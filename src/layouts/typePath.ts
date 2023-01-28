@@ -20,6 +20,7 @@ export const ADMINISTRATION_BRANDS_CREATE = '/administration/brands/create'
 export const ADMINISTRATION_BRANDS_EDIT = '/administration/brands/edit'
 // Service Order
 export const MANAGER_SERVICE_ORDER = '/manager/service-order'
+export const MANAGER_SERVICE_ORDER_VIEW = '/manager/service-order/view'
 export const MANAGER_SERVICE_ORDER_CREATE = '/manager/service-order/create'
 export const MANAGER_SERVICE_ORDER_EDIT = '/manager/service-order/edit'
 // Dashboard

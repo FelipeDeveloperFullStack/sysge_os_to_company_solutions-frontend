@@ -14,7 +14,10 @@ import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatPrice, formatInputPrice } from 'src/helpers/formatPrice'
-import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
+import {
+  MANAGER_SERVICE_ORDER,
+  MANAGER_SERVICE_ORDER_VIEW,
+} from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
 import {
   LAYOUT_TITLE_PAGE,
@@ -177,16 +180,14 @@ const CreateOrderService: React.FC = () => {
       ...data,
     }
 
-    console.log({
-      data: {
-        ...data,
-        itemServices,
-        laudos,
-        itemPieces,
-        total,
-        manpower: manpower === '' ? 'R$ 0,00' : manpower,
-      },
-    })
+    const OSData = {
+      ...data,
+      itemServices,
+      laudos,
+      itemPieces,
+      total,
+      manpower: manpower === '' ? 'R$ 0,00' : manpower,
+    }
 
     try {
       //await apiAdmin.post(`orderServices`, toApi(data))
@@ -194,7 +195,7 @@ const CreateOrderService: React.FC = () => {
         type: SERVICE_FILTER,
         payload: {},
       })
-      //history.push(MANAGER_SERVICE_ORDER)
+      history.push(MANAGER_SERVICE_ORDER_VIEW, { OSData })
       toast.success('Ordem de serviço cadastrada com sucesso.')
     } catch (error) {
       exceptionHandle(error)
@@ -341,6 +342,56 @@ const CreateOrderService: React.FC = () => {
             render={({ field, fieldState }) => (
               <InputTextOSNumberDisabled
                 label={'Nº Série'}
+                field={field}
+                fieldState={fieldState}
+              />
+            )}
+          />
+        </Row>
+        <Row columns="repeat(4, 1fr)" marginTop="10px" gap={10}>
+          <Controller
+            name="equipament"
+            control={control}
+            defaultValue={''}
+            render={({ field, fieldState }) => (
+              <InputTextOSNumberDisabled
+                label={'Cabo'}
+                field={field}
+                fieldState={fieldState}
+              />
+            )}
+          />
+          <Controller
+            name="brand"
+            control={control}
+            defaultValue={''}
+            render={({ field, fieldState }) => (
+              <InputTextOSNumberDisabled
+                label={'Carregador'}
+                field={field}
+                fieldState={fieldState}
+              />
+            )}
+          />
+          <Controller
+            name="model"
+            control={control}
+            defaultValue={''}
+            render={({ field, fieldState }) => (
+              <InputTextOSNumberDisabled
+                label={'Quebrado'}
+                field={field}
+                fieldState={fieldState}
+              />
+            )}
+          />
+          <Controller
+            name="serialNumber"
+            control={control}
+            defaultValue={''}
+            render={({ field, fieldState }) => (
+              <InputTextOSNumberDisabled
+                label={'Detalhes'}
                 field={field}
                 fieldState={fieldState}
               />

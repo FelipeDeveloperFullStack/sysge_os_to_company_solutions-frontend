@@ -17,9 +17,13 @@ type TextClientProps = {
   borderTop?: string
   display?: string
   justifyContent?: string
+  fontWeight?: string
 }
 
-export const PaperStyled = styled(Paper)<{ padding?: string }>`
+export const PaperStyled = styled(Paper)<{
+  padding?: string
+  paddingBottom?: string
+}>`
   border-style: solid;
   border-color: gray;
   border-width: 3px;
@@ -27,13 +31,21 @@ export const PaperStyled = styled(Paper)<{ padding?: string }>`
   margin-bottom: 5px;
   width: 100%;
   padding-top: 10px;
-  padding-bottom: 10px;
+  padding-bottom: ${({ paddingBottom }) =>
+    paddingBottom ? paddingBottom : '10px'};
   padding: ${({ padding }) => padding};
+`
+
+export const ButtonContainer = styled.div`
+  position: fixed;
+  bottom: 31px;
+  right: 23px;
 `
 
 export const Container = styled.section`
   background-color: #fff;
   height: auto;
+  font-size: 12px;
 `
 
 export const ContainerOS = styled.section`
@@ -124,4 +136,5 @@ export const Text = styled.section<TextClientProps>`
   border-top: ${({ borderTop }) => borderTop};
   display: ${({ display }) => display};
   justify-content: ${({ justifyContent }) => justifyContent};
+  font-weight: ${({ fontWeight }) => fontWeight};
 `

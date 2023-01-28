@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Button } from 'src/components'
 import { useGeneratePDF } from 'src/hooks/useGeneratePDF'
 import { Row } from 'src/styles'
 import Logo from './assets/images/logo.png'
+import { OSData } from './create/type'
+import { formatPrice } from 'src/helpers/formatPrice'
+import Fab from '@mui/material/Fab'
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 import {
+  ButtonContainer,
   CompanyAddress,
   CompanyContact,
   Container,
@@ -25,19 +31,47 @@ import {
 
 const ServiceOrder: React.FC = () => {
   const exportPDF = useGeneratePDF()
+  const location = useLocation()
+
+  const [data] = useState<OSData>(location?.state?.OSData)
 
   const getDateCurrent = () => {
     return `${new Date().getDate()}/${new Date().getMonth() + 1}/
     ${new Date().getFullYear()}`
   }
 
+  useEffect(() => {
+    console.log({ data })
+  }, [])
+
   return (
     <>
-      <Button
-        textButton="Gerar OS"
-        variant="contained"
-        onClick={() => exportPDF('Ordem de servico', 'pdf')}
-      />
+      <ButtonContainer>
+        {/* <Button
+          textButton="Gerar OS"
+          size="large"
+          variant="contained"
+          onClick={() =>
+            exportPDF(
+              `Cliente_${data.clientName}_Ordem_de_Servico_N_${data.osNumber}`,
+              'pdf',
+            )
+          }
+        /> */}
+        <Fab
+          color="primary"
+          variant="extended"
+          onClick={() =>
+            exportPDF(
+              `Cliente_${data.clientName}_Ordem_de_Servico_N_${data.osNumber}`,
+              'pdf',
+            )
+          }
+        >
+          <CloudDownloadIcon sx={{ mr: 1 }} />
+          Gerar OS
+        </Fab>
+      </ButtonContainer>
       <Container>
         <ContainerOS id="pdf">
           <PaperStyled elevation={1}>
@@ -84,13 +118,13 @@ const ServiceOrder: React.FC = () => {
               <ContainerOSText>
                 <OSText>ORDEM DE SERVIÇO</OSText>
                 <OSNumber>
-                  Nº <OSNumber color="red">1870</OSNumber>
+                  Nº <OSNumber color="red">{data.osNumber}</OSNumber>
                 </OSNumber>
               </ContainerOSText>
             </PaperStyled>
             <PaperStyled elevation={1}>
               <ContainerDateOS>
-                <DateOS>Data {getDateCurrent()}</DateOS>
+                <DateOS>Data {data.dateOS}</DateOS>
               </ContainerDateOS>
             </PaperStyled>
           </ContainerOSNumberAndDate>
@@ -103,7 +137,7 @@ const ServiceOrder: React.FC = () => {
               marginBottom="5px"
             >
               <Text isNotUsingBorderBottom width="900px">
-                <b>Cliente:</b> FELIPE MIGUEL DOS SANTOS
+                <b>Cliente:</b> {data.clientName}
               </Text>
             </Row>
             <Row marginLeft="15px" columns="5fr 1fr" marginBottom="5px">
@@ -142,54 +176,102 @@ const ServiceOrder: React.FC = () => {
           <PaperStyled elevation={1}>
             <Row marginLeft="15px" columns="repeat(4, 1fr)" marginBottom="5px">
               <Text>
-                <b>Equipamento:</b> Notebook
+                <b>Equipamento:</b> {data.equipament}
               </Text>
               <Text marginRight="15px">
-                <b>Marca:</b> INTELBRAS
+                <b>Marca:</b> {data.brand}
               </Text>
               <Text marginRight="15px">
-                <b>Modelo:</b> IM4
+                <b>Modelo:</b> {data.model}
               </Text>
               <Text marginRight="15px">
-                <b>Nº Série:</b> 65406540
+                <b>Nº Série:</b> {data.serialNumber}
               </Text>
             </Row>
           </PaperStyled>
-          <PaperStyled elevation={1}>
-            <Text marginLeft="15px" isNotUsingBorderBottom>
-              Laudo Técnico
-            </Text>
-            <Row columns="8fr" marginLeft="15px">
-              <Text marginTop="20px" marginRight="15px">
-                RESTAURAÇÃO DOBRADIÇA COLA INSTANTÂNEA + PÓ DE
-                FERRO,LUBRIFICAÇÃO DA DOBRADIÇA E REGULAGEM DO TENSOR
+          {!!data.itemServices.length && (
+            <PaperStyled elevation={1} paddingBottom="20px">
+              <Row
+                columns="8fr 1fr 1fr 1fr"
+                gap={5}
+                marginLeft="15px"
+                marginRight="15px"
+                marginBottom="-16px"
+              >
+                <Text isNotUsingBorderBottom fontWeight="bold">
+                  Executados
+                </Text>
+                <Text
+                  isNotUsingBorderBottom
+                  display="flex"
+                  justifyContent="center"
+                  fontWeight="bold"
+                >
+                  Qtde
+                </Text>
+                <Text
+                  isNotUsingBorderBottom
+                  display="flex"
+                  justifyContent="center"
+                  fontWeight="bold"
+                >
+                  Unit
+                </Text>
+                <Text isNotUsingBorderBottom fontWeight="bold">
+                  Total
+                </Text>
+              </Row>
+              {data.itemServices.map((item) => {
+                return (
+                  <Row
+                    columns="8fr 1fr 1fr 1fr"
+                    marginLeft="15px"
+                    marginRight="15px"
+                    height="27px"
+                    gap={5}
+                  >
+                    <Text marginTop="20px">{item.description}</Text>
+                    <Text
+                      marginTop="20px"
+                      display="flex"
+                      justifyContent="center"
+                    >
+                      {item.qtde}
+                    </Text>
+                    <Text
+                      marginTop="20px"
+                      display="flex"
+                      justifyContent="center"
+                    >
+                      {formatPrice(item.unit)}
+                    </Text>
+                    <Text marginTop="20px">{formatPrice(item.total)}</Text>
+                  </Row>
+                )
+              })}
+            </PaperStyled>
+          )}
+          {!!data.laudos.length && (
+            <PaperStyled elevation={1} paddingBottom="20px">
+              <Text
+                marginLeft="15px"
+                isNotUsingBorderBottom
+                fontWeight="bold"
+                marginBottom="-16px"
+              >
+                Laudo Técnico
               </Text>
-            </Row>
-            <Row columns="8fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">DESENTUPIMENTO DE DRENO</Text>
-            </Row>
-            <Row columns="8fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">
-                RESTAURAÇÃO DOBRADIÇA COM ARREBITES DE 2 MM ,LUBRIFICAÇÃO DA
-                DOBRADIÇA E REGULAGEM DO TENSOR
-              </Text>
-            </Row>
-            <Row columns="8fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">CRIMPAGEM DE PONTA A PONTA RJ45 /</Text>
-            </Row>
-            <Row columns="8fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">CRIMPAGEM DE PONTA A PONTA RJ11 </Text>
-            </Row>
-            <Row columns="8fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">ABASTECIMENTO DE TINTA</Text>
-            </Row>
-            <Row columns="8fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">ALINHAMENTO DE CABEÇOTE</Text>
-            </Row>
-            <Row columns="8fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">LIMPEZA DO CABEÇOTE</Text>
-            </Row>
-          </PaperStyled>
+              {data.laudos.map((item) => {
+                return (
+                  <Row columns="8fr" marginLeft="15px" height="27px">
+                    <Text marginTop="20px" marginRight="15px">
+                      {item.description}
+                    </Text>
+                  </Row>
+                )
+              })}
+            </PaperStyled>
+          )}
           <PaperStyled elevation={1}>
             <Row marginLeft="15px" columns="repeat(4, 1fr)" marginBottom="5px">
               <Text>
@@ -206,46 +288,75 @@ const ServiceOrder: React.FC = () => {
               </Text>
             </Row>
           </PaperStyled>
-          <PaperStyled elevation={1}>
-            <Text marginLeft="15px" isNotUsingBorderBottom>
-              Serviços Executados
-            </Text>
-            <Row columns="8fr 1fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">CAMERA VIDEO WI-FI FULL HD IM4</Text>
-              <Text marginTop="20px">R$ 448.38</Text>
-            </Row>
-            <Row columns="8fr 1fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">
-                LEITOR USB + CARTAO MEMORIA CLASSE10 64GB MULTILASER
-              </Text>
-              <Text marginTop="20px">R$ 109.98</Text>
-            </Row>
-            <Row columns="8fr 1fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">
-                LEITOR USB + CARTAO MEMORIA CLASSE10 32GB MULTILASER
-              </Text>
-              <Text marginTop="20px">R$ 107.68</Text>
-            </Row>
-            <Row columns="8fr 1fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">RESTAURAÇÃO CARCAÇA</Text>
-              <Text marginTop="20px">R$ 75,15</Text>
-            </Row>
-            <Row columns="8fr 1fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">FORMATAÇÃO BÁSICA</Text>
-              <Text marginTop="20px">R$ 60,00</Text>
-            </Row>
-            <Row columns="8fr 1fr" marginLeft="15px" marginRight="15px">
-              <Text marginTop="20px">INSTALAÇÃO DE PROGRAMA</Text>
-              <Text marginTop="20px">R$ 30,00</Text>
-            </Row>
-          </PaperStyled>
+          {!!data.itemPieces.length && (
+            <PaperStyled elevation={1} paddingBottom="20px">
+              <Row
+                columns="8fr 1fr 1fr 1fr"
+                gap={5}
+                marginLeft="15px"
+                marginRight="15px"
+                marginBottom="-16px"
+              >
+                <Text isNotUsingBorderBottom fontWeight="bold">
+                  Peças e Serviços
+                </Text>
+                <Text
+                  isNotUsingBorderBottom
+                  display="flex"
+                  justifyContent="center"
+                  fontWeight="bold"
+                >
+                  Qtde
+                </Text>
+                <Text
+                  isNotUsingBorderBottom
+                  display="flex"
+                  fontWeight="bold"
+                  justifyContent="center"
+                >
+                  Unit
+                </Text>
+                <Text isNotUsingBorderBottom fontWeight="bold">
+                  Total
+                </Text>
+              </Row>
+              {data.itemPieces.map((item) => {
+                return (
+                  <Row
+                    columns="8fr 1fr 1fr 1fr"
+                    marginLeft="15px"
+                    marginRight="15px"
+                    height="27px"
+                    gap={5}
+                  >
+                    <Text marginTop="20px">{item.description}</Text>
+                    <Text
+                      marginTop="20px"
+                      display="flex"
+                      justifyContent="center"
+                    >
+                      {item.qtde}
+                    </Text>
+                    <Text
+                      marginTop="20px"
+                      display="flex"
+                      justifyContent="center"
+                    >
+                      {formatPrice(item.unit)}
+                    </Text>
+                    <Text marginTop="20px">{formatPrice(item.total)}</Text>
+                  </Row>
+                )
+              })}
+            </PaperStyled>
+          )}
           <PaperStyled elevation={1}>
             <Row marginLeft="15px" columns="repeat(2, 1fr)" marginBottom="5px">
               <Text isNotUsingBorderBottom>
-                <b>Valor da mão de obra: </b> R$ 150,00
+                <b>Valor da mão de obra: </b> {data.manpower}
               </Text>
               <Text marginRight="15px" isNotUsingBorderBottom>
-                <b>Total: </b> R$ 816,04
+                <b>Total: </b> {data.total}
               </Text>
             </Row>
           </PaperStyled>

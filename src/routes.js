@@ -24,6 +24,7 @@ import {
   DASHBOARD,
   MANAGER_SERVICE_ORDER,
   MANAGER_SERVICE_ORDER_CREATE,
+  MANAGER_SERVICE_ORDER_VIEW,
 } from './layouts/typePath'
 
 export const renderRoutes = (routes = []) => (
@@ -200,6 +201,11 @@ const routes = [
         component: lazy(() =>
           import('./views/modules/manager/serviceOrder/create'),
         ),
+      },
+      {
+        exact: true,
+        path: MANAGER_SERVICE_ORDER_VIEW,
+        component: lazy(() => import('./views/modules/manager/serviceOrder')),
       },
       {
         exact: true,
