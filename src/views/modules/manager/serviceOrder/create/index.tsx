@@ -4,13 +4,14 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import {
   Autocomplete,
   AutocompleteOptions,
 } from 'src/components/Form/Autocomplete'
 import Button from 'src/components/Form/Button'
+import { Select } from 'src/components/Widgets/Select'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatPrice, formatInputPrice } from 'src/helpers/formatPrice'
@@ -24,7 +25,7 @@ import {
   SERVICE_FILTER,
   SERVICE_ORDER_CREATE,
 } from 'src/store/actions'
-import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
+import { ClientT, ServiceOrderT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaServiceOrder } from '../schemaValidation'
 import InputCurrency from './components/InputCurrency'
@@ -47,7 +48,7 @@ const CreateOrderService: React.FC = () => {
 
   const { sum, resetTotal } = useTotalSum()
 
-  const { control, handleSubmit } = useForm<ServiceOrderT>({
+  const { control, handleSubmit, formState } = useForm<ServiceOrderT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaServiceOrder),
   })
@@ -154,6 +155,12 @@ const CreateOrderService: React.FC = () => {
   }, [total])
 
   useEffect(() => {
+    if (Object.values(formState?.errors).some((item) => item)) {
+      scroll(0, 0)
+    }
+  }, [formState?.errors])
+
+  useEffect(() => {
     resetTotal()
     setTotal('R$ 0,00')
   }, [])
@@ -165,7 +172,7 @@ const CreateOrderService: React.FC = () => {
       scroll(0, 0)
       return
     }
-    console.log({ totalCleanValue })
+
     if (totalCleanValue === 0 || totalCleanValue === undefined) {
       setMessageErrorTotal('Total obrigatório!')
       return
@@ -188,6 +195,7 @@ const CreateOrderService: React.FC = () => {
       total,
       manpower: manpower === '' ? 'R$ 0,00' : manpower,
     }
+    console.log({ OSData })
 
     try {
       //await apiAdmin.post(`orderServices`, toApi(data))
@@ -195,7 +203,7 @@ const CreateOrderService: React.FC = () => {
         type: SERVICE_FILTER,
         payload: {},
       })
-      history.push(MANAGER_SERVICE_ORDER_VIEW, { OSData })
+      //history.push(MANAGER_SERVICE_ORDER_VIEW, { OSData })
       toast.success('Ordem de serviço cadastrada com sucesso.')
     } catch (error) {
       exceptionHandle(error)
@@ -350,50 +358,74 @@ const CreateOrderService: React.FC = () => {
         </Row>
         <Row columns="repeat(4, 1fr)" marginTop="10px" gap={10}>
           <Controller
-            name="equipament"
+            name="cable"
             control={control}
             defaultValue={''}
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Cabo'}
-                field={field}
-                fieldState={fieldState}
+            render={({ field, formState }) => (
+              <Select
+                {...field}
+                labelDefaultOption="Selecione"
+                label="Cabo"
+                hasError={!!formState.errors.cable?.message}
+                msgError={formState.errors.cable?.message}
+                options={[
+                  { label: 'SIM', value: 'SIM' },
+                  { label: 'NAO', value: 'NAO' },
+                ]}
               />
             )}
           />
           <Controller
-            name="brand"
+            name="charger"
             control={control}
             defaultValue={''}
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Carregador'}
-                field={field}
-                fieldState={fieldState}
+            render={({ field, formState }) => (
+              <Select
+                {...field}
+                labelDefaultOption="Selecione"
+                label="Carregador"
+                hasError={!!formState.errors.charger?.message}
+                msgError={formState.errors.charger?.message}
+                options={[
+                  { label: 'SIM', value: 'SIM' },
+                  { label: 'NAO', value: 'NAO' },
+                ]}
               />
             )}
           />
           <Controller
-            name="model"
+            name="breaked"
             control={control}
             defaultValue={''}
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Quebrado'}
-                field={field}
-                fieldState={fieldState}
+            render={({ field, formState }) => (
+              <Select
+                {...field}
+                labelDefaultOption="Selecione"
+                label="Quebrado"
+                hasError={!!formState.errors.breaked?.message}
+                msgError={formState.errors.breaked?.message}
+                options={[
+                  { label: 'SIM', value: 'SIM' },
+                  { label: 'NAO', value: 'NAO' },
+                ]}
               />
             )}
           />
           <Controller
-            name="serialNumber"
+            name="detail"
             control={control}
             defaultValue={''}
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Detalhes'}
-                field={field}
-                fieldState={fieldState}
+            render={({ field, formState }) => (
+              <Select
+                {...field}
+                labelDefaultOption="Selecione"
+                label="Detalhes"
+                hasError={!!formState.errors.detail?.message}
+                msgError={formState.errors.detail?.message}
+                options={[
+                  { label: 'SIM', value: 'SIM' },
+                  { label: 'NAO', value: 'NAO' },
+                ]}
               />
             )}
           />

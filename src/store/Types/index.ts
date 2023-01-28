@@ -89,6 +89,10 @@ export type ServiceOrderT = {
   brand?: string
   model?: string
   serialNumber?: string
+  cable?: string
+  charger?: string
+  breaked?: string
+  detail?: string
   _id?: string
   laudos: [
     {

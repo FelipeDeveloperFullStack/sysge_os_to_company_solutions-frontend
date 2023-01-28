@@ -1,5 +1,5 @@
 import { Divider, Paper } from '@mui/material'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 type HeaderTextFontProps = {
   fontSize?: number
@@ -20,9 +20,33 @@ type TextClientProps = {
   fontWeight?: string
 }
 
+const swingButtonFinancial = keyframes`
+  15% {
+    transform: translateX(5px);
+  }
+  30% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  65% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+`
+
 export const PaperStyled = styled(Paper)<{
   padding?: string
   paddingBottom?: string
+  display?: string
+  justifyContent?: string
+  fontSize?: string
 }>`
   border-style: solid;
   border-color: gray;
@@ -34,12 +58,21 @@ export const PaperStyled = styled(Paper)<{
   padding-bottom: ${({ paddingBottom }) =>
     paddingBottom ? paddingBottom : '10px'};
   padding: ${({ padding }) => padding};
+  display: ${({ display }) => display};
+  justify-content: ${({ justifyContent }) => justifyContent};
+  font-size: ${({ fontSize }) => fontSize};
 `
 
-export const ButtonContainer = styled.div`
+export const ButtonContainerGenerateOS = styled.div`
   position: fixed;
   bottom: 31px;
   right: 23px;
+`
+export const ButtonContainerLaunchInTheFinancial = styled.div`
+  position: fixed;
+  bottom: 85px;
+  right: 23px;
+  animation: ${swingButtonFinancial} 1s ease-in-out infinite;
 `
 
 export const Container = styled.section`

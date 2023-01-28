@@ -3,10 +3,16 @@ import jsPDF from 'jspdf'
 import { toast } from 'src/components/Widgets/Toastify'
 import { useLoading } from './useLoading'
 
+type TypeSaveMode = 'auto_download' | 'open_new_window'
+
 export const useGeneratePDF = () => {
   const { Loading } = useLoading()
 
-  const exportPDF = (filePDFName: string, idName: string) => {
+  const exportPDF = (
+    filePDFName: string,
+    idName: string,
+    typeSaveMode: TypeSaveMode,
+  ) => {
     try {
       Loading.turnOn()
       const input = document.getElementById(idName)
@@ -23,6 +29,9 @@ export const useGeneratePDF = () => {
           const imgHeight = (canvas.height * imgWidth) / canvas.width
           const imgData = canvas.toDataURL()
           const pdf = new jsPDF('portrait', 'mm', 'a4')
+          pdf.setProperties({
+            title: filePDFName,
+          })
           pdf.addImage(
             imgData,
             'jpeg',
@@ -33,19 +42,26 @@ export const useGeneratePDF = () => {
             // undefined,
             // 'FAST',
           )
-          pdf.save(`${filePDFName}.pdf`)
-
+          if (typeSaveMode === 'auto_download') {
+            pdf.save(`${filePDFName}.pdf`)
+          } else {
+            pdf.autoPrint()
+            window.open(
+              pdf.output('bloburl'),
+              '_blank',
+              'height=650,width=500,scrollbars=yes,location=yes',
+            )
+          }
           // let element = document.createElement('a')
           // element.href = canvas.toDataURL('img/png')
           // element.download = `${filePDFName}.png`
           // element.click()
-
           //document.body.appendChild(canvas)
           Loading.turnOff()
         })
         .catch((error) => {
           toast.error(error)
-          exportPDF(filePDFName, idName)
+          exportPDF(filePDFName, idName, typeSaveMode)
         })
     } catch (error) {
       toast.error(

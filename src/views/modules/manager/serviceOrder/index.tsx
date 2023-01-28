@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Button } from 'src/components'
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import { useGeneratePDF } from 'src/hooks/useGeneratePDF'
 import { Row } from 'src/styles'
 import Logo from './assets/images/logo.png'
@@ -9,7 +9,8 @@ import { formatPrice } from 'src/helpers/formatPrice'
 import Fab from '@mui/material/Fab'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 import {
-  ButtonContainer,
+  ButtonContainerGenerateOS,
+  ButtonContainerLaunchInTheFinancial,
   CompanyAddress,
   CompanyContact,
   Container,
@@ -34,10 +35,15 @@ const ServiceOrder: React.FC = () => {
   const location = useLocation()
 
   const [data] = useState<OSData>(location?.state?.OSData)
+  const [isOSGenerated, setIsOsGenerated] = useState(false)
 
-  const getDateCurrent = () => {
-    return `${new Date().getDate()}/${new Date().getMonth() + 1}/
-    ${new Date().getFullYear()}`
+  const handleClickToGenerateOS = () => {
+    exportPDF(
+      `Cliente_${data.clientName}_Ordem_de_Servico_N_${data.osNumber}`,
+      'pdf',
+      'open_new_window',
+    )
+    setIsOsGenerated(true)
   }
 
   useEffect(() => {
@@ -46,32 +52,24 @@ const ServiceOrder: React.FC = () => {
 
   return (
     <>
-      <ButtonContainer>
-        {/* <Button
-          textButton="Gerar OS"
-          size="large"
-          variant="contained"
-          onClick={() =>
-            exportPDF(
-              `Cliente_${data.clientName}_Ordem_de_Servico_N_${data.osNumber}`,
-              'pdf',
-            )
-          }
-        /> */}
+      <ButtonContainerGenerateOS>
         <Fab
           color="primary"
           variant="extended"
-          onClick={() =>
-            exportPDF(
-              `Cliente_${data.clientName}_Ordem_de_Servico_N_${data.osNumber}`,
-              'pdf',
-            )
-          }
+          onClick={() => handleClickToGenerateOS()}
         >
           <CloudDownloadIcon sx={{ mr: 1 }} />
-          Gerar OS
+          Gerar PDF
         </Fab>
-      </ButtonContainer>
+      </ButtonContainerGenerateOS>
+      {!!isOSGenerated && (
+        <ButtonContainerLaunchInTheFinancial>
+          <Fab color="success" variant="extended">
+            <CurrencyExchangeIcon sx={{ mr: 1 }} />
+            Lançar Financeiro
+          </Fab>
+        </ButtonContainerLaunchInTheFinancial>
+      )}
       <Container>
         <ContainerOS id="pdf">
           <PaperStyled elevation={1}>
@@ -350,16 +348,28 @@ const ServiceOrder: React.FC = () => {
               })}
             </PaperStyled>
           )}
-          <PaperStyled elevation={1}>
-            <Row marginLeft="15px" columns="repeat(2, 1fr)" marginBottom="5px">
+          <Row columns="repeat(2, 1fr)" marginBottom="5px" gap={5}>
+            <PaperStyled
+              elevation={1}
+              display="flex"
+              justifyContent="center"
+              fontSize="17px"
+            >
               <Text isNotUsingBorderBottom>
                 <b>Valor da mão de obra: </b> {data.manpower}
               </Text>
+            </PaperStyled>
+            <PaperStyled
+              elevation={1}
+              display="flex"
+              justifyContent="center"
+              fontSize="17px"
+            >
               <Text marginRight="15px" isNotUsingBorderBottom>
                 <b>Total: </b> {data.total}
               </Text>
-            </Row>
-          </PaperStyled>
+            </PaperStyled>
+          </Row>
           <PaperStyled elevation={1} padding="40px">
             <Row marginLeft="15px" columns="repeat(2, 1fr)" marginBottom="5px">
               <Text
@@ -372,7 +382,6 @@ const ServiceOrder: React.FC = () => {
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    width: '500px',
                   }}
                 >
                   Técnico Responsável
