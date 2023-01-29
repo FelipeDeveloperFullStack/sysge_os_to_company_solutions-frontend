@@ -10,14 +10,12 @@ export const ADMINISTRATION_PIECES_EDIT = '/administration/pieces/edit'
 export const ADMINISTRATION_SERVICES = '/administration/services'
 export const ADMINISTRATION_SERVICES_CREATE = '/administration/services/create'
 export const ADMINISTRATION_SERVICES_EDIT = '/administration/services/edit'
-// Model
-export const ADMINISTRATION_MODELS = '/administration/models'
-export const ADMINISTRATION_MODELS_CREATE = '/administration/models/create'
-export const ADMINISTRATION_MODELS_EDIT = '/administration/models/edit'
-// Brand
-export const ADMINISTRATION_BRANDS = '/administration/brands'
-export const ADMINISTRATION_BRANDS_CREATE = '/administration/brands/create'
-export const ADMINISTRATION_BRANDS_EDIT = '/administration/brands/edit'
+// Equipament
+export const ADMINISTRATION_EQUIPAMENTS = '/administration/equipaments'
+export const ADMINISTRATION_EQUIPAMENTS_CREATE =
+  '/administration/equipaments/create'
+export const ADMINISTRATION_EQUIPAMENTS_EDIT =
+  '/administration/equipaments/edit'
 // Service Order
 export const MANAGER_SERVICE_ORDER = '/manager/service-order'
 export const MANAGER_SERVICE_ORDER_VIEW = '/manager/service-order/view'

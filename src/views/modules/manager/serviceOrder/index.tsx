@@ -39,16 +39,12 @@ const ServiceOrder: React.FC = () => {
 
   const handleClickToGenerateOS = () => {
     exportPDF(
-      `Cliente_${data.clientName}_Ordem_de_Servico_N_${data.osNumber}`,
+      `Cliente_${data.client.name}_Ordem_de_Servico_N_${data.osNumber}`,
       'pdf',
       'open_new_window',
     )
     setIsOsGenerated(true)
   }
-
-  useEffect(() => {
-    console.log({ data })
-  }, [])
 
   return (
     <>
@@ -135,15 +131,15 @@ const ServiceOrder: React.FC = () => {
               marginBottom="5px"
             >
               <Text isNotUsingBorderBottom width="900px">
-                <b>Cliente:</b> {data.clientName}
+                <b>Cliente:</b> {data.client.name}
               </Text>
             </Row>
             <Row marginLeft="15px" columns="5fr 1fr" marginBottom="5px">
               <Text>
-                <b>End:</b> Rua 10 QUADRA CP16 LOTE 01 SALA 03
+                <b>End:</b> {data.client.address}
               </Text>
               <Text marginRight="15px">
-                <b>CEP:</b> 74395-200
+                <b>CEP:</b> {data.client.cep}
               </Text>
             </Row>
             <Row
@@ -153,21 +149,24 @@ const ServiceOrder: React.FC = () => {
               marginBottom="5px"
             >
               <Text>
-                <b>Cidade:</b> GOIÂNIA
+                <b>Cidade:</b> {data.client.city}
               </Text>
               <Text>
-                <b>UF:</b> GO
+                <b>UF:</b> {data.client.uf}
               </Text>
               <Text>
-                <b>CNPJ:</b> 39.325.426/0001-55
+                <b>CNPJ:</b> {data.client.cpfOrCnpj}
               </Text>
             </Row>
-            <Row marginLeft="15px" columns="4fr 1fr" marginBottom="5px">
+            <Row marginLeft="15px" columns="2fr 1fr" marginBottom="5px">
               <Text>
-                <b>E-mail:</b> arianyf_aguiar@hotmail.com
+                <b>E-mail:</b> {data.client.email}
               </Text>
               <Text marginRight="15px">
-                <b>Telefone:</b> (62) 98206-9603
+                <b>Telefone:</b> {data.client.phoneNumber}{' '}
+                {data.client.phoneNumberFixo
+                  ? `${data.client.phoneNumberFixo}`
+                  : null}
               </Text>
             </Row>
           </PaperStyled>
@@ -273,16 +272,16 @@ const ServiceOrder: React.FC = () => {
           <PaperStyled elevation={1}>
             <Row marginLeft="15px" columns="repeat(4, 1fr)" marginBottom="5px">
               <Text>
-                <b>Cabo?</b> Sim
+                <b>Cabo?</b> {data.cable}
               </Text>
               <Text marginRight="15px">
-                <b>Carregador?</b> Sim
+                <b>Carregador?</b> {data.charger}
               </Text>
               <Text marginRight="15px">
-                <b>Quabrado?</b> Não
+                <b>Quabrado?</b> {data.breaked}
               </Text>
               <Text marginRight="15px">
-                <b>Detalhes?</b> Não
+                <b>Detalhes?</b> {data.detail}
               </Text>
             </Row>
           </PaperStyled>
@@ -382,6 +381,7 @@ const ServiceOrder: React.FC = () => {
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
+                    width: '100%',
                   }}
                 >
                   Técnico Responsável
@@ -393,7 +393,15 @@ const ServiceOrder: React.FC = () => {
                 display="flex"
                 justifyContent="center"
               >
-                <b>Cliente</b>
+                <b
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Cliente
+                </b>
               </Text>
             </Row>
           </PaperStyled>

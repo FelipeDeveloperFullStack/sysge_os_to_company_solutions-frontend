@@ -1,30 +1,36 @@
-import { BRAND_FILTER, BRAND_SEE_ALL } from 'src/store/actions'
+import { EQUIPAMENT_FILTER, EQUIPAMENT_SEE_ALL } from 'src/store/actions'
 import { Action } from './type'
 
 export const INIT_STATE = {
-  brands: [
+  equipaments: [
     {
       _id: '',
-      description: '',
+      equipamentName: '',
+      brand: '',
+      model: '',
+      serialNumber: '',
     },
   ],
-  brandFilter: {
-    description: undefined,
+  equipamentFilter: {
+    equipamentName: undefined,
+    brand: undefined,
+    model: undefined,
+    serialNumber: undefined,
   },
 }
 
 export default function brandReducer(state = INIT_STATE, action: Action) {
   switch (action.type) {
-    case BRAND_SEE_ALL: {
+    case EQUIPAMENT_SEE_ALL: {
       return {
         ...state,
-        brands: action.payload,
+        equipaments: action.payload,
       }
     }
-    case BRAND_FILTER: {
+    case EQUIPAMENT_FILTER: {
       return {
         ...state,
-        brandFilter: action.payload,
+        equipamentFilter: action.payload,
       }
     }
     default: {

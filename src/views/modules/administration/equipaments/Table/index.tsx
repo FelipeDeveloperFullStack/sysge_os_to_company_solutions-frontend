@@ -11,8 +11,8 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { useModal } from 'src/hooks/useModal'
-import { ADMINISTRATION_MODELS_EDIT } from 'src/layouts/typePath'
-import { IStore, ModelT } from 'src/store/Types'
+import { ADMINISTRATION_EQUIPAMENTS_EDIT } from 'src/layouts/typePath'
+import { EquipamentT, IStore } from 'src/store/Types'
 import {
   IconButtonStyled,
   TableCellColumnStyled,
@@ -21,12 +21,14 @@ import RemoveConfirmation from '../messages/RemoveConfirmation'
 import { columns } from './Columns'
 
 const TableView: React.FC = () => {
-  const modelsStore = useSelector((state: IStore) => state.model.models)
+  const equipamentsStore = useSelector(
+    (state: IStore) => state.equipament?.equipaments,
+  )
   const history = useHistory()
   const { showMessage } = useModal()
 
-  const removeClient = (client: ModelT) => {
-    showMessage(RemoveConfirmation, client)
+  const removeClient = (equipament: EquipamentT) => {
+    showMessage(RemoveConfirmation, equipament)
   }
 
   return (
@@ -34,11 +36,11 @@ const TableView: React.FC = () => {
       <Table size="small">
         <TableHead>
           <div style={{ margin: '20px', fontWeight: 'bold', fontSize: '16px' }}>
-            {modelsStore?.length ? (
+            {equipamentsStore?.length ? (
               <div>
                 <div>Resultados encontrados</div>
                 <div style={{ fontSize: '12px' }}>
-                  Total: ({modelsStore?.length})
+                  Total: ({equipamentsStore?.length})
                 </div>
               </div>
             ) : (
@@ -46,18 +48,18 @@ const TableView: React.FC = () => {
             )}
           </div>
           <TableRow>
-            {!!modelsStore.length &&
+            {!!equipamentsStore?.length &&
               columns.map((column) => (
                 <TableCell>{column.headerName}</TableCell>
               ))}
-            {!!modelsStore.length && (
+            {!!equipamentsStore?.length && (
               <TableCellColumnStyled>Ações</TableCellColumnStyled>
             )}
           </TableRow>
         </TableHead>
         <TableBody>
-          {!!modelsStore.length &&
-            modelsStore?.map((row) => (
+          {!!equipamentsStore?.length &&
+            equipamentsStore?.map((row) => (
               <TableRow key={row._id}>
                 {columns.map((column) => {
                   return <TableCell>{row[column.field]}</TableCell>
@@ -67,7 +69,7 @@ const TableView: React.FC = () => {
                     <EditIcon
                       color="primary"
                       onClick={() =>
-                        history.push(ADMINISTRATION_MODELS_EDIT, row)
+                        history.push(ADMINISTRATION_EQUIPAMENTS_EDIT, row)
                       }
                     />
                   </IconButtonStyled>

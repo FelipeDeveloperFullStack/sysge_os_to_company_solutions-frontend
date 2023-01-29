@@ -1,3 +1,7 @@
+import { AutocompleteOptions } from 'src/components/Form/Autocomplete'
+import { ClientT } from 'src/store/Types'
+import { Laudo } from '../tables/type'
+
 export type ItemPieces = {
   id: string
   description: string
@@ -14,7 +18,6 @@ export type ItemServices = {
 }
 
 export type OSData = {
-  clientName: string
   status: string
   osNumber: string
   dateOS: string
@@ -22,45 +25,14 @@ export type OSData = {
   brand: string
   model: string
   serialNumber: string
-  itemServices: [
-    {
-      description: string
-      id: string
-      qtde: number
-      total: number
-      unit: number
-    },
-    {
-      description: string
-      id: string
-      qtde: number
-      total: number
-      unit: number
-    },
-  ]
-  laudos: [
-    {
-      checked: boolean
-      description: string
-      service: string
-    },
-  ]
-  itemPieces: [
-    {
-      description: string
-      id: string
-      qtde: number
-      total: number
-      unit: number
-    },
-    {
-      description: string
-      id: string
-      qtde: number
-      total: number
-      unit: number
-    },
-  ]
+  cable: string
+  charger: string
+  breaked: string
+  detail: string
+  client: ClientT
+  itemServices: ItemServices[]
+  laudos: Laudo[]
+  itemPieces: ItemPieces[]
   total: string
   manpower: string
 }

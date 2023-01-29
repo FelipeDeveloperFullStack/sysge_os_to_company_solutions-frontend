@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -7,10 +8,10 @@ import { InputText } from 'src/components'
 import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
-import { ADMINISTRATION_BRANDS } from 'src/layouts/typePath'
+import { ADMINISTRATION_EQUIPAMENTS } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { BRAND_FILTER, LAYOUT_TITLE_PAGE } from 'src/store/actions'
-import { BrandT } from 'src/store/Types'
+import { EQUIPAMENT_FILTER, LAYOUT_TITLE_PAGE } from 'src/store/actions'
+import { EquipamentT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaBrand } from '../schemaValidation'
 import { toApi } from './adapters'
@@ -22,7 +23,7 @@ const CreateBrand: React.FC = () => {
   const { apiAdmin } = useAdmin()
   const [idbrand, setIdBrand] = useState('')
 
-  const { control, handleSubmit, setValue } = useForm<BrandT>({
+  const { control, handleSubmit, setValue } = useForm<EquipamentT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaBrand),
   })
@@ -35,26 +36,29 @@ const CreateBrand: React.FC = () => {
     dispatch({
       type: LAYOUT_TITLE_PAGE,
       payload: {
-        title: 'Marca - Inclusão',
+        title: 'Equipamento - Edição',
       },
     })
   }, [])
 
   useEffect(() => {
-    const { description, _id } = location?.state
-    setValue('description', description)
+    const { equipamentName, _id, brand, model, serialNumber } = location?.state
+    setValue('equipamentName', equipamentName)
+    setValue('brand', brand)
+    setValue('model', model)
+    setValue('serialNumber', serialNumber)
     setIdBrand(_id)
   }, [])
 
-  const onSubmit = async (data: BrandT) => {
+  const onSubmit = async (data: EquipamentT) => {
     try {
-      await apiAdmin.put(`brands/${idbrand}`, toApi(data))
+      await apiAdmin.put(`equipaments/${idbrand}`, toApi(data))
       dispatch({
-        type: BRAND_FILTER,
+        type: EQUIPAMENT_FILTER,
         payload: {},
       })
-      history.push(ADMINISTRATION_BRANDS)
-      toast.success('Marca atualizada com sucesso.')
+      history.push(ADMINISTRATION_EQUIPAMENTS)
+      toast.success('Equipamento atualizada com sucesso.')
     } catch (error) {
       exceptionHandle(error)
     }
@@ -65,12 +69,50 @@ const CreateBrand: React.FC = () => {
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Row columns="1fr">
           <Controller
-            name="description"
+            name="equipamentName"
             control={control}
             defaultValue=""
             render={({ field, fieldState }) => (
               <InputText
-                label={'Nome da marca'}
+                label={'Equipamento'}
+                field={field}
+                fieldState={fieldState}
+              />
+            )}
+          />
+        </Row>
+        <Row columns="repeat(3, 1fr)" marginTop="10px">
+          <Controller
+            name="brand"
+            control={control}
+            defaultValue=""
+            render={({ field, fieldState }) => (
+              <InputText
+                label={'Marca'}
+                field={field}
+                fieldState={fieldState}
+              />
+            )}
+          />
+          <Controller
+            name="model"
+            control={control}
+            defaultValue=""
+            render={({ field, fieldState }) => (
+              <InputText
+                label={'Modelo'}
+                field={field}
+                fieldState={fieldState}
+              />
+            )}
+          />
+          <Controller
+            name="serialNumber"
+            control={control}
+            defaultValue=""
+            render={({ field, fieldState }) => (
+              <InputText
+                label={'Nº de série'}
                 field={field}
                 fieldState={fieldState}
               />
@@ -90,7 +132,7 @@ const CreateBrand: React.FC = () => {
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(ADMINISTRATION_BRANDS)}
+            onClick={() => history.push(ADMINISTRATION_EQUIPAMENTS)}
           />
         </ButtonContainer>
       </Form>

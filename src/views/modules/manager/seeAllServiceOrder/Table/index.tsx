@@ -13,7 +13,6 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { useModal } from 'src/hooks/useModal'
-import { ADMINISTRATION_MODELS_EDIT } from 'src/layouts/typePath'
 import { IStore, ServiceOrderT } from 'src/store/Types'
 import {
   IconButtonStyled,
@@ -70,9 +69,9 @@ const TableView: React.FC = () => {
                   <IconButtonStyled>
                     <EditIcon
                       color="primary"
-                      onClick={() =>
-                        history.push(ADMINISTRATION_MODELS_EDIT, row)
-                      }
+                      // onClick={() =>
+                      //   history.push(ADMINISTRATION_MODELS_EDIT, row)
+                      // }
                     />
                   </IconButtonStyled>
                   <IconButtonStyled>

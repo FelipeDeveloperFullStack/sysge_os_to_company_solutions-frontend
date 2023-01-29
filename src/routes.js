@@ -12,6 +12,9 @@ import {
   ADMINISTRATION_CLIENTS,
   ADMINISTRATION_CLIENTS_CREATE,
   ADMINISTRATION_CLIENTS_EDIT,
+  ADMINISTRATION_EQUIPAMENTS,
+  ADMINISTRATION_EQUIPAMENTS_CREATE,
+  ADMINISTRATION_EQUIPAMENTS_EDIT,
   ADMINISTRATION_MODELS,
   ADMINISTRATION_MODELS_CREATE,
   ADMINISTRATION_MODELS_EDIT,
@@ -152,40 +155,23 @@ const routes = [
       },
       {
         exact: true,
-        path: ADMINISTRATION_MODELS,
-        component: lazy(() => import('./views/modules/administration/models')),
-      },
-      {
-        exact: true,
-        path: ADMINISTRATION_MODELS_CREATE,
+        path: ADMINISTRATION_EQUIPAMENTS,
         component: lazy(() =>
-          import('./views/modules/administration/models/create'),
+          import('./views/modules/administration/equipaments'),
         ),
       },
       {
         exact: true,
-        path: ADMINISTRATION_MODELS_EDIT,
+        path: ADMINISTRATION_EQUIPAMENTS_CREATE,
         component: lazy(() =>
-          import('./views/modules/administration/models/edit'),
+          import('./views/modules/administration/equipaments/create'),
         ),
       },
       {
         exact: true,
-        path: ADMINISTRATION_BRANDS,
-        component: lazy(() => import('./views/modules/administration/brands')),
-      },
-      {
-        exact: true,
-        path: ADMINISTRATION_BRANDS_CREATE,
+        path: ADMINISTRATION_EQUIPAMENTS_EDIT,
         component: lazy(() =>
-          import('./views/modules/administration/brands/create'),
-        ),
-      },
-      {
-        exact: true,
-        path: ADMINISTRATION_BRANDS_EDIT,
-        component: lazy(() =>
-          import('./views/modules/administration/brands/edit'),
+          import('./views/modules/administration/equipaments/edit'),
         ),
       },
       {

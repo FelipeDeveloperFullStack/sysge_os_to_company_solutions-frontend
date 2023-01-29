@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import axios from 'axios'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import {
   Autocomplete,
@@ -25,9 +25,10 @@ import {
   SERVICE_FILTER,
   SERVICE_ORDER_CREATE,
 } from 'src/store/actions'
-import { ClientT, ServiceOrderT } from 'src/store/Types'
+import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaServiceOrder } from '../schemaValidation'
+import { toApi } from './adapters'
 import InputCurrency from './components/InputCurrency'
 import { useTotalSum } from './hooks/useTotalSum'
 import {
@@ -39,12 +40,16 @@ import {
 import LaudoTechnicalTable from './tables/laudoTechnical'
 import PiecesTable from './tables/pieces'
 import { Laudo } from './tables/type'
-import { ItemPieces, ItemServices } from './type'
+import { ItemPieces, ItemServices, OSData } from './type'
 
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
 
   const { apiAdmin } = useAdmin()
+
+  const equipaments = useSelector(
+    (state: IStore) => state.equipament?.equipaments,
+  )
 
   const { sum, resetTotal } = useTotalSum()
 
@@ -56,10 +61,31 @@ const CreateOrderService: React.FC = () => {
   const [optionClient, setOptionClient] = useState<AutocompleteOptions[]>(
     [] as AutocompleteOptions[],
   )
+  const [clients, setClients] = useState<ClientT[]>([] as ClientT[])
 
   const [client, setClient] = useState<AutocompleteOptions>(
     {} as AutocompleteOptions,
   )
+
+  const [equipamentsNameOptions, setEquipamentsNameOptions] = useState<
+    AutocompleteOptions[]
+  >([] as AutocompleteOptions[])
+  const [brandOptions, setBrandOptions] = useState<AutocompleteOptions[]>(
+    [] as AutocompleteOptions[],
+  )
+  const [modelOptions, setModelOptions] = useState<AutocompleteOptions[]>(
+    [] as AutocompleteOptions[],
+  )
+  const [serialNumberOptions, setSerialNumberOptions] = useState<
+    AutocompleteOptions[]
+  >([] as AutocompleteOptions[])
+
+  const [equipamentName, setEquipamentName] = useState(
+    {} as AutocompleteOptions,
+  )
+  const [brand, setBrand] = useState({} as AutocompleteOptions)
+  const [model, setModel] = useState({} as AutocompleteOptions)
+  const [serialNumber, setSerialNumber] = useState({} as AutocompleteOptions)
 
   const [manpower, setManpower] = useState('0.00')
   const [isDisableManPower, setIsDisableManPower] = useState(false)
@@ -75,9 +101,25 @@ const CreateOrderService: React.FC = () => {
   const [clickedClientName, setClickedClientName] = useState(
     {} as AutocompleteOptions,
   )
+  const [clickedEquipament, setClickedEquipament] = useState(
+    {} as AutocompleteOptions,
+  )
+  const [clickedBrand, setClickedBrand] = useState({} as AutocompleteOptions)
+  const [clickedModel, setClickedModel] = useState({} as AutocompleteOptions)
+  const [clickedSerialNumber, setClickedSerialNumber] = useState(
+    {} as AutocompleteOptions,
+  )
 
   const [validateErrorMessageClientName, setValidateErrorMessageClientName] =
     useState('')
+  const [validateErrorMessageEquipament, setValidateErrorMessageEquipament] =
+    useState('')
+  const [validateErrorMessageBrand, setValidateErrorMessageBrand] = useState('')
+  const [validateErrorMessageModel, setValidateErrorMessageModel] = useState('')
+  const [
+    validateErrorMessageSerialNumber,
+    setValidateErrorMessageSerialNumber,
+  ] = useState('')
   const [messageErrorTotal, setMessageErrorTotal] = useState('')
 
   const getDateCurrent = () => {
@@ -116,8 +158,55 @@ const CreateOrderService: React.FC = () => {
     }
   }, [clickedClientName])
 
+  useEffect(() => {
+    if (clickedEquipament) {
+      setValidateErrorMessageEquipament('')
+    }
+  }, [clickedEquipament])
+
+  useEffect(() => {
+    if (clickedBrand) {
+      setValidateErrorMessageBrand('')
+    }
+  }, [clickedBrand])
+
+  useEffect(() => {
+    if (clickedModel) {
+      setValidateErrorMessageModel('')
+    }
+  }, [clickedModel])
+
+  useEffect(() => {
+    if (clickedSerialNumber) {
+      setValidateErrorMessageSerialNumber('')
+    }
+  }, [clickedSerialNumber])
+
   const sumTotal = (pieces: ItemPieces[]) => {
     return pieces.reduce((acc, piece) => acc + piece.total, 0)
+  }
+
+  const getEquipaments = () => {
+    const resultEquipamentsName = equipaments.map((item) => ({
+      label: item.equipamentName,
+      value: item.equipamentName,
+    }))
+    const resultBrand = equipaments.map((item) => ({
+      label: item.brand,
+      value: item.brand,
+    }))
+    const model = equipaments.map((item) => ({
+      label: item.model,
+      value: item.model,
+    }))
+    const resultSerialNumber = equipaments.map((item) => ({
+      label: item.serialNumber,
+      value: item.serialNumber,
+    }))
+    setEquipamentsNameOptions(resultEquipamentsName)
+    setBrandOptions(resultBrand)
+    setModelOptions(model)
+    setSerialNumberOptions(resultSerialNumber)
   }
 
   useEffect(() => {
@@ -161,14 +250,35 @@ const CreateOrderService: React.FC = () => {
   }, [formState?.errors])
 
   useEffect(() => {
+    getEquipaments()
     resetTotal()
     setTotal('R$ 0,00')
   }, [])
 
-  const onSubmit = async (data: ServiceOrderT) => {
+  const onSubmit = async (data: ServiceOrderT & OSData) => {
     const { clean: totalCleanValue } = formatInputPrice(total)
     if (!clickedClientName?.label) {
       setValidateErrorMessageClientName('Selecione o cliente')
+      scroll(0, 0)
+      return
+    }
+    if (!clickedEquipament?.label) {
+      setValidateErrorMessageEquipament('Selecione o equipamento')
+      scroll(0, 0)
+      return
+    }
+    if (!clickedBrand?.label) {
+      setValidateErrorMessageBrand('Selecione a marca')
+      scroll(0, 0)
+      return
+    }
+    if (!clickedModel?.label) {
+      setValidateErrorMessageModel('Selecione o modelo')
+      scroll(0, 0)
+      return
+    }
+    if (!clickedSerialNumber?.label) {
+      setValidateErrorMessageSerialNumber('Selecione o número de série')
       scroll(0, 0)
       return
     }
@@ -181,31 +291,34 @@ const CreateOrderService: React.FC = () => {
     setValidateErrorMessageClientName('')
     setMessageErrorTotal('')
 
-    data = {
-      clientName: clickedClientName.label,
-      status: 'Pendente',
-      ...data,
-    }
-
     const OSData = {
       ...data,
+      client: clients.filter(
+        (clientItem) => clientItem._id === clickedClientName.value,
+      )[0],
+      status: 'Pendente',
       itemServices,
       laudos,
       itemPieces,
       total,
       manpower: manpower === '' ? 'R$ 0,00' : manpower,
+      equipament: equipamentName.label,
+      brand: brand.label,
+      model: model.label,
+      serialNumber: serialNumber.label,
     }
     console.log({ OSData })
 
     try {
-      //await apiAdmin.post(`orderServices`, toApi(data))
+      await apiAdmin.post(`orderServices`, toApi(OSData))
       dispatch({
         type: SERVICE_FILTER,
         payload: {},
       })
-      //history.push(MANAGER_SERVICE_ORDER_VIEW, { OSData })
+      history.push(MANAGER_SERVICE_ORDER_VIEW, { OSData })
       toast.success('Ordem de serviço cadastrada com sucesso.')
     } catch (error) {
+      console.log(error)
       exceptionHandle(error)
     }
   }
@@ -229,6 +342,7 @@ const CreateOrderService: React.FC = () => {
         }))
 
         setOptionClient(dataMapped)
+        setClients(data)
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Request canceled', error.message)
@@ -240,6 +354,81 @@ const CreateOrderService: React.FC = () => {
 
     return () => cancel && cancel()
   }, [client])
+
+  useEffect(() => {
+    if (!equipamentName.label?.toUpperCase()) {
+      setEquipamentsNameOptions(
+        equipaments.map((item) => ({
+          label: item.equipamentName,
+          value: item.equipamentName,
+        })),
+      )
+    } else {
+      const result = equipaments.filter((item) =>
+        item.equipamentName.includes(equipamentName.label?.toUpperCase()),
+      )
+      setEquipamentsNameOptions(
+        result.map((item) => ({
+          label: item.equipamentName,
+          value: item.equipamentName,
+        })),
+      )
+    }
+    if (!brand.label?.toUpperCase()) {
+      setBrandOptions(
+        equipaments.map((item) => ({
+          label: item.brand,
+          value: item.brand,
+        })),
+      )
+    } else {
+      const result = equipaments.filter((item) =>
+        item.brand.includes(brand.label?.toUpperCase()),
+      )
+      setBrandOptions(
+        result.map((item) => ({
+          label: item.brand,
+          value: item.brand,
+        })),
+      )
+    }
+    if (!model.label?.toUpperCase()) {
+      setModelOptions(
+        equipaments.map((item) => ({
+          label: item.model,
+          value: item.model,
+        })),
+      )
+    } else {
+      const result = equipaments.filter((item) =>
+        item.model.includes(model.label?.toUpperCase()),
+      )
+      setModelOptions(
+        result.map((item) => ({
+          label: item.model,
+          value: item.model,
+        })),
+      )
+    }
+    if (!serialNumber.label?.toUpperCase()) {
+      setSerialNumberOptions(
+        equipaments.map((item) => ({
+          label: item.serialNumber,
+          value: item.serialNumber,
+        })),
+      )
+    } else {
+      const result = equipaments.filter((item) =>
+        item.serialNumber.includes(serialNumber.label?.toUpperCase()),
+      )
+      setSerialNumberOptions(
+        result.map((item) => ({
+          label: item.serialNumber,
+          value: item.serialNumber,
+        })),
+      )
+    }
+  }, [equipamentName, brand, model, serialNumber])
 
   const handleKeyDownManPower = (
     event: React.KeyboardEvent<HTMLInputElement>,
@@ -307,53 +496,45 @@ const CreateOrderService: React.FC = () => {
           />
         </Row>
         <Row columns="repeat(4, 1fr)" marginTop="10px" gap={10}>
-          <Controller
-            name="equipament"
-            control={control}
-            defaultValue={''}
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Equipamento'}
-                field={field}
-                fieldState={fieldState}
-              />
-            )}
+          <Autocomplete
+            label="Equipamento"
+            value={equipamentName}
+            setValue={setEquipamentName}
+            options={equipamentsNameOptions}
+            setOptions={setEquipamentsNameOptions}
+            setClickedValue={setClickedEquipament}
+            hasError={!!validateErrorMessageEquipament}
+            error={validateErrorMessageEquipament}
           />
-          <Controller
-            name="brand"
-            control={control}
-            defaultValue={''}
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Marca'}
-                field={field}
-                fieldState={fieldState}
-              />
-            )}
+          <Autocomplete
+            label="Marca"
+            value={brand}
+            setValue={setBrand}
+            options={brandOptions}
+            setOptions={setBrandOptions}
+            setClickedValue={setClickedBrand}
+            hasError={!!validateErrorMessageBrand}
+            error={validateErrorMessageBrand}
           />
-          <Controller
-            name="model"
-            control={control}
-            defaultValue={''}
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Modelo'}
-                field={field}
-                fieldState={fieldState}
-              />
-            )}
+          <Autocomplete
+            label="Modelo"
+            value={model}
+            setValue={setModel}
+            options={modelOptions}
+            setOptions={setModelOptions}
+            setClickedValue={setClickedModel}
+            hasError={!!validateErrorMessageModel}
+            error={validateErrorMessageModel}
           />
-          <Controller
-            name="serialNumber"
-            control={control}
-            defaultValue={''}
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Nº Série'}
-                field={field}
-                fieldState={fieldState}
-              />
-            )}
+          <Autocomplete
+            label="Nº Série'"
+            value={serialNumber}
+            setValue={setSerialNumber}
+            options={serialNumberOptions}
+            setOptions={setSerialNumberOptions}
+            setClickedValue={setClickedSerialNumber}
+            hasError={!!validateErrorMessageSerialNumber}
+            error={validateErrorMessageSerialNumber}
           />
         </Row>
         <Row columns="repeat(4, 1fr)" marginTop="10px" gap={10}>

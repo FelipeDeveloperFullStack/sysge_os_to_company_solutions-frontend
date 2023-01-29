@@ -21,13 +21,9 @@ export interface IStore {
   createServiceOrder: {
     createServiceOrder: CreateServiceOrderT
   }
-  model: {
-    models: Array<ModelT>
-    modelFilter: ModelT
-  }
-  brand: {
-    brands: Array<BrandT>
-    brandFilter: BrandT
+  equipament: {
+    equipaments: Array<EquipamentT>
+    equipamentFilter: EquipamentT
   }
   layout: {
     title: string
@@ -112,8 +108,11 @@ export type CreateServiceOrderT = {
   total: number
 }
 
-export type BrandT = {
-  description?: string
+export type EquipamentT = {
+  equipamentName?: string
+  brand?: string
+  model?: string
+  serialNumber?: string
   _id?: string
 }
 

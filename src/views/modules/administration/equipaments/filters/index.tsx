@@ -3,28 +3,31 @@ import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { ADMINISTRATION_MODELS_CREATE } from 'src/layouts/typePath'
-import { MODEL_FILTER } from 'src/store/actions'
-import { ModelT } from 'src/store/Types'
+import { ADMINISTRATION_EQUIPAMENTS_CREATE } from 'src/layouts/typePath'
+import { EQUIPAMENT_FILTER } from 'src/store/actions'
+import { EquipamentT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import Button from '../../../../../components/Form/Button'
 import InputText from '../../../../../components/Form/InputText/index_old'
 import { ButtonContainer, Container } from './styles'
 
 const Filters: React.FC = () => {
-  const { control, handleSubmit, reset } = useForm<ModelT>()
+  const { control, handleSubmit, reset } = useForm<EquipamentT>()
 
   const history = useHistory()
 
   const dispatch = useDispatch()
 
-  const onSubmitFilter = (data: ModelT) => {
+  const onSubmitFilter = (data: EquipamentT) => {
     data = {
       ...data,
-      description: data.description,
+      equipamentName: data.equipamentName,
+      brand: data.brand,
+      model: data.model,
+      serialNumber: data.serialNumber,
     }
     dispatch({
-      type: MODEL_FILTER,
+      type: EQUIPAMENT_FILTER,
       payload: data,
     })
   }
@@ -32,8 +35,8 @@ const Filters: React.FC = () => {
   const clearFilter = () => {
     reset()
     dispatch({
-      type: MODEL_FILTER,
-      payload: {} as ModelT,
+      type: EQUIPAMENT_FILTER,
+      payload: {} as EquipamentT,
     })
   }
 
@@ -41,14 +44,50 @@ const Filters: React.FC = () => {
     <Container>
       <Paper elevation={1}>
         <form onSubmit={handleSubmit(onSubmitFilter)} autoComplete="off">
-          <Row columns="1fr" gap={10}>
+          <Row columns="repeat(4, 1fr)" gap={10}>
             <Controller
-              name="description"
+              name="equipamentName"
               control={control}
               defaultValue=""
               render={({ field, fieldState }) => (
                 <InputText
-                  label="Nome do modelo"
+                  label="Equipamento"
+                  field={field}
+                  fieldState={fieldState}
+                />
+              )}
+            />
+            <Controller
+              name="brand"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label="Marca"
+                  field={field}
+                  fieldState={fieldState}
+                />
+              )}
+            />
+            <Controller
+              name="model"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label="Modelo"
+                  field={field}
+                  fieldState={fieldState}
+                />
+              )}
+            />
+            <Controller
+              name="serialNumber"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label="Nº Série"
                   field={field}
                   fieldState={fieldState}
                 />
@@ -61,7 +100,7 @@ const Filters: React.FC = () => {
               variant="contained"
               size="medium"
               icon="add"
-              onClick={() => history.push(ADMINISTRATION_MODELS_CREATE)}
+              onClick={() => history.push(ADMINISTRATION_EQUIPAMENTS_CREATE)}
             />
             <div>
               <Button

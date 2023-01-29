@@ -4,10 +4,10 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import layoutReducer from 'src/store/Modules/Layout'
 import accountReducer from './accountReducer'
-import brandReducer from './Modules/Brand'
+import equipamentReducer from './Modules/Brand'
 import clientReducer from './Modules/Client'
 import createServiceOrderReducer from './Modules/CreateServiceOrder'
-import modelReducer from './Modules/Model'
+// import modelReducer from './Modules/Model' Don't use it
 import pieceReducer from './Modules/Piece'
 import serviceReducer from './Modules/Service'
 import serviceOrderReducer from './Modules/ServiceOrder'
@@ -45,9 +45,12 @@ const reducers = combineReducers({
     settingPersistReducer({ key: 'service' }),
     serviceReducer,
   ),
-  model: persistReducer(settingPersistReducer({ key: 'model' }), modelReducer),
+  //model: persistReducer(settingPersistReducer({ key: 'model' }), modelReducer),
 
-  brand: persistReducer(settingPersistReducer({ key: 'brand' }), brandReducer),
+  equipament: persistReducer(
+    settingPersistReducer({ key: 'equipament' }),
+    equipamentReducer,
+  ),
 
   serviceOrder: persistReducer(
     settingPersistReducer({ key: 'serviceOrder' }),
