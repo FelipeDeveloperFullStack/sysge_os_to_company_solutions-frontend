@@ -1,3 +1,5 @@
+import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
+
 export interface IStore {
   account: IAccount
   form: any
@@ -15,8 +17,8 @@ export interface IStore {
     serviceFilter: ServiceT
   }
   serviceOrder: {
-    serviceOrders: Array<ServiceOrderT>
-    serviceOrderFilter: ServiceOrderT
+    serviceOrders: Array<OSData>
+    serviceOrderFilter: OSData
   }
   createServiceOrder: {
     createServiceOrder: CreateServiceOrderT

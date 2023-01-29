@@ -1,13 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { useAdmin } from 'src/services/useAdmin'
 import {
   CLIENT_SEE_ALL,
   EQUIPAMENT_SEE_ALL,
   PIECE_SEE_ALL,
+  SERVICE_ORDER_SEE_ALL,
   SERVICE_SEE_ALL,
 } from 'src/store/actions'
+import { IStore } from 'src/store/Types'
 import { fromApi } from '../../administration/services/adapters'
 import Filters from './filters'
 import TableView from './Table'
@@ -17,6 +20,10 @@ type Props = {}
 const SeeAllServiceOrder = (props: Props) => {
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
+  const serviceOrderFiltered = useSelector(
+    (state: IStore) => state.serviceOrder.serviceOrderFilter,
+  )
+  const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
 
   const getServices = async () => {
     try {
@@ -79,17 +86,17 @@ const SeeAllServiceOrder = (props: Props) => {
   }
   const getOrderServices = async () => {
     try {
-      const { data } = await apiAdmin.get(`orderServices`, {
+      const response = await apiAdmin.get(`orderServices`, {
         params: {
           clientName: undefined,
           osNumber: undefined,
         },
       })
-      console.log({ data })
-      // dispatch({
-      //   type: EQUIPAMENT_SEE_ALL,
-      //   payload: await fromApi(response),
-      // })
+      console.log({ data: response.data })
+      dispatch({
+        type: SERVICE_ORDER_SEE_ALL,
+        payload: await fromApi(response),
+      })
     } catch (error) {
       exceptionHandle(
         error,
@@ -106,7 +113,7 @@ const SeeAllServiceOrder = (props: Props) => {
 
   useEffect(() => {
     getOrderServices()
-  }, [])
+  }, [makeRequest, serviceOrderFiltered])
 
   return (
     <>

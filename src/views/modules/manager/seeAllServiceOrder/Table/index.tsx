@@ -13,13 +13,16 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { useModal } from 'src/hooks/useModal'
-import { IStore, ServiceOrderT } from 'src/store/Types'
+import { IStore } from 'src/store/Types'
+import Chip from '@mui/material/Chip'
+import { Row } from 'src/styles'
 import {
   IconButtonStyled,
   TableCellColumnStyled,
 } from '../../../../modules/administration/connections/Table/Styles'
 import RemoveConfirmation from '../messages/RemoveConfirmation'
 import { columns } from './Columns'
+import { OSData } from '../../serviceOrder/create/type'
 
 const TableView: React.FC = () => {
   const serviceOrdersStore = useSelector(
@@ -28,7 +31,7 @@ const TableView: React.FC = () => {
   const history = useHistory()
   const { showMessage } = useModal()
 
-  const removeClient = (serviceOrder: ServiceOrderT) => {
+  const removeClient = (serviceOrder: OSData) => {
     showMessage(RemoveConfirmation, serviceOrder)
   }
 
@@ -63,7 +66,27 @@ const TableView: React.FC = () => {
             serviceOrdersStore?.map((row) => (
               <TableRow key={row._id}>
                 {columns.map((column) => {
-                  return <TableCell>{row[column.field]}</TableCell>
+                  console.log(row)
+                  return column.field === 'clientName' ? (
+                    <TableCell>
+                      <Row display="flex" flexDirection="column" gap={5}>
+                        <div>{row['client'].name}</div>
+                        <div>
+                          <strong>Total:</strong> {row['total']}
+                        </div>
+                      </Row>
+                    </TableCell>
+                  ) : column.field === 'status' ? (
+                    <TableCell>
+                      {row[column.field] === 'Pendente' ? (
+                        <Chip label={row[column.field]} color="warning" />
+                      ) : (
+                        <Chip label={row[column.field]} color="success" />
+                      )}
+                    </TableCell>
+                  ) : (
+                    <TableCell>{row[column.field]}</TableCell>
+                  )
                 })}
                 <TableCell>
                   <IconButtonStyled>

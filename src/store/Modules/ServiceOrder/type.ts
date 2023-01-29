@@ -1,6 +1,6 @@
-import { ServiceOrderT } from 'src/store/Types'
+import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
 
 export type Action = {
   type: string
-  payload: ServiceOrderT
+  payload: OSData
 }

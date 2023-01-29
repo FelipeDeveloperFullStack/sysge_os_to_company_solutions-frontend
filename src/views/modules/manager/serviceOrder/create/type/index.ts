@@ -35,4 +35,5 @@ export type OSData = {
   itemPieces: ItemPieces[]
   total: string
   manpower: string
+  _id?: string
 }

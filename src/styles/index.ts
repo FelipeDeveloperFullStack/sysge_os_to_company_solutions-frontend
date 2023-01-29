@@ -16,10 +16,12 @@ type RowProp = {
   left?: string
   right?: string
   height?: string
+  flexDirection?: 'row' | 'column'
 }
 
 export const Row = styled.div<RowProp>`
   display: ${({ display }) => (display ? display : 'grid')};
+  flex-direction: ${({ flexDirection }) => flexDirection};
   margin-top: ${({ marginTop }) => (marginTop ? marginTop : '0px')};
   margin-left: ${({ marginLeft }) => (marginLeft ? marginLeft : '0px')};
   margin-right: ${({ marginRight }) => (marginRight ? marginRight : '0px')};
