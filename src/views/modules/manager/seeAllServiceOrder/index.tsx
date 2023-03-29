@@ -92,7 +92,6 @@ const SeeAllServiceOrder = (props: Props) => {
           osNumber: undefined,
         },
       })
-      console.log({ data: response.data })
       dispatch({
         type: SERVICE_ORDER_SEE_ALL,
         payload: await fromApi(response),

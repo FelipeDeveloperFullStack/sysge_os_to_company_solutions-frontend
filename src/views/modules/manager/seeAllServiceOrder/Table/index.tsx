@@ -66,7 +66,6 @@ const TableView: React.FC = () => {
             serviceOrdersStore?.map((row) => (
               <TableRow key={row._id}>
                 {columns.map((column) => {
-                  console.log(row)
                   return column.field === 'clientName' ? (
                     <TableCell>
                       <Row display="flex" flexDirection="column" gap={5}>

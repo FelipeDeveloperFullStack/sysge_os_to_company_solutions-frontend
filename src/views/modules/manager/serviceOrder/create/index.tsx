@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
+import useLocalStorage from 'use-local-storage'
 import axios from 'axios'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -29,7 +30,7 @@ import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaServiceOrder } from '../schemaValidation'
 import { toApi } from './adapters'
-import InputCurrency from './components/InputCurrency'
+import InputText from './components/InputCurrency'
 import { useTotalSum } from './hooks/useTotalSum'
 import {
   ButtonContainer,
@@ -109,7 +110,7 @@ const CreateOrderService: React.FC = () => {
   const [clickedSerialNumber, setClickedSerialNumber] = useState(
     {} as AutocompleteOptions,
   )
-
+  const [osNumber, setOsNumber] = useLocalStorage('osNumber', '')
   const [validateErrorMessageClientName, setValidateErrorMessageClientName] =
     useState('')
   const [validateErrorMessageEquipament, setValidateErrorMessageEquipament] =
@@ -249,7 +250,26 @@ const CreateOrderService: React.FC = () => {
     }
   }, [formState?.errors])
 
+  const getNextOsNumber = (data: { osNumber: string }[]): string => {
+    const highestNumber = data.reduce((prev, current) => {
+      const currentNumber = parseInt(current.osNumber)
+      return currentNumber > prev ? currentNumber : prev
+    }, 0)
+    return highestNumber ? (highestNumber + 1).toString() : '1000'
+  }
+
+  const getOSNumber = async () => {
+    try {
+      const { data } = await apiAdmin.get(`orderServices`)
+      setOsNumber(getNextOsNumber(data))
+    } catch (error) {
+      console.log(error)
+      exceptionHandle(error)
+    }
+  }
+
   useEffect(() => {
+    getOSNumber()
     getEquipaments()
     resetTotal()
     setTotal('R$ 0,00')
@@ -307,10 +327,9 @@ const CreateOrderService: React.FC = () => {
       model: model.label,
       serialNumber: serialNumber.label,
     }
-    console.log({ OSData })
 
     try {
-      await apiAdmin.post(`orderServices`, toApi(OSData))
+      await apiAdmin.post(`orderServices`, toApi(OSData, osNumber))
       dispatch({
         type: SERVICE_FILTER,
         payload: {},
@@ -458,18 +477,12 @@ const CreateOrderService: React.FC = () => {
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Row columns="1fr 6fr 1fr" gap={10}>
-          <Controller
-            name="osNumber"
-            control={control}
-            defaultValue="6540"
-            render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
-                label={'Nº OS'}
-                field={field}
-                fieldState={fieldState}
-                disabled
-              />
-            )}
+          <InputText
+            type="text"
+            label="Nº OS"
+            isCurrencyNumberOnly
+            value={osNumber}
+            disabled
           />
           <Autocomplete
             label="Cliente"
@@ -621,7 +634,7 @@ const CreateOrderService: React.FC = () => {
           <PiecesTable setItemPieces={setItemPieces} itemPieces={itemPieces} />
         </Row>
         <Row columns="1fr 1fr" marginTop="10px">
-          <InputCurrency
+          <InputText
             type="text"
             label="Mão de Obra"
             mask={''}
@@ -633,7 +646,7 @@ const CreateOrderService: React.FC = () => {
             onKeyDown={handleKeyDownManPower}
             disabled={isDisableManPower}
           />
-          <InputCurrency
+          <InputText
             type="text"
             label="Total"
             value={total}

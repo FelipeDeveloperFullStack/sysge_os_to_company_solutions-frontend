@@ -28,7 +28,7 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   [x: string]: any
 }
 
-const InputCurrency: React.FC<InputTextProps> = ({
+const InputText: React.FC<InputTextProps> = ({
   setValue,
   setPrice,
   label,
@@ -104,4 +104,4 @@ const InputCurrency: React.FC<InputTextProps> = ({
   )
 }
 
-export default InputCurrency
+export default InputText

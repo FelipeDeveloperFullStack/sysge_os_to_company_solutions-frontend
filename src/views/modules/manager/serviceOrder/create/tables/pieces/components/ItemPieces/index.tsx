@@ -8,7 +8,7 @@ import {
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { IStore, ServiceT } from 'src/store/Types'
 import { Row } from 'src/styles'
-import InputCurrency from '../../../../components/InputCurrency'
+import InputText from '../../../../components/InputCurrency'
 import { useTotalSum } from '../../../../hooks/useTotalSum'
 import hasNumber from 'src/helpers/hasNumber'
 import axios from 'axios'
@@ -190,7 +190,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
         error={msgErrorAutoComplete}
         onSelect={onHandleSelectedAutocomplete}
       />
-      <InputCurrency
+      <InputText
         value={qtdeValue}
         mask={''}
         disabled={
@@ -202,7 +202,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
         hasError={!!msgError}
         msgError={msgError}
       />
-      <InputCurrency
+      <InputText
         type="text"
         label={''}
         value={valueUnit}
@@ -211,7 +211,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
         onKeyUp={() => onFormatterPrice(valueUnit)}
         disabled
       />
-      <InputCurrency
+      <InputText
         type="text"
         label={''}
         value={totalValue}

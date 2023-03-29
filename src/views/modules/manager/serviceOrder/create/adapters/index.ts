@@ -1,9 +1,9 @@
 import { OSData } from '../type'
 
-export const toApi = (data: OSData): OSData => {
+export const toApi = (data: OSData, osNumber: string): any => {
   return {
     status: data.status || null,
-    osNumber: data.osNumber || null,
+    osNumber: osNumber,
     dateOS: data.dateOS || null,
     equipament: data.equipament || null,
     brand: data.brand || null,
