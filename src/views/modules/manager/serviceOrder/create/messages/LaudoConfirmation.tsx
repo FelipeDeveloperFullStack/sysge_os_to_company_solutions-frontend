@@ -6,6 +6,7 @@ import Button from 'src/components/Form/Button'
 import { useModal } from 'src/hooks/useModal'
 import { IStore } from 'src/store/Types'
 import { Row } from 'src/styles'
+import { Laudo } from '../tables/type'
 import { ButtonGroup, Container, FormControlLabelStyled, Text } from './style'
 
 type LaudoConfirmationProps = {

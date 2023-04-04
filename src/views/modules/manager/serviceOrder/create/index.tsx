@@ -13,19 +13,11 @@ import {
 } from 'src/components/Form/Autocomplete'
 import Button from 'src/components/Form/Button'
 import { Select } from 'src/components/Widgets/Select'
-import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatPrice, formatInputPrice } from 'src/helpers/formatPrice'
-import {
-  MANAGER_SERVICE_ORDER,
-  MANAGER_SERVICE_ORDER_VIEW,
-} from 'src/layouts/typePath'
+import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import {
-  LAYOUT_TITLE_PAGE,
-  SERVICE_FILTER,
-  SERVICE_ORDER_CREATE,
-} from 'src/store/actions'
+import { LAYOUT_TITLE_PAGE, SERVICE_ORDER_CREATE } from 'src/store/actions'
 import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaServiceOrder } from '../schemaValidation'
@@ -42,6 +34,9 @@ import LaudoTechnicalTable from './tables/laudoTechnical'
 import PiecesTable from './tables/pieces'
 import { Laudo } from './tables/type'
 import { ItemPieces, ItemServices, OSData } from './type'
+import { LaunchFinancial } from './messages/LaunchFinancial'
+import { useModal } from 'src/hooks/useModal'
+import moment from 'moment'
 
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
@@ -52,12 +47,16 @@ const CreateOrderService: React.FC = () => {
     (state: IStore) => state.equipament?.equipaments,
   )
 
-  const { sum, resetTotal } = useTotalSum()
+  const { resetTotal } = useTotalSum()
+  const { showMessage } = useModal()
+  const [makeClearField, setMakeClearField] = useState(0)
 
-  const { control, handleSubmit, formState } = useForm<ServiceOrderT>({
-    shouldUnregister: false,
-    resolver: yupResolver(schemaServiceOrder),
-  })
+  const { control, handleSubmit, formState, setValue } = useForm<ServiceOrderT>(
+    {
+      shouldUnregister: false,
+      resolver: yupResolver(schemaServiceOrder),
+    },
+  )
 
   const [optionClient, setOptionClient] = useState<AutocompleteOptions[]>(
     [] as AutocompleteOptions[],
@@ -124,9 +123,9 @@ const CreateOrderService: React.FC = () => {
   const [messageErrorTotal, setMessageErrorTotal] = useState('')
 
   const getDateCurrent = () => {
-    return `${new Date().getDate()}/${
-      new Date().getMonth() + 1
-    }/${new Date().getFullYear()}`
+    const dataAtual = moment()
+    const formato = 'DD/MM/YYYY'
+    return dataAtual.format(formato)
   }
 
   const history = useHistory()
@@ -275,6 +274,26 @@ const CreateOrderService: React.FC = () => {
     setTotal('R$ 0,00')
   }, [])
 
+  // const resetAllField = () => {
+  //   getOSNumber()
+  //   setTotal('R$ 0,00')
+  //   resetTotal()
+  //   setClient({} as AutocompleteOptions)
+  //   setEquipamentName({} as AutocompleteOptions)
+  //   setBrand({} as AutocompleteOptions)
+  //   setModel({} as AutocompleteOptions)
+  //   setSerialNumber({} as AutocompleteOptions)
+  //   setValue('cable', '')
+  //   setValue('charger', '')
+  //   setValue('breaked', '')
+  //   setValue('detail', '')
+  //   setItemServices([] as ItemServices[])
+  //   setItemPieces([] as ItemPieces[])
+  //   setManpower('')
+  //   setMakeClearField(Math.random())
+  //   scroll(0, 0)
+  // }
+
   const onSubmit = async (data: ServiceOrderT & OSData) => {
     const { clean: totalCleanValue } = formatInputPrice(total)
     if (!clickedClientName?.label) {
@@ -326,16 +345,23 @@ const CreateOrderService: React.FC = () => {
       brand: brand.label,
       model: model.label,
       serialNumber: serialNumber.label,
+      osNumber,
     }
 
     try {
-      await apiAdmin.post(`orderServices`, toApi(OSData, osNumber))
-      dispatch({
-        type: SERVICE_FILTER,
-        payload: {},
+      const resultToApi = toApi(OSData, osNumber)
+      // await apiAdmin.post(`orderServices`, toApi(OSData, osNumber))
+      // dispatch({
+      //   type: SERVICE_FILTER,
+      //   payload: {},
+      // })
+      // history.push(MANAGER_SERVICE_ORDER_VIEW, { OSData })
+      // toast.success('Ordem de serviço cadastrada com sucesso.')
+      showMessage(LaunchFinancial, {
+        data: resultToApi,
+        history,
+        // resetAllField,
       })
-      history.push(MANAGER_SERVICE_ORDER_VIEW, { OSData })
-      toast.success('Ordem de serviço cadastrada com sucesso.')
     } catch (error) {
       console.log(error)
       exceptionHandle(error)
@@ -659,10 +685,10 @@ const CreateOrderService: React.FC = () => {
         </Row>
         <ButtonContainer>
           <Button
-            textButton="Gerar ordem de serviço"
+            textButton="Salvar"
             variant="contained"
             size="large"
-            icon="add"
+            icon="add3"
             type="submit"
           />
           <Button

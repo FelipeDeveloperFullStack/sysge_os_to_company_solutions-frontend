@@ -77,7 +77,7 @@ const TableView: React.FC = () => {
                     </TableCell>
                   ) : column.field === 'status' ? (
                     <TableCell>
-                      {row[column.field] === 'Pendente' ? (
+                      {row[column.field] === 'PENDENTE' ? (
                         <Chip label={row[column.field]} color="warning" />
                       ) : (
                         <Chip label={row[column.field]} color="success" />

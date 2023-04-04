@@ -1,6 +1,6 @@
 import { OSData } from '../type'
 
-export const toApi = (data: OSData, osNumber: string): any => {
+export const toApi = (data: OSData, osNumber: string): OSData => {
   return {
     status: data.status || null,
     osNumber: osNumber,

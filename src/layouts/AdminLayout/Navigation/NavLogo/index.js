@@ -20,7 +20,7 @@ const NavLogo = () => {
           <div className="b-bg">
             <i className="feather icon-trending-up" />
           </div>
-          <span className="b-title">OS Manager</span>
+          <span className="b-title">Solution</span>
         </Link>
         <Link
           to="#"

@@ -27,6 +27,7 @@ const Breadcrumb = () => {
         title = layout?.title
       }
     })
+    // console.log({ title, pathName, sufixPath })
     return title
   }
 

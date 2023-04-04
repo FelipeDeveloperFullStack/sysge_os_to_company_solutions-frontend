@@ -4,7 +4,7 @@ import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import { useGeneratePDF } from 'src/hooks/useGeneratePDF'
 import { Row } from 'src/styles'
 import Logo from './assets/images/logo.png'
-import { OSData } from './create/type'
+import { ItemPieces, ItemServices, OSData } from './create/type'
 import { formatPrice } from 'src/helpers/formatPrice'
 import Fab from '@mui/material/Fab'
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
@@ -29,6 +29,7 @@ import {
   PaperStyled,
   Text,
 } from './style'
+import { Laudo } from './create/tables/type'
 
 const ServiceOrder: React.FC = () => {
   const exportPDF = useGeneratePDF()
@@ -39,11 +40,32 @@ const ServiceOrder: React.FC = () => {
 
   const handleClickToGenerateOS = () => {
     exportPDF(
-      `Cliente_${data.client.name}_Ordem_de_Servico_N_${data.osNumber}`,
+      `Cliente_${data.client.name}_Ordem_de_Servico_N_${data.osNumber}_NSerie_${data.serialNumber}`,
       'pdf',
       'open_new_window',
     )
     setIsOsGenerated(true)
+  }
+
+  const resultNewArray = (data: any[]) => {
+    const lengthData = 6 - data.length
+    if (lengthData < 6) {
+      return [...data, ...new Array(lengthData).fill('')]
+    } else {
+      return data
+    }
+  }
+
+  const resultRowItemServices = (data: any[]): ItemServices[] => {
+    return resultNewArray(data)
+  }
+
+  const resultRowLaudos = (data: any[]): Laudo[] => {
+    return resultNewArray(data)
+  }
+
+  const resultRowItemPieces = (data: any[]): ItemPieces[] => {
+    return resultNewArray(data)
   }
 
   return (
@@ -218,7 +240,7 @@ const ServiceOrder: React.FC = () => {
                   Total
                 </Text>
               </Row>
-              {data.itemServices.map((item) => {
+              {resultRowItemServices(data.itemServices).map((item) => {
                 return (
                   <Row
                     columns="8fr 1fr 1fr 1fr"
@@ -227,9 +249,12 @@ const ServiceOrder: React.FC = () => {
                     height="27px"
                     gap={5}
                   >
-                    <Text marginTop="20px">{item.description}</Text>
+                    <Text marginTop="20px" height="19px">
+                      {item.description}
+                    </Text>
                     <Text
                       marginTop="20px"
+                      height="19px"
                       display="flex"
                       justifyContent="center"
                     >
@@ -237,12 +262,15 @@ const ServiceOrder: React.FC = () => {
                     </Text>
                     <Text
                       marginTop="20px"
+                      height="19px"
                       display="flex"
                       justifyContent="center"
                     >
                       {formatPrice(item.unit)}
                     </Text>
-                    <Text marginTop="20px">{formatPrice(item.total)}</Text>
+                    <Text marginTop="20px" height="19px">
+                      {formatPrice(item.total)}
+                    </Text>
                   </Row>
                 )
               })}
@@ -258,10 +286,10 @@ const ServiceOrder: React.FC = () => {
               >
                 Laudo Técnico
               </Text>
-              {data.laudos.map((item) => {
+              {resultRowLaudos(data.laudos).map((item) => {
                 return (
                   <Row columns="8fr" marginLeft="15px" height="27px">
-                    <Text marginTop="20px" marginRight="15px">
+                    <Text marginTop="20px" height="19px" marginRight="15px">
                       {item.description}
                     </Text>
                   </Row>
@@ -317,7 +345,7 @@ const ServiceOrder: React.FC = () => {
                   Total
                 </Text>
               </Row>
-              {data.itemPieces.map((item) => {
+              {resultRowItemPieces(data.itemPieces).map((item) => {
                 return (
                   <Row
                     columns="8fr 1fr 1fr 1fr"
@@ -326,9 +354,12 @@ const ServiceOrder: React.FC = () => {
                     height="27px"
                     gap={5}
                   >
-                    <Text marginTop="20px">{item.description}</Text>
+                    <Text marginTop="20px" height="19px">
+                      {item.description}
+                    </Text>
                     <Text
                       marginTop="20px"
+                      height="19px"
                       display="flex"
                       justifyContent="center"
                     >
@@ -336,12 +367,15 @@ const ServiceOrder: React.FC = () => {
                     </Text>
                     <Text
                       marginTop="20px"
+                      height="19px"
                       display="flex"
                       justifyContent="center"
                     >
                       {formatPrice(item.unit)}
                     </Text>
-                    <Text marginTop="20px">{formatPrice(item.total)}</Text>
+                    <Text marginTop="20px" height="19px">
+                      {formatPrice(item.total)}
+                    </Text>
                   </Row>
                 )
               })}

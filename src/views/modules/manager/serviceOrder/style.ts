@@ -14,6 +14,7 @@ type TextClientProps = {
   marginRight?: string
   marginBottom?: string
   width?: string
+  height?: string
   borderTop?: string
   display?: string
   justifyContent?: string
@@ -166,6 +167,7 @@ export const Text = styled.section<TextClientProps>`
   margin-right: ${({ marginRight }) => (marginRight ? marginRight : '0px')};
   margin-bottom: ${({ marginBottom }) => (marginBottom ? marginBottom : '0px')};
   width: ${({ width }) => width};
+  height: ${({ height }) => height};
   border-top: ${({ borderTop }) => borderTop};
   display: ${({ display }) => display};
   justify-content: ${({ justifyContent }) => justifyContent};

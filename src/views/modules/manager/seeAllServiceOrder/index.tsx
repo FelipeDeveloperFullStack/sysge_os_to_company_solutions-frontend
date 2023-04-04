@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { useAdmin } from 'src/services/useAdmin'
 import {
-  CLIENT_SEE_ALL,
   EQUIPAMENT_SEE_ALL,
   PIECE_SEE_ALL,
   SERVICE_ORDER_SEE_ALL,

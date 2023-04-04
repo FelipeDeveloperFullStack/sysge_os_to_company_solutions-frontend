@@ -1,4 +1,3 @@
-import { AutocompleteOptions } from 'src/components/Form/Autocomplete'
 import { ClientT } from 'src/store/Types'
 import { Laudo } from '../tables/type'
 
@@ -34,5 +33,6 @@ export type OSData = {
   itemPieces: ItemPieces[]
   total: string
   manpower: string
+  osNumber: string
   _id?: string
 }

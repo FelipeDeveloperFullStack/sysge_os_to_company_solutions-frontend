@@ -63,6 +63,8 @@ const InputText: React.FC<InputTextProps> = ({
     if (isCurrencyNumberOnly) {
       if (hasNumber(value)) {
         setValue(value)
+      } else {
+        setValue(value)
       }
     } else {
       const { formated } = formatInputPrice(value)

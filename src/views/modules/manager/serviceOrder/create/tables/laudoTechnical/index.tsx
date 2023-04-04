@@ -26,8 +26,7 @@ const TableView: React.FC<TableViewProps> = ({
   laudos,
   setLaudos,
 }) => {
-  const { showMessage } = useModal()
-
+  const { showMessage, showSimple } = useModal()
   const [clickedValue, setClickedValue] = useState({} as AutocompleteOptions)
   const [laudosList, setLaudosList] = React.useState<Laudo[]>([] as Laudo[])
 
@@ -38,23 +37,39 @@ const TableView: React.FC<TableViewProps> = ({
       )[0],
   )
 
+  const checkLengthLaudos = (laudos: Laudo[]): boolean => {
+    if (laudos.length > 5) {
+      showSimple.warning('Não é possível adicionar mais de 6 laudos.')
+      return false
+    } else {
+      return true
+    }
+  }
+
   useEffect(() => {
     if (clickedValue) {
       if (!!Object.keys(clickedValue).length) {
         if (services.laudos.length > 1) {
-          showMessage(LaudoConfirmation, {
-            clickedValue,
-            setLaudosList,
-            laudosList,
+          setLaudos((previousState) => {
+            if (checkLengthLaudos(previousState)) {
+              showMessage(LaudoConfirmation, {
+                clickedValue,
+                setLaudosList,
+                laudosList,
+              })
+            }
+            return previousState
           })
         } else if (services.laudos.length === 1) {
           setLaudos((laudos) => [
             ...laudos,
-            {
-              checked: true,
-              description: String(services.laudos[0]).toUpperCase(),
-              service: clickedValue.label,
-            },
+            laudos.length <= 5
+              ? {
+                  checked: true,
+                  description: String(services.laudos[0]).toUpperCase(),
+                  service: clickedValue.label,
+                }
+              : undefined,
           ])
         }
       }

@@ -25,3 +25,37 @@ export const Text = styled.section<{ bold?: boolean }>`
 export const FormControlLabelStyled = styled(FormControlLabel)`
   width: 695px;
 `
+
+export const Modal = styled.div`
+  width: 555px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  > div:first-child {
+    font-size: 18px;
+  }
+  > section {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+`
+
+export const ButtonContainer = styled.div`
+  display: grid;
+  gap: 95px;
+  grid-template-columns: repeat(2, 1fr);
+`
+
+export const ButtonLaunchFinancialConfirmationContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+`
+
+export const LaunchFinancialConfirmationContainer = styled.div`
+  > div:first-child {
+    font-size: 19px;
+  }
+`
