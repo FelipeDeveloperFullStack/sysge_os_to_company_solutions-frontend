@@ -97,7 +97,7 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
       <ButtonContainer>
         <Button
           textButton="Lançar Financeiro"
-          variant="contained"
+          variant="outlined"
           size="large"
           icon="add2"
           onClick={saveOS}

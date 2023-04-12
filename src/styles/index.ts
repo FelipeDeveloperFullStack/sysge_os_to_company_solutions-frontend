@@ -5,6 +5,7 @@ type RowProp = {
   columns?: string
   display?: string
   justifyContent?: string
+  alignItems?: string
   marginTop?: string
   marginLeft?: string
   marginRight?: string
@@ -29,6 +30,7 @@ export const Row = styled.div<RowProp>`
   position: ${({ position }) => position};
   top: ${({ top }) => top};
   left: ${({ left }) => left};
+  align-items: ${({ alignItems }) => alignItems};
   right: ${({ right }) => right};
   bottom: ${({ bottom }) => bottom};
   height: ${({ height }) => height};

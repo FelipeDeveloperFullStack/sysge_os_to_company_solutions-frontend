@@ -29,8 +29,12 @@ const MessageConfirmation: React.FC = () => {
       </p>
 
       <ButtonGroup>
-        <Button variant='contained' onClick={onContinueEdting} textButton='Não'/>
-        <Button variant='outlined' onClick={onCancelEdting} textButton='Sim'/>
+        <Button
+          variant="outlined"
+          onClick={onContinueEdting}
+          textButton="Não"
+        />
+        <Button variant="outlined" onClick={onCancelEdting} textButton="Sim" />
       </ButtonGroup>
     </Container>
   )

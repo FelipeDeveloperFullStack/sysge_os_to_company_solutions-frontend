@@ -686,7 +686,7 @@ const CreateOrderService: React.FC = () => {
         <ButtonContainer>
           <Button
             textButton="Salvar"
-            variant="contained"
+            variant="outlined"
             size="large"
             icon="add3"
             type="submit"

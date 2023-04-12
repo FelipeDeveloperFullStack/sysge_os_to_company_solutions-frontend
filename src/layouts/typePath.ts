@@ -21,5 +21,7 @@ export const MANAGER_SERVICE_ORDER = '/manager/service-order'
 export const MANAGER_SERVICE_ORDER_VIEW = '/manager/service-order/view'
 export const MANAGER_SERVICE_ORDER_CREATE = '/manager/service-order/create'
 export const MANAGER_SERVICE_ORDER_EDIT = '/manager/service-order/edit'
+// Financial
+export const FINANCIAL_SEE_ALL_INCOME = '/financial/income/SeeAllIncome'
 // Dashboard
 export const DASHBOARD = '/app/dashboard/default'

@@ -45,7 +45,12 @@ export const SimpleModal: React.FC<ISimpleModal> = ({
     <Container style={styles}>
       <img src={icons[type]} />
       <p>{message}</p>
-      <Button onClick={onOk} color='success' variant='contained' textButton='Ok'/>
+      <Button
+        onClick={onOk}
+        color="success"
+        variant="outlined"
+        textButton="Ok"
+      />
     </Container>
   )
 }

@@ -58,7 +58,7 @@ const Filters: React.FC = () => {
           <ButtonContainer>
             <Button
               textButton="Incluir"
-              variant="contained"
+              variant="outlined"
               size="medium"
               icon="add"
               onClick={() => history.push(ADMINISTRATION_SERVICES_CREATE)}
@@ -72,7 +72,7 @@ const Filters: React.FC = () => {
               />
               <Button
                 textButton="Filtrar Resultado"
-                variant="contained"
+                variant="outlined"
                 type="submit"
               />
             </div>

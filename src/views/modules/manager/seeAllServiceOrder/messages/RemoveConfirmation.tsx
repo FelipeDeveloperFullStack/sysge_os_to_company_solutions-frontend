@@ -52,7 +52,7 @@ const RemoveConfirmation: React.FC<OSData> = ({
       <ButtonGroup>
         <Button
           textButton="Deletar"
-          variant="contained"
+          variant="outlined"
           color="error"
           icon="delete"
           onClick={() => deleteModel()}

@@ -25,7 +25,7 @@ import {
   CONNECTION_SERVICE_GETCONNECTION_CLIENT_READY,
   CONNECTION_WHATSAPP_SERVICE_CREATE,
   EVENTS_SERVICE_CONNECT,
-  CONNECTION_SERVICE_GETCONNECTION_CLIENT_AUTO_CLOSE_CALLED
+  CONNECTION_SERVICE_GETCONNECTION_CLIENT_AUTO_CLOSE_CALLED,
 } from '../../../../../services/Socket/EventTypes'
 import { fromApi } from '../Adapters'
 import QrCodeModalContent from '../Messages/QrCodeModal'
@@ -98,11 +98,14 @@ const TableView: React.FC<TableViewProps> = ({ setIsMessageError }) => {
       },
     )
 
-    socket.on(`${CONNECTION_SERVICE_GETCONNECTION_CLIENT_AUTO_CLOSE_CALLED}-${user.user.cpf}`, (data) => {
-      if (data?.status === 'autoCloseCalled') {
-        setIsMessageError(true)
-      }
-    })
+    socket.on(
+      `${CONNECTION_SERVICE_GETCONNECTION_CLIENT_AUTO_CLOSE_CALLED}-${user.user.cpf}`,
+      (data) => {
+        if (data?.status === 'autoCloseCalled') {
+          setIsMessageError(true)
+        }
+      },
+    )
 
     socket.on(
       `${CONNECTION_SERVICE_GETCONNECTION_CLIENT_READY}-${user.user.cpf}`,
@@ -193,12 +196,12 @@ const TableView: React.FC<TableViewProps> = ({ setIsMessageError }) => {
                           QR Code
                         </LoadingButton>
                       ) : (
-                          <Button
-                            variant="contained"
-                            textButton="Desconectar"
-                            color="error"
-                            size="small"
-                          />
+                        <Button
+                          variant="outlined"
+                          textButton="Desconectar"
+                          color="error"
+                          size="small"
+                        />
                       )}
                     </TableCell>
                   )

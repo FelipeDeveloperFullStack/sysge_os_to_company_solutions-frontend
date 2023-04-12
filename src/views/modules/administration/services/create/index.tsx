@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -127,7 +128,7 @@ const CreateService: React.FC = () => {
           />
           <Button
             textButton="Adicionar Laudo"
-            variant="contained"
+            variant="outlined"
             size="small"
             icon="add2"
             onClick={addLaudo}
@@ -139,7 +140,7 @@ const CreateService: React.FC = () => {
         <ButtonContainer>
           <Button
             textButton="Salvar"
-            variant="contained"
+            variant="outlined"
             size="large"
             icon="add"
             type="submit"

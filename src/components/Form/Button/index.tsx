@@ -21,7 +21,7 @@ interface buttonProps {
   [x: string]: any
 }
 
-type variantType = 'contained' | 'outlined' | 'text'
+type variantType = 'outlined' | 'contained' | 'text'
 type colorType = 'success' | 'error' | 'secondary'
 type sizeType = 'small' | 'medium' | 'large'
 type iconType =

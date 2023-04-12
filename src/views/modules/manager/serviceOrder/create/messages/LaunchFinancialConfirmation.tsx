@@ -37,7 +37,7 @@ export const LaunchFinancialConfirmation: React.FC<
       <ButtonLaunchFinancialConfirmationContainer>
         <Button
           textButton="Sim"
-          variant="contained"
+          variant="outlined"
           size="large"
           icon="add2"
           onClick={newOS}

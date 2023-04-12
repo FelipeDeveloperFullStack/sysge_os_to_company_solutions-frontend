@@ -32,6 +32,28 @@ const menuItems = {
     },
     {
       id: 'ui-element',
+      title: 'Financeiro',
+      type: 'group',
+      icon: 'icon-ui',
+      children: [
+        {
+          id: 'income',
+          title: 'Receitas',
+          type: 'item',
+          url: '/financial/income/SeeAllIncome',
+          icon: 'feather icon-thumbs-up',
+        },
+        {
+          id: 'income',
+          title: 'Despesas',
+          type: 'item',
+          url: '/administration/clients',
+          icon: 'feather icon-thumbs-down',
+        },
+      ],
+    },
+    {
+      id: 'ui-element',
       title: 'Administração',
       type: 'group',
       icon: 'icon-ui',

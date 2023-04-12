@@ -43,7 +43,7 @@ const RemoveConfirmation: React.FC<PieceT> = ({ _id, description }) => {
       <ButtonGroup>
         <Button
           textButton="Deletar"
-          variant="contained"
+          variant="outlined"
           color="error"
           icon="delete"
           onClick={() => deleteClient()}

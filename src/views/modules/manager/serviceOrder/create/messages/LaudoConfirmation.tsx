@@ -142,7 +142,7 @@ const LaudoConfirmation: React.FC<LaudoConfirmationProps> = ({
       <ButtonGroup>
         <Button
           textButton="Confirmar"
-          variant="contained"
+          variant="outlined"
           color="success"
           icon="add3"
           onClick={handleConfirmationButton}

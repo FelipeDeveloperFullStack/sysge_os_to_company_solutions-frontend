@@ -40,7 +40,7 @@ const ConnectionWhatsApp: React.FC = () => {
         </Row>
       </span>
       <Button
-        variant="contained"
+        variant="outlined"
         onClick={handleClickAddWhatsApp}
         textButton="Adicionar WhatsApp"
         icon={'whatsApp'}

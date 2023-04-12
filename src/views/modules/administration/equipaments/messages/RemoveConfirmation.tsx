@@ -45,7 +45,7 @@ const RemoveConfirmation: React.FC<EquipamentT> = ({ _id, equipamentName }) => {
       <ButtonGroup>
         <Button
           textButton="Deletar"
-          variant="contained"
+          variant="outlined"
           color="error"
           icon="delete"
           onClick={() => deleteModel()}
