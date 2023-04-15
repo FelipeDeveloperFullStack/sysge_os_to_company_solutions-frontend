@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Paper } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from 'src/components'
 import InputText from 'src/components/Form/InputText/index_old'
@@ -11,7 +11,7 @@ import { Row } from 'src/styles'
 import useLocalStorage from 'use-local-storage'
 import { fromApi, Income } from '../Table/adapter'
 import { Container, Form } from './style'
-import { format, getMonth, getYear, parse } from 'date-fns'
+import { format, getYear, parse } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
 type SeeAllIncomeProps = {
@@ -20,10 +20,15 @@ type SeeAllIncomeProps = {
 
 type FiltersProps = {
   setIncomesFiltered: React.Dispatch<React.SetStateAction<Income[]>>
+  makeRequest: number
 }
 
-const Filters: React.FC<FiltersProps> = ({ setIncomesFiltered }) => {
-  const { control, handleSubmit } = useForm<SeeAllIncomeProps>()
+const Filters: React.FC<FiltersProps> = ({
+  setIncomesFiltered,
+  makeRequest,
+}) => {
+  const { control, handleSubmit, getValues, watch } =
+    useForm<SeeAllIncomeProps>()
   const { apiAdmin } = useAdmin()
   const [months, setMonths] = useState([])
   const [monthSelected, setMonthSelected] = useLocalStorage('monthSelected', '')
@@ -31,9 +36,29 @@ const Filters: React.FC<FiltersProps> = ({ setIncomesFiltered }) => {
   const [yearSelected, setYearSelected] = useLocalStorage('yearSelected', '')
   const [incomes, setIncomes] = useState<Income[]>([] as Income[])
   const { Loading } = useLoading()
+  const [selectedButton, setSelectedButton] = useLocalStorage(
+    'selectedButton',
+    '',
+  )
+  const inputValueName = watch('nameOrOsNumber')
 
   const onSubmitIncome = (nameOrOsNumber: SeeAllIncomeProps) => {
-    console.log({ nameOrOsNumber })
+    // const result = dateFilter(`${monthSelected}/${yearSelected}`, incomes)
+    // setIncomesFiltered(result)
+  }
+
+  const checkIfbuttonHasSelected = (dataIncomeResponseFromApi: Income[]) => {
+    const { monthSelected, yearSelected } = getDateCurrent()
+    if (monthSelected && yearSelected) {
+      const result = dateFilter(
+        `${monthSelected}/${yearSelected}`,
+        dataIncomeResponseFromApi,
+        'PENDENTE',
+      )
+      setIncomesFiltered(result)
+    } else {
+      setIncomesFiltered(dataIncomeResponseFromApi)
+    }
   }
 
   const getDataOrderServices = async () => {
@@ -44,6 +69,7 @@ const Filters: React.FC<FiltersProps> = ({ setIncomesFiltered }) => {
       setMonths(orderedMonth)
       setYears(orderedYear)
       setIncomes(resultFromApi)
+      checkIfbuttonHasSelected(resultFromApi)
     } catch (error) {
       toast.error('Um erro ocurreu ao tentar buscar os dados de receitas')
     } finally {
@@ -53,7 +79,7 @@ const Filters: React.FC<FiltersProps> = ({ setIncomesFiltered }) => {
 
   const onHandleClickYear = (year: string) => {
     setYearSelected(year)
-    const result = dataFilter(`${monthSelected}/${year}`, incomes)
+    const result = dateFilter(`${monthSelected}/${year}`, incomes)
     setIncomesFiltered(result)
   }
 
@@ -63,123 +89,178 @@ const Filters: React.FC<FiltersProps> = ({ setIncomesFiltered }) => {
       return
     }
     setMonthSelected(month)
-    const result = dataFilter(`${month}/${yearSelected}`, incomes)
+    const result = dateFilter(`${month}/${yearSelected}`, incomes)
     setIncomesFiltered(result)
   }
 
-  function getDateCurrent(): void {
+  function getDateCurrent() {
     const currentMonth = format(new Date(), 'MMM', {
       locale: ptBR,
     }).toUpperCase()
     const currentYear = String(getYear(new Date()))
-
     setMonthSelected(currentMonth)
     setYearSelected(currentYear)
+    setSelectedButton('PENDENTE')
+    return {
+      monthSelected: currentMonth,
+      yearSelected: currentYear,
+    }
   }
 
   const onHandleSituation = (situation: string) => {
-    const result = incomes.filter((item) => item.situation === situation)
+    setSelectedButton(situation)
+    const result = dateFilter(
+      `${monthSelected}/${yearSelected}`,
+      incomes,
+      situation,
+    )
     setIncomesFiltered(result)
   }
 
-  function dataFilter(data: string, arrayDatas: any[]): any[] {
-    const [monthFind, yearFind] = data.split('/')
-    const dataPesquisa = parse(
-      `${monthFind}/${yearFind}`,
-      'MMM/yyyy',
-      new Date(),
-      { locale: ptBR },
-    )
-    return arrayDatas.filter((dado) => {
-      const dataDado = parse(dado.dateOS, 'dd/MM/yyyy', new Date())
-      return (
-        dataDado.getMonth() === dataPesquisa.getMonth() &&
-        dataDado.getFullYear() === dataPesquisa.getFullYear()
+  function dateFilter(
+    data: string,
+    arrayDatas: Income[],
+    situation?: string,
+    income?: string,
+  ): any[] {
+    try {
+      Loading.turnOn()
+      const valuesFields = getValues()
+      const [monthFind, yearFind] = data.split('/')
+      const dataPesquisa = parse(
+        `${monthFind}/${yearFind}`,
+        'MMM/yyyy',
+        new Date(),
+        { locale: ptBR },
       )
-    })
+      return arrayDatas
+        .filter((dado) => {
+          const dataDado = parse(dado.dateOS, 'dd/MM/yyyy', new Date())
+          return (
+            dataDado.getMonth() === dataPesquisa.getMonth() &&
+            dataDado.getFullYear() === dataPesquisa.getFullYear()
+          )
+        })
+        .filter((item) => (situation ? item.situation === situation : item))
+        .filter((item) =>
+          valuesFields.nameOrOsNumber !== ''
+            ? item.clientName
+                .toUpperCase()
+                .includes(valuesFields?.nameOrOsNumber?.toUpperCase())
+            : item,
+        )
+        .filter((item) =>
+          income
+            ? item.clientName.toUpperCase().includes(income?.toUpperCase())
+            : item,
+        )
+    } catch (err) {
+      toast.error('Ocorreu um erro ao realizar a filtragem dos dados.')
+    } finally {
+      Loading.turnOff()
+    }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     getDataOrderServices()
-    getDateCurrent()
-  }, [])
+  }, [makeRequest])
+
+  useEffect(() => {
+    const result = dateFilter(
+      `${monthSelected}/${yearSelected}`,
+      incomes,
+      '',
+      inputValueName,
+    )
+    setIncomesFiltered(result)
+  }, [inputValueName])
 
   return (
-    <Paper elevation={1}>
-      <Container>
-        <Row display="flex" flexDirection="column" gap={1}>
-          <div>Ano:</div>
-          <Row
-            display="flex"
-            justifyContent="flex-start"
-            alignItems="center"
-            gap={10}
-          >
-            {years.map((year, index) => (
-              <Button
-                variant={yearSelected === year ? 'contained' : 'outlined'}
-                textButton={year}
-                onClick={() => onHandleClickYear(year)}
-              />
-            ))}
-          </Row>
-        </Row>
-        <Row display="flex" flexDirection="column" gap={1}>
-          <div>Mês:</div>
-          <Row
-            display="flex"
-            justifyContent="flex-start"
-            alignItems="center"
-            gap={10}
-          >
-            {months.map((month) => (
-              <Button
-                variant={monthSelected === month ? 'contained' : 'outlined'}
-                textButton={month}
-                onClick={() => onHandleClickMonth(month)}
-              />
-            ))}
-          </Row>
-        </Row>
-        <Row display="flex" flexDirection="column" gap={1}>
-          <div>Situação:</div>
-          <Row
-            display="flex"
-            justifyContent="flex-start"
-            alignItems="center"
-            gap={10}
-          >
-            <Button
-              variant="outlined"
-              textButton="Pendentes a Receber"
-              color="error"
-              onClick={() => onHandleSituation('PENDENTE')}
-            />
-            <Button
-              variant="outlined"
-              textButton="Recebidos"
-              color="success"
-              onClick={() => onHandleSituation('PAGO')}
-            />
-          </Row>
-        </Row>
-        <Row display="flex" flexDirection="column" gap={1}>
-          <div>Cliente/Nº O.S:</div>
-          <Form onSubmit={handleSubmit(onSubmitIncome)} autoComplete="off">
-            <Row display="grid" columns="1fr" alignItems="end" gap={10}>
-              <Controller
-                name="nameOrOsNumber"
-                control={control}
-                defaultValue=""
-                render={({ field, fieldState }) => (
-                  <InputText label="" field={field} fieldState={fieldState} />
-                )}
-              />
+    <>
+      {!!incomes.length && (
+        <Paper elevation={1}>
+          <Container>
+            <Row display="flex" flexDirection="column" gap={1}>
+              <div>Ano:</div>
+              <Row
+                display="flex"
+                justifyContent="flex-start"
+                alignItems="center"
+                gap={10}
+              >
+                {years.map((year, index) => (
+                  <Button
+                    variant={yearSelected === year ? 'contained' : 'outlined'}
+                    textButton={year}
+                    onClick={() => onHandleClickYear(year)}
+                  />
+                ))}
+              </Row>
             </Row>
-          </Form>
-        </Row>
-      </Container>
-    </Paper>
+            <Row display="flex" flexDirection="column" gap={1}>
+              <div>Mês:</div>
+              <Row
+                display="flex"
+                justifyContent="flex-start"
+                alignItems="center"
+                gap={10}
+              >
+                {months.map((month) => (
+                  <Button
+                    variant={monthSelected === month ? 'contained' : 'outlined'}
+                    textButton={month}
+                    onClick={() => onHandleClickMonth(month)}
+                  />
+                ))}
+              </Row>
+            </Row>
+            <Row display="flex" flexDirection="column" gap={1}>
+              <div>Situação:</div>
+              <Row
+                display="flex"
+                justifyContent="flex-start"
+                alignItems="center"
+                gap={10}
+              >
+                <Button
+                  variant={
+                    selectedButton === 'PENDENTE' ? 'contained' : 'outlined'
+                  }
+                  textButton="Pendentes a Receber"
+                  color="warning"
+                  onClick={() => onHandleSituation('PENDENTE')}
+                />
+                <Button
+                  variant={selectedButton === 'PAGO' ? 'contained' : 'outlined'}
+                  textButton="Recebidos"
+                  color="success"
+                  onClick={() => onHandleSituation('PAGO')}
+                />
+              </Row>
+            </Row>
+            <Row display="flex" flexDirection="column" gap={1}>
+              <div>Cliente/Nº O.S:</div>
+              <Form onSubmit={handleSubmit(onSubmitIncome)} autoComplete="off">
+                <Row display="grid" columns="1fr" alignItems="end" gap={10}>
+                  <Controller
+                    name="nameOrOsNumber"
+                    control={control}
+                    defaultValue=""
+                    render={({ field, fieldState }) => (
+                      <InputText
+                        label=""
+                        field={field}
+                        fieldState={fieldState}
+                      />
+                    )}
+                  />
+                </Row>
+              </Form>
+            </Row>
+          </Container>
+        </Paper>
+      )}
+    </>
   )
 }
 

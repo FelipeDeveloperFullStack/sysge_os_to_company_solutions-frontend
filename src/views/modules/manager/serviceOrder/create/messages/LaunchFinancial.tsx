@@ -33,14 +33,14 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
     { label: 'Pago', value: 'PAGO' },
   ]
 
-  const [formOfPayment, setFormOfPayment] = useState('BOLETO')
+  const [formOfPayment, setFormOfPayment] = useState('Boleto')
   const sformOfPaymentOptions: OptionsProps[] = [
-    { label: 'Boleto', value: 'BOLETO' },
-    { label: 'Pix', value: 'PIX' },
-    { label: 'Dinheiro', value: 'DINHEIRO' },
-    { label: 'Cheque', value: 'CHEQUE' },
-    { label: 'Cartão de Crédito', value: 'CARTAO_DE_CREDITO' },
-    { label: 'Cartão de Débito', value: 'CARTAO_DE_DEBITO' },
+    { label: 'Boleto', value: 'Boleto' },
+    { label: 'Pix', value: 'Pix' },
+    { label: 'Dinheiro', value: 'Dinheiro' },
+    { label: 'Cheque', value: 'Cheque' },
+    { label: 'Cartão de Crédito', value: 'Cartão de Crédito' },
+    { label: 'Cartão de Débito', value: 'Cartão de Débito' },
   ]
 
   const saveOS = async () => {

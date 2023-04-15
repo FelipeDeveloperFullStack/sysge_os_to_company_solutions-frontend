@@ -22,7 +22,15 @@ interface buttonProps {
 }
 
 type variantType = 'outlined' | 'contained' | 'text'
-type colorType = 'success' | 'error' | 'secondary'
+type colorType =
+  | 'inherit'
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'error'
+  | 'info'
+  | 'success'
+  | 'warning'
 type sizeType = 'small' | 'medium' | 'large'
 type iconType =
   | 'add'

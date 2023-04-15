@@ -1,3 +1,12 @@
+import {
+  ADMINISTRATION_CLIENTS,
+  ADMINISTRATION_EQUIPAMENTS,
+  ADMINISTRATION_PIECES,
+  ADMINISTRATION_SERVICES,
+  FINANCIAL_SEE_ALL_INCOME,
+  MANAGER_SERVICE_ORDER,
+} from './layouts/typePath'
+
 const menuItems = {
   items: [
     // {
@@ -25,7 +34,7 @@ const menuItems = {
           id: 'service-order',
           title: 'Ordem de serviço',
           type: 'item',
-          url: '/manager/service-order',
+          url: MANAGER_SERVICE_ORDER,
           icon: 'feather icon-file',
         },
       ],
@@ -40,7 +49,7 @@ const menuItems = {
           id: 'income',
           title: 'Receitas',
           type: 'item',
-          url: '/financial/income/SeeAllIncome',
+          url: FINANCIAL_SEE_ALL_INCOME,
           icon: 'feather icon-thumbs-up',
         },
         {
@@ -62,28 +71,28 @@ const menuItems = {
           id: 'client',
           title: 'Clientes',
           type: 'item',
-          url: '/administration/clients',
+          url: ADMINISTRATION_CLIENTS,
           icon: 'feather icon-users',
         },
         {
           id: 'piece',
           title: 'Peças',
           type: 'item',
-          url: '/administration/pieces',
+          url: ADMINISTRATION_PIECES,
           icon: 'feather icon-settings',
         },
         {
           id: 'service',
           title: 'Serviços',
           type: 'item',
-          url: '/administration/services',
+          url: ADMINISTRATION_SERVICES,
           icon: 'feather icon-file-text',
         },
         {
           id: 'equipament',
           title: 'Equipamento',
           type: 'item',
-          url: '/administration/equipaments',
+          url: ADMINISTRATION_EQUIPAMENTS,
           icon: 'feather icon-monitor',
         },
         {

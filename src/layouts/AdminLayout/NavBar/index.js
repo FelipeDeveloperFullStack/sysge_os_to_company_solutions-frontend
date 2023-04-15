@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 
-//import NavLeft from './NavLeft'
+import NavLeft from './NavLeft'
 import NavRight from './NavRight'
 
 import { ConfigContext } from '../../../contexts/ConfigContext'
@@ -52,7 +52,7 @@ const NavBar = () => {
                 </Link> */}
       </div>
       <div className={collapseClass.join(' ')}>
-        {/* <NavLeft /> */}
+        <NavLeft />
         <NavRight />
       </div>
     </React.Fragment>

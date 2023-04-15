@@ -34,5 +34,6 @@ export type OSData = {
   total: string
   manpower: string
   osNumber: string
+  formOfPayment: string
   _id?: string
 }

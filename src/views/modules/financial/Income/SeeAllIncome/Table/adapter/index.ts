@@ -9,6 +9,7 @@ export type Income = {
   osNumber: string
   valueNumber: number
   valueFormated: string
+  formOfPayment: string
   situation: string
   dateOS: string
   month: string
@@ -67,6 +68,7 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     dateOS: item.dateOS,
     month: getMonthAndYear(item.dateOS).month,
     year: getMonthAndYear(item.dateOS).year,
+    formOfPayment: item.formOfPayment,
     id: item._id,
   }))
 

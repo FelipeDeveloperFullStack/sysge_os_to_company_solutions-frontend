@@ -27,7 +27,7 @@ const Breadcrumb = () => {
         title = layout?.title
       }
     })
-    // console.log({ title, pathName, sufixPath })
+    window.localStorage.setItem('titlePageCurrent', JSON.stringify(title))
     return title
   }
 
@@ -73,10 +73,14 @@ const Breadcrumb = () => {
           <div className="page-block">
             <div className="row align-items-center">
               <div className="col-md-12">
-                <div className="page-header-title">
-                  <h5 className="m-b-10">{checkOutTitle({ title })}</h5>
-                </div>
-                <ListGroup as="ul" bsPrefix=" " className="breadcrumb">
+                {/* <div className="page-header-title">
+                  <h5 className="m-b-10">
+                    <span style={{ fontSize: '25px', fontWeight: 700 }}>
+                      {checkOutTitle({ title })}
+                    </span>
+                  </h5>
+                </div> */}
+                {/* <ListGroup as="ul" bsPrefix=" " className="breadcrumb">
                   <ListGroup.Item
                     as="li"
                     bsPrefix=" "
@@ -88,7 +92,7 @@ const Breadcrumb = () => {
                   </ListGroup.Item>
                   {mainContent}
                   {itemContent}
-                </ListGroup>
+                </ListGroup> */}
               </div>
             </div>
           </div>

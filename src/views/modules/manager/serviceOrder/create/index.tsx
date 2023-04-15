@@ -272,7 +272,10 @@ const CreateOrderService: React.FC = () => {
     getEquipaments()
     resetTotal()
     setTotal('R$ 0,00')
+    scroll(0, 0)
   }, [])
+
+  // scroll(0, 0)
 
   // const resetAllField = () => {
   //   getOSNumber()

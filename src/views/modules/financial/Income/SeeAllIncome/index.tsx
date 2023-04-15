@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import useLocalStorage from 'use-local-storage'
 import Filters from './Filters'
 import TableView from './Table'
 import { Income } from './Table/adapter'
@@ -7,10 +8,20 @@ const SeeAllIncome: React.FC = () => {
   const [incomesFiltered, setIncomesFiltered] = useState<Income[]>(
     [] as Income[],
   )
+  const [makeRequest, setMakeRequest] = useLocalStorage<number>(
+    'makeRequest',
+    undefined,
+  )
   return (
     <>
-      <Filters setIncomesFiltered={setIncomesFiltered} />
-      <TableView incomesFiltered={incomesFiltered} />
+      <Filters
+        setIncomesFiltered={setIncomesFiltered}
+        makeRequest={makeRequest}
+      />
+      <TableView
+        incomesFiltered={incomesFiltered}
+        setMakeRequest={setMakeRequest}
+      />
     </>
   )
 }
