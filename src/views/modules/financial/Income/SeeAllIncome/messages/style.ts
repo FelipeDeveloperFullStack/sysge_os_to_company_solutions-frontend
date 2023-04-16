@@ -47,14 +47,14 @@ export const ButtonContainer = styled.div`
   grid-template-columns: repeat(2, 1fr);
 `
 
-export const ButtonDeleteConfirmationContainer = styled.div`
+export const UpdateDeleteConfirmationContainer = styled.div`
   display: flex;
   gap: 10px;
   justify-content: center;
   margin-top: 15px;
 `
 
-export const DeleteConfirmationContainer = styled.div`
+export const UpdateConfirmationContainer = styled.div`
   > div:first-child {
     font-size: 19px;
   }

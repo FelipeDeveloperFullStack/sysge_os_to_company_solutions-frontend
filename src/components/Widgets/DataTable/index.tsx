@@ -20,6 +20,22 @@ export const DataTable = <TypeGenericRow extends object>({
     noRowsLabel: 'Nenhum registro encontrado',
   }
 
+  const CustomFooter = () => {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          height: '100%',
+        }}
+      >
+        <span style={{ marginRight: 8 }}>Total:</span>
+        <span>{'R$ 654,00'}</span>
+      </div>
+    )
+  }
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid

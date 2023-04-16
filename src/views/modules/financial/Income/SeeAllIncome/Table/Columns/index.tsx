@@ -6,9 +6,15 @@ import Chip from '@mui/material/Chip'
 import { useModal } from 'src/hooks/useModal'
 import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
 import { Income } from '../adapter'
+import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
+}
+
+type CustomHeaderProps = {
+  colDef: GridColDef
+  totalValue: number
 }
 
 export const useColumns = (props: ColumnsProps) => {
@@ -27,19 +33,34 @@ export const useColumns = (props: ColumnsProps) => {
     }
   }
 
+  const onHandleUpdateSituationRow = (params: GridCellParams) => {
+    if (params.field === 'group-buttons') {
+      const { clientName, id, valueFormated } = params.row as Income
+      showMessage(UpdateConfirmation, {
+        valueFormated,
+        clientName,
+        id,
+        setMakeRequest: props.setMakeRequest,
+      })
+    }
+  }
+
   const columns: GridColDef[] = [
     { field: 'clientName', headerName: 'Nome', width: 470 },
     { field: 'osNumber', headerName: 'Nº OS' },
-    { field: 'valueFormated', headerName: 'Valor' },
+    {
+      field: 'valueFormated',
+      headerName: 'Valor',
+    },
     {
       field: 'situation',
-      headerName: 'Situação',
+      headerName: 'Status',
       width: 125,
       renderCell: (params: GridCellParams) => {
         const situation = params.value as string
         return (
           <Chip
-            label={situation}
+            label={situation === 'PAGO' ? 'RECEBIDO' : 'PENDENTE'}
             color={situation === 'PAGO' ? 'success' : 'warning'}
           />
         )
@@ -58,20 +79,25 @@ export const useColumns = (props: ColumnsProps) => {
       disableColumnMenu: true,
       renderCell: (params: GridCellParams) => (
         <>
-          <IconButton
-            aria-label="update"
-            color="info"
-            onClick={() => onHandleDeleteRow(params)}
-          >
-            <PublishedWithChangesIcon />
-          </IconButton>
-          <IconButton
-            aria-label="delete"
-            color="default"
-            onClick={() => onHandleDeleteRow(params)}
-          >
-            <DeleteForeverIcon />
-          </IconButton>
+          {params.row.situation === 'PENDENTE' && (
+            <>
+              <IconButton
+                aria-label="update"
+                color="info"
+                onClick={() => onHandleUpdateSituationRow(params)}
+              >
+                <PublishedWithChangesIcon />
+              </IconButton>
+
+              <IconButton
+                aria-label="delete"
+                color="default"
+                onClick={() => onHandleDeleteRow(params)}
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </>
+          )}
         </>
       ),
     },

@@ -9,18 +9,16 @@ import {
 } from './style'
 import { toast } from 'src/components/Widgets/Toastify'
 
-type DeleteConfirmationProps = {
-  osNumber: number
+type UpdateConfirmationProps = {
   valueFormated: string
   clientName: string
   id: string
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
-export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
+export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   clientName,
   id,
-  osNumber,
   valueFormated,
   setMakeRequest,
 }) => {
@@ -31,12 +29,12 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   const confirmation = () => {
     try {
       Loading.turnOn()
-      apiAdmin.delete(`orderServices/${id}`)
+      apiAdmin.put(`orderServices/${id}`, { status: 'PAGO' })
       setMakeRequest(Math.random())
-      toast.success('Receita financeira excluída com sucesso.')
+      toast.success('Receita financeira atualizada com sucesso.')
     } catch (error) {
       toast.error(
-        'Opss! Ocorreu um erro ao tentar excluir o registro financeiro.',
+        'Opss! Ocorreu um erro ao tentar atualiza o status do registro financeiro.',
       )
     } finally {
       Loading.turnOff()
@@ -50,12 +48,14 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
 
   return (
     <UpdateConfirmationContainer>
-      <div>Deseja realmente excluir essa receita?</div>
+      <div>
+        Deseja realmente atualizar o status desse registro financeiro para
+        Recebido?
+      </div>
       <div>Cliente: {clientName}</div>
       <div>Valor: {valueFormated}</div>
       <div>
-        Ao clicar em SIM a ordem de serviço de Nº {osNumber} também será
-        excluída do sistema.
+        <b>Ao clicar em SIM o procedimento não poderá ser desfeito.</b>
       </div>
       <UpdateDeleteConfirmationContainer>
         <Button
