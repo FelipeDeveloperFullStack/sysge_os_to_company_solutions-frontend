@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import BackIcon from '@mui/icons-material/Reply'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
+import PdfIcon from '@mui/icons-material/PictureAsPdf'
 import Button from '@mui/material/Button'
 import React from 'react'
 
@@ -41,6 +42,7 @@ type iconType =
   | 'whatsApp'
   | 'back'
   | 'close'
+  | 'pdf'
 
 const icons = {
   add: <AddIcon />,
@@ -51,6 +53,7 @@ const icons = {
   whatsApp: <WhatsAppIcon />,
   back: <BackIcon />,
   close: <CloseIcon />,
+  pdf: <PdfIcon />,
 }
 
 const defineIcon = (icon: iconType) => {

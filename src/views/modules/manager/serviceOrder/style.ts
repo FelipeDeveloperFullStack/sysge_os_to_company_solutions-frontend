@@ -73,17 +73,21 @@ export const ButtonContainerLaunchInTheFinancial = styled.div`
   position: fixed;
   bottom: 85px;
   right: 23px;
-  animation: ${swingButtonFinancial} 1s ease-in-out infinite;
+  //animation: ${swingButtonFinancial} 1s ease-in-out infinite;
 `
 
 export const Container = styled.section`
   background-color: #fff;
   height: auto;
   font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export const ContainerOS = styled.section`
   padding: 15px;
+  width: 1024px;
 `
 
 export const Header = styled.section`

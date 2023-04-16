@@ -7,13 +7,14 @@ import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
 import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
-import { OSData } from '../../serviceOrder/create/type'
+import { MappedDataServiceOrders } from '../types'
 import { ButtonGroup, Container, Text } from './style'
 
-const RemoveConfirmation: React.FC<OSData> = ({
-  _id,
+const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
+  id,
   osNumber,
-  client: { name },
+  name,
+  total,
 }) => {
   const { closeModal } = useModal()
   const { Loading } = useLoading()
@@ -23,7 +24,7 @@ const RemoveConfirmation: React.FC<OSData> = ({
   const deleteModel = async () => {
     try {
       Loading.turnOn()
-      await apiAdmin.delete(`orderServices/${_id}`)
+      await apiAdmin.delete(`orderServices/${id}`)
       toast.success(`Ordem de serviço de nº ${osNumber} excluída com sucesso!`)
       closeModal()
       dispatch({
@@ -44,21 +45,34 @@ const RemoveConfirmation: React.FC<OSData> = ({
 
   return (
     <Container>
-      <Text>
-        Deseja realmente excluir a ordem de serviço de nº {osNumber} vinculada
-        ao cliente{' '}
+      <Text alignSelf="center" fontSize="20px" bold>
+        Deseja realmente excluir a ordem de serviço?
       </Text>
-      <Text bold>{name} ?</Text>
+      <Text flexDirection="column">
+        <div>
+          Ordem de Serviço: <span>{osNumber}</span>
+        </div>
+        <div>
+          Cliente: <span>{name}</span>
+        </div>
+        <div>
+          Total: <span>{total}</span>
+        </div>
+      </Text>
+      <Text>
+        Ao clicar em <span>SIM</span> a receita lançada no financeiro será
+        excluída, essa operação não poderá ser desfeita.
+      </Text>
       <ButtonGroup>
         <Button
-          textButton="Deletar"
+          textButton="Sim"
           variant="outlined"
           color="error"
           icon="delete"
           onClick={() => deleteModel()}
         />
         <Button
-          textButton="Fechar"
+          textButton="Não"
           variant="outlined"
           icon="close"
           onClick={() => closeModal()}

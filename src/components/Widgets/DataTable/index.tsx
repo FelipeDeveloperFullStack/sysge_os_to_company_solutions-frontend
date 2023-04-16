@@ -1,12 +1,16 @@
 import * as React from 'react'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { DataGridStyled } from './styles'
+interface TypeGenericRowWithId {
+  id: string
+}
 
 type DataTableProps<TypeGenericRow> = {
-  rows: TypeGenericRow[]
+  rows: TypeGenericRow[] & TypeGenericRowWithId[]
   columns: GridColDef[]
   pageSize?: number
   checkboxSelection?: boolean
-  setCellClick?: (cellClick: TypeGenericRow) => void
+  setCellClick?: (cellClick: TypeGenericRow[]) => void
 }
 
 export const DataTable = <TypeGenericRow extends object>({
@@ -20,25 +24,9 @@ export const DataTable = <TypeGenericRow extends object>({
     noRowsLabel: 'Nenhum registro encontrado',
   }
 
-  const CustomFooter = () => {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          height: '100%',
-        }}
-      >
-        <span style={{ marginRight: 8 }}>Total:</span>
-        <span>{'R$ 654,00'}</span>
-      </div>
-    )
-  }
-
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
+      <DataGridStyled
         rows={rows}
         columns={columns}
         pageSize={pageSize}
@@ -47,7 +35,20 @@ export const DataTable = <TypeGenericRow extends object>({
         autoHeight
         onCellClick={(e) => {
           if (!e.value) {
-            if (setCellClick) setCellClick(e.row)
+            if (setCellClick)
+              // @ts-ignore
+              setCellClick((previousState: TypeGenericRowWithId[]) => [
+                ...previousState.filter((item) => item.id !== e.row.id),
+                e.row,
+              ])
+          } else {
+            // @ts-ignore
+            setCellClick((previousState: TypeGenericRowWithId[]) => {
+              const resultFilter = previousState.filter(
+                (item) => item.id !== e.row.id,
+              )
+              return [...resultFilter]
+            })
           }
         }}
         localeText={customLocaleText}

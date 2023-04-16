@@ -12,11 +12,6 @@ type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
-type CustomHeaderProps = {
-  colDef: GridColDef
-  totalValue: number
-}
-
 export const useColumns = (props: ColumnsProps) => {
   const { showMessage } = useModal()
 

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
+import React, { useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
+import BackIcon from '@mui/icons-material/Reply'
 import { useGeneratePDF } from 'src/hooks/useGeneratePDF'
 import { Row } from 'src/styles'
 import Logo from './assets/images/logo.png'
@@ -30,12 +30,14 @@ import {
   Text,
 } from './style'
 import { Laudo } from './create/tables/type'
+import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 
 const ServiceOrder: React.FC = () => {
   const exportPDF = useGeneratePDF()
   const location = useLocation()
+  const history = useHistory()
 
-  const [data] = useState<OSData>(location?.state?.OSData)
+  const [data] = useState<OSData>(location?.state?.oSData)
   const [isOSGenerated, setIsOsGenerated] = useState(false)
 
   const handleClickToGenerateOS = () => {
@@ -70,24 +72,26 @@ const ServiceOrder: React.FC = () => {
 
   return (
     <>
-      <ButtonContainerGenerateOS>
+      <ButtonContainerLaunchInTheFinancial>
         <Fab
-          color="primary"
+          color="secondary"
           variant="extended"
           onClick={() => handleClickToGenerateOS()}
         >
           <CloudDownloadIcon sx={{ mr: 1 }} />
           Gerar PDF
         </Fab>
+      </ButtonContainerLaunchInTheFinancial>
+      <ButtonContainerGenerateOS>
+        <Fab
+          color="primary"
+          variant="extended"
+          onClick={() => history.push(MANAGER_SERVICE_ORDER)}
+        >
+          <BackIcon sx={{ mr: 1 }} />
+          Voltar
+        </Fab>
       </ButtonContainerGenerateOS>
-      {!!isOSGenerated && (
-        <ButtonContainerLaunchInTheFinancial>
-          <Fab color="success" variant="extended">
-            <CurrencyExchangeIcon sx={{ mr: 1 }} />
-            Lançar Financeiro
-          </Fab>
-        </ButtonContainerLaunchInTheFinancial>
-      )}
       <Container>
         <ContainerOS id="pdf">
           <PaperStyled elevation={1}>

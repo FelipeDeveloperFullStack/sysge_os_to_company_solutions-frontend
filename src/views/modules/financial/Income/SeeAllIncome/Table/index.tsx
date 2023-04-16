@@ -16,6 +16,12 @@ const TableView: React.FC<TableViewProps> = ({
 }) => {
   const columns = useColumns({ setMakeRequest })
 
+  const mappedIncomeFinancial = (serviceOrder: Income[]): Income[] => {
+    return serviceOrder
+      .map((item: Income) => item)
+      .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))
+  }
+
   return (
     <>
       <>
@@ -46,7 +52,11 @@ const TableView: React.FC<TableViewProps> = ({
           )}
         </div>
       </>
-      <DataTable rows={incomesFiltered} columns={columns} />
+      <DataTable
+        rows={mappedIncomeFinancial(incomesFiltered)}
+        columns={columns}
+        pageSize={5}
+      />
     </>
   )
 }
