@@ -24,6 +24,7 @@ const TableView: React.FC = () => {
           dateOS: item.dateOS,
           total: item.total,
           status: item.status,
+          dateGeneratedOS: item.dateGeneratedOS,
         }
       })
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))

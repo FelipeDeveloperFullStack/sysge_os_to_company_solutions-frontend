@@ -66,8 +66,9 @@ export const useColumns = () => {
       },
     },
     {
-      field: 'generatedOS',
+      field: 'dateGeneratedOS',
       headerName: 'OS Gerada',
+      width: 150,
     },
     {
       field: 'group-buttons',

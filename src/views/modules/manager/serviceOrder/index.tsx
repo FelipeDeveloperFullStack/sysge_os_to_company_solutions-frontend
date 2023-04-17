@@ -31,22 +31,44 @@ import {
 } from './style'
 import { Laudo } from './create/tables/type'
 import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
+import { useAdmin } from 'src/services/useAdmin'
+import { toast } from 'src/components/Widgets/Toastify'
+import { format } from 'date-fns'
 
 const ServiceOrder: React.FC = () => {
   const exportPDF = useGeneratePDF()
   const location = useLocation()
   const history = useHistory()
+  const { apiAdmin } = useAdmin()
 
   const [data] = useState<OSData>(location?.state?.oSData)
   const [isOSGenerated, setIsOsGenerated] = useState(false)
 
-  const handleClickToGenerateOS = () => {
+  const getCurrentDateAndHour = () => {
+    const now = new Date()
+    return format(now, 'dd/MM/yyyy HH:mm')
+  }
+
+  const updateDateOSGenerated = async () => {
+    try {
+      await apiAdmin.put(`orderServices/${data._id}`, {
+        dateGeneratedOS: getCurrentDateAndHour(),
+      })
+    } catch (error) {
+      toast.error(
+        'Um erro ocorreu ao tentar atualizar a data de atualização da OS gerada.',
+      )
+    }
+  }
+
+  const handleClickToGenerateOS = async () => {
     exportPDF(
       `Cliente_${data.client.name}_Ordem_de_Servico_N_${data.osNumber}_NSerie_${data.serialNumber}`,
       'pdf',
       'open_new_window',
     )
     setIsOsGenerated(true)
+    await updateDateOSGenerated()
   }
 
   const resultNewArray = (data: any[]) => {
