@@ -12,6 +12,7 @@ import {
 } from 'src/store/actions'
 import { IStore } from 'src/store/Types'
 import { fromApi } from '../../administration/services/adapters'
+import ServiceOrder from '../serviceOrder'
 import Filters from './filters'
 import TableView from './Table'
 
@@ -116,6 +117,7 @@ const SeeAllServiceOrder = (props: Props) => {
 
   return (
     <>
+      <ServiceOrder />
       <Filters />
       <TableView />
     </>

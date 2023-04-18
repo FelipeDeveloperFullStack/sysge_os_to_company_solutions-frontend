@@ -1,17 +1,29 @@
 import * as htmlToImage from 'html-to-image'
 import jsPDF from 'jspdf'
 import { toast } from 'src/components/Widgets/Toastify'
+import { useAdmin } from 'src/services/useAdmin'
 import { useLoading } from './useLoading'
 
 type TypeSaveMode = 'auto_download' | 'open_new_window'
 
 export const useGeneratePDF = () => {
   const { Loading } = useLoading()
+  const { apiAdmin } = useAdmin()
 
-  const exportPDF = (
+  const generatePDF = async (base64Pdf: string, fileName: string) => {
+    try {
+      await apiAdmin.post('orderServices/generate/pdf', { base64Pdf, fileName })
+    } catch (error) {
+      toast.error('Houve um erro ao tentar gerar o PDF')
+    }
+  }
+
+  const exportPDF = async (
     filePDFName: string,
     idName: string,
     typeSaveMode: TypeSaveMode,
+    isPreviewPDF?: boolean,
+    //@ts-ignore
   ) => {
     try {
       Loading.turnOn()
@@ -42,15 +54,21 @@ export const useGeneratePDF = () => {
             // undefined,
             // 'FAST',
           )
+          let base64PDF = ''
           if (typeSaveMode === 'auto_download') {
             pdf.save(`${filePDFName}.pdf`)
           } else {
-            pdf.autoPrint()
-            window.open(
-              pdf.output('bloburl'),
-              '_blank',
-              'height=650,width=500,scrollbars=yes,location=yes',
-            )
+            if (isPreviewPDF) {
+              pdf.autoPrint()
+              window.open(
+                pdf.output('bloburl'),
+                '_blank',
+                'height=650,width=500,scrollbars=yes,location=yes',
+              )
+            } else {
+              base64PDF = pdf.output('datauristring')
+              generatePDF(base64PDF, filePDFName)
+            }
           }
           // let element = document.createElement('a')
           // element.href = canvas.toDataURL('img/png')

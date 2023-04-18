@@ -56,6 +56,7 @@ const TableView: React.FC<TableViewProps> = ({
         rows={mappedIncomeFinancial(incomesFiltered)}
         columns={columns}
         pageSize={5}
+        checkboxSelection
       />
     </>
   )

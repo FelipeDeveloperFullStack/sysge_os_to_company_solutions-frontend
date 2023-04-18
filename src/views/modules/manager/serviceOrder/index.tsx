@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import BackIcon from '@mui/icons-material/Reply'
@@ -40,8 +41,8 @@ const ServiceOrder: React.FC = () => {
   const location = useLocation()
   const history = useHistory()
   const { apiAdmin } = useAdmin()
-
-  const [data] = useState<OSData>(location?.state?.oSData)
+  const osData = JSON.parse(window.localStorage.getItem('oSData'))
+  const [data] = useState<OSData>(osData ? osData : location?.state?.oSData)
   const [isOSGenerated, setIsOsGenerated] = useState(false)
 
   const getCurrentDateAndHour = () => {
@@ -51,7 +52,7 @@ const ServiceOrder: React.FC = () => {
 
   const updateDateOSGenerated = async () => {
     try {
-      await apiAdmin.put(`orderServices/${data._id}`, {
+      await apiAdmin.put(`orderServices/${data?._id}`, {
         dateGeneratedOS: getCurrentDateAndHour(),
       })
     } catch (error) {
@@ -61,18 +62,23 @@ const ServiceOrder: React.FC = () => {
     }
   }
 
+  React.useEffect(() => {
+    handleClickToGenerateOS()
+  }, [osData])
+
   const handleClickToGenerateOS = async () => {
     exportPDF(
-      `Cliente_${data.client.name}_Ordem_de_Servico_N_${data.osNumber}_NSerie_${data.serialNumber}`,
+      `Cliente_${data?.client.name}_Ordem_de_Servico_N_${data?.osNumber}_NSerie_${data?.serialNumber}`,
       'pdf',
       'open_new_window',
+      osData ? false : true,
     )
     setIsOsGenerated(true)
     await updateDateOSGenerated()
   }
 
   const resultNewArray = (data: any[]) => {
-    const lengthData = 6 - data.length
+    const lengthData = 6 - data?.length
     if (lengthData < 6) {
       return [...data, ...new Array(lengthData).fill('')]
     } else {
@@ -160,13 +166,13 @@ const ServiceOrder: React.FC = () => {
               <ContainerOSText>
                 <OSText>ORDEM DE SERVIÇO</OSText>
                 <OSNumber>
-                  Nº <OSNumber color="red">{data.osNumber}</OSNumber>
+                  Nº <OSNumber color="red">{data?.osNumber}</OSNumber>
                 </OSNumber>
               </ContainerOSText>
             </PaperStyled>
             <PaperStyled elevation={1}>
               <ContainerDateOS>
-                <DateOS>Data {data.dateOS}</DateOS>
+                <DateOS>Data {data?.dateOS}</DateOS>
               </ContainerDateOS>
             </PaperStyled>
           </ContainerOSNumberAndDate>
@@ -179,15 +185,15 @@ const ServiceOrder: React.FC = () => {
               marginBottom="5px"
             >
               <Text isNotUsingBorderBottom width="900px">
-                <b>Cliente:</b> {data.client.name}
+                <b>Cliente:</b> {data?.client.name}
               </Text>
             </Row>
             <Row marginLeft="15px" columns="5fr 1fr" marginBottom="5px">
               <Text>
-                <b>End:</b> {data.client.address}
+                <b>End:</b> {data?.client.address}
               </Text>
               <Text marginRight="15px">
-                <b>CEP:</b> {data.client.cep}
+                <b>CEP:</b> {data?.client.cep}
               </Text>
             </Row>
             <Row
@@ -197,23 +203,23 @@ const ServiceOrder: React.FC = () => {
               marginBottom="5px"
             >
               <Text>
-                <b>Cidade:</b> {data.client.city}
+                <b>Cidade:</b> {data?.client.city}
               </Text>
               <Text>
-                <b>UF:</b> {data.client.uf}
+                <b>UF:</b> {data?.client.uf}
               </Text>
               <Text>
-                <b>CNPJ:</b> {data.client.cpfOrCnpj}
+                <b>CNPJ:</b> {data?.client.cpfOrCnpj}
               </Text>
             </Row>
             <Row marginLeft="15px" columns="2fr 1fr" marginBottom="5px">
               <Text>
-                <b>E-mail:</b> {data.client.email}
+                <b>E-mail:</b> {data?.client.email}
               </Text>
               <Text marginRight="15px">
-                <b>Telefone:</b> {data.client.phoneNumber}{' '}
-                {data.client.phoneNumberFixo
-                  ? `${data.client.phoneNumberFixo}`
+                <b>Telefone:</b> {data?.client.phoneNumber}{' '}
+                {data?.client.phoneNumberFixo
+                  ? `${data?.client.phoneNumberFixo}`
                   : null}
               </Text>
             </Row>
@@ -221,20 +227,20 @@ const ServiceOrder: React.FC = () => {
           <PaperStyled elevation={1}>
             <Row marginLeft="15px" columns="repeat(4, 1fr)" marginBottom="5px">
               <Text>
-                <b>Equipamento:</b> {data.equipament}
+                <b>Equipamento:</b> {data?.equipament}
               </Text>
               <Text marginRight="15px">
-                <b>Marca:</b> {data.brand}
+                <b>Marca:</b> {data?.brand}
               </Text>
               <Text marginRight="15px">
-                <b>Modelo:</b> {data.model}
+                <b>Modelo:</b> {data?.model}
               </Text>
               <Text marginRight="15px">
-                <b>Nº Série:</b> {data.serialNumber}
+                <b>Nº Série:</b> {data?.serialNumber}
               </Text>
             </Row>
           </PaperStyled>
-          {!!data.itemServices.length && (
+          {!!data?.itemServices.length && (
             <PaperStyled elevation={1} paddingBottom="20px">
               <Row
                 columns="8fr 1fr 1fr 1fr"
@@ -266,7 +272,7 @@ const ServiceOrder: React.FC = () => {
                   Total
                 </Text>
               </Row>
-              {resultRowItemServices(data.itemServices).map((item) => {
+              {resultRowItemServices(data?.itemServices).map((item) => {
                 return (
                   <Row
                     columns="8fr 1fr 1fr 1fr"
@@ -302,7 +308,7 @@ const ServiceOrder: React.FC = () => {
               })}
             </PaperStyled>
           )}
-          {!!data.laudos.length && (
+          {!!data?.laudos.length && (
             <PaperStyled elevation={1} paddingBottom="20px">
               <Text
                 marginLeft="15px"
@@ -312,7 +318,7 @@ const ServiceOrder: React.FC = () => {
               >
                 Laudo Técnico
               </Text>
-              {resultRowLaudos(data.laudos).map((item) => {
+              {resultRowLaudos(data?.laudos).map((item) => {
                 return (
                   <Row columns="8fr" marginLeft="15px" height="27px">
                     <Text marginTop="20px" height="19px" marginRight="15px">
@@ -326,20 +332,20 @@ const ServiceOrder: React.FC = () => {
           <PaperStyled elevation={1}>
             <Row marginLeft="15px" columns="repeat(4, 1fr)" marginBottom="5px">
               <Text>
-                <b>Cabo?</b> {data.cable}
+                <b>Cabo?</b> {data?.cable}
               </Text>
               <Text marginRight="15px">
-                <b>Carregador?</b> {data.charger}
+                <b>Carregador?</b> {data?.charger}
               </Text>
               <Text marginRight="15px">
-                <b>Quabrado?</b> {data.breaked}
+                <b>Quabrado?</b> {data?.breaked}
               </Text>
               <Text marginRight="15px">
-                <b>Detalhes?</b> {data.detail}
+                <b>Detalhes?</b> {data?.detail}
               </Text>
             </Row>
           </PaperStyled>
-          {!!data.itemPieces.length && (
+          {!!data?.itemPieces.length && (
             <PaperStyled elevation={1} paddingBottom="20px">
               <Row
                 columns="8fr 1fr 1fr 1fr"
@@ -371,7 +377,7 @@ const ServiceOrder: React.FC = () => {
                   Total
                 </Text>
               </Row>
-              {resultRowItemPieces(data.itemPieces).map((item) => {
+              {resultRowItemPieces(data?.itemPieces).map((item) => {
                 return (
                   <Row
                     columns="8fr 1fr 1fr 1fr"
@@ -415,7 +421,7 @@ const ServiceOrder: React.FC = () => {
               fontSize="17px"
             >
               <Text isNotUsingBorderBottom>
-                <b>Valor da mão de obra: </b> {data.manpower}
+                <b>Valor da mão de obra: </b> {data?.manpower}
               </Text>
             </PaperStyled>
             <PaperStyled
@@ -425,7 +431,7 @@ const ServiceOrder: React.FC = () => {
               fontSize="17px"
             >
               <Text marginRight="15px" isNotUsingBorderBottom>
-                <b>Total: </b> {data.total}
+                <b>Total: </b> {data?.total}
               </Text>
             </PaperStyled>
           </Row>

@@ -34,7 +34,6 @@ export const useColumns = () => {
       const { data: oSData } = await apiAdmin.get(
         `orderServices/${dataIncomeTable.id}`,
       )
-      console.log(oSData)
       history.push(MANAGER_SERVICE_ORDER_VIEW, { oSData })
     } catch (error) {
       toast.error('Opss! Houve um erro ao tentar gerar a Ordem de Serviço.')

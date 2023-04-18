@@ -41,7 +41,7 @@ export const useColumns = (props: ColumnsProps) => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'clientName', headerName: 'Nome', width: 470 },
+    { field: 'clientName', headerName: 'Nome', width: 410 },
     { field: 'osNumber', headerName: 'Nº OS' },
     {
       field: 'valueFormated',
