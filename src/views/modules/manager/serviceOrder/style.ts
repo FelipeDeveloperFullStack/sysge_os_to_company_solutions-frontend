@@ -1,5 +1,5 @@
 import { Divider, Paper } from '@mui/material'
-import styled, { keyframes } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 type HeaderTextFontProps = {
   fontSize?: number
@@ -64,25 +64,53 @@ export const PaperStyled = styled(Paper)<{
   font-size: ${({ fontSize }) => fontSize};
 `
 
-export const ButtonContainerGenerateOS = styled.div`
+export const ButtonContainerGenerateOS = styled.div<{ isGeneratePDF: boolean }>`
   position: fixed;
   bottom: 31px;
   right: 23px;
+  ${({ isGeneratePDF }) =>
+    isGeneratePDF &&
+    css`
+      visibility: hidden;
+      height: 0px;
+    `}
 `
-export const ButtonContainerLaunchInTheFinancial = styled.div`
+export const ButtonContainerLaunchInTheFinancial = styled.div<{
+  isGeneratePDF: boolean
+}>`
   position: fixed;
   bottom: 85px;
   right: 23px;
   //animation: ${swingButtonFinancial} 1s ease-in-out infinite;
+  ${({ isGeneratePDF }) =>
+    isGeneratePDF &&
+    css`
+      visibility: hidden;
+      height: 0px;
+    `}
 `
 
-export const Container = styled.section`
+export const Container = styled.section<{
+  isGeneratePDF: boolean
+  isDisplay: boolean
+}>`
   background-color: #fff;
   height: auto;
   font-size: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
+  ${({ isGeneratePDF }) =>
+    isGeneratePDF &&
+    css`
+      /* visibility: hidden;*/
+      height: 0px;
+    `}
+  ${({ isDisplay }) =>
+    isDisplay &&
+    css`
+      display: none;
+    `}
 `
 
 export const ContainerOS = styled.section`

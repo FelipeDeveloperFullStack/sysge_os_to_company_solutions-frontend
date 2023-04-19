@@ -43,7 +43,7 @@ export const useColumns = () => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Nome', width: 470 },
+    { field: 'name', headerName: 'Nome', width: 430 },
     { field: 'osNumber', headerName: 'Nº OS' },
     { field: 'dateOS', headerName: 'Data' },
     {

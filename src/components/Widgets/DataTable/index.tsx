@@ -11,6 +11,7 @@ type DataTableProps<TypeGenericRow> = {
   pageSize?: number
   checkboxSelection?: boolean
   setCellClick?: (cellClick: TypeGenericRow[]) => void
+  setSelectedAllRowIds?: (allRow: string[]) => void
 }
 
 export const DataTable = <TypeGenericRow extends object>({
@@ -19,9 +20,22 @@ export const DataTable = <TypeGenericRow extends object>({
   pageSize = 10,
   checkboxSelection = false,
   setCellClick,
+  setSelectedAllRowIds,
 }: DataTableProps<TypeGenericRow>) => {
   const customLocaleText = {
     noRowsLabel: 'Nenhum registro encontrado',
+  }
+
+  const handleSelectionModelChange = (ids: string[]) => {
+    if (ids.length === 0 || ids.length === 1) {
+      if (setSelectedAllRowIds) {
+        setSelectedAllRowIds(ids)
+      }
+    } else {
+      if (setSelectedAllRowIds) {
+        setSelectedAllRowIds(ids)
+      }
+    }
   }
 
   return (
@@ -32,7 +46,10 @@ export const DataTable = <TypeGenericRow extends object>({
         pageSize={pageSize}
         rowsPerPageOptions={[10]}
         checkboxSelection={checkboxSelection}
+        // @ts-ignore
+        onSelectionModelChange={(ids) => handleSelectionModelChange(ids)}
         autoHeight
+        disableSelectionOnClick
         onCellClick={(e) => {
           if (!e.value) {
             if (setCellClick)
@@ -42,13 +59,15 @@ export const DataTable = <TypeGenericRow extends object>({
                 e.row,
               ])
           } else {
-            // @ts-ignore
-            setCellClick((previousState: TypeGenericRowWithId[]) => {
-              const resultFilter = previousState.filter(
-                (item) => item.id !== e.row.id,
-              )
-              return [...resultFilter]
-            })
+            if (setCellClick) {
+              // @ts-ignore
+              setCellClick((previousState: TypeGenericRowWithId[]) => {
+                const resultFilter = previousState.filter(
+                  (item) => item.id !== e.row.id,
+                )
+                return [...resultFilter]
+              })
+            }
           }
         }}
         localeText={customLocaleText}

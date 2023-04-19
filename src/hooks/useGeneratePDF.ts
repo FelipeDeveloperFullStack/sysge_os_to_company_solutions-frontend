@@ -12,9 +12,12 @@ export const useGeneratePDF = () => {
 
   const generatePDF = async (base64Pdf: string, fileName: string) => {
     try {
+      Loading.turnOn()
       await apiAdmin.post('orderServices/generate/pdf', { base64Pdf, fileName })
     } catch (error) {
       toast.error('Houve um erro ao tentar gerar o PDF')
+    } finally {
+      Loading.turnOff()
     }
   }
 

@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { IStore } from 'src/store/Types'
 import { useColumns } from './Columns'
 import { OSData } from '../../serviceOrder/create/type'
 import { DataTable } from 'src/components/Widgets/DataTable'
 import { MappedDataServiceOrders } from '../types'
-import ServiceOrder from '../../serviceOrder'
 import { useAdmin } from 'src/services/useAdmin'
 import { useLoading } from 'src/hooks/useLoading'
 import { toast } from 'src/components/Widgets/Toastify'
 import useLocalStorage from 'use-local-storage'
+import { Button } from 'src/components'
 
 const TableView: React.FC = () => {
   const serviceOrdersStore = useSelector(
@@ -22,6 +22,12 @@ const TableView: React.FC = () => {
   const [oSData, setOSData] = useLocalStorage<OSData[]>(
     'oSData',
     [] as OSData[],
+  )
+  const [isRowSelected, setIsRowSelected] = useState<MappedDataServiceOrders[]>(
+    [] as MappedDataServiceOrders[],
+  )
+  const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
+    [] as string[],
   )
 
   const mappedDataServiceOrders = (
@@ -56,21 +62,39 @@ const TableView: React.FC = () => {
   }
 
   React.useEffect(() => {
-    onHandleGeneratePDF('643c5cfc3f2de2aed5fa3689')
-    onHandleGeneratePDF('643c5c923f2de2aed5fa3668')
-    onHandleGeneratePDF('643c52863f2de2aed5fa360c')
-    onHandleGeneratePDF('643c25651de333db07228c98')
     return () => {
       window.localStorage.removeItem('oSData')
     }
   }, [])
 
+  const onHandleGenerateOS = async () => {
+    setOSData([])
+    let index = 0
+    for (index; index < selectedAllRowIds.length; index++) {
+      const item = selectedAllRowIds[index]
+      await onHandleGeneratePDF(item)
+      if (index === selectedAllRowIds.length - 1) {
+        window.location.reload()
+      }
+    }
+  }
+
   return (
     <>
+      {!!selectedAllRowIds?.length && (
+        <Button
+          textButton={`Gerar Ordens de Serviço (${selectedAllRowIds?.length})`}
+          variant="contained"
+          onClick={onHandleGenerateOS}
+        />
+      )}
       <DataTable
         rows={mappedDataServiceOrders(serviceOrdersStore)}
         columns={columns}
         pageSize={5}
+        checkboxSelection
+        //setCellClick={setIsRowSelected}
+        setSelectedAllRowIds={setSelectedAllRowIds}
       />
     </>
   )

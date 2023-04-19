@@ -1,5 +1,7 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import BackIcon from '@mui/icons-material/Reply'
 import { useGeneratePDF } from 'src/hooks/useGeneratePDF'
@@ -36,14 +38,47 @@ import { useAdmin } from 'src/services/useAdmin'
 import { toast } from 'src/components/Widgets/Toastify'
 import { format } from 'date-fns'
 
-const ServiceOrder: React.FC = () => {
+type ServiceOrderProps = {
+  osData?: OSData
+}
+
+const ServiceOrder: React.FC<ServiceOrderProps> = ({ osData }) => {
   const exportPDF = useGeneratePDF()
   const location = useLocation()
   const history = useHistory()
   const { apiAdmin } = useAdmin()
-  const osData = JSON.parse(window.localStorage.getItem('oSData'))
-  const [data] = useState<OSData>(osData ? osData : location?.state?.oSData)
+  const [data, setData] = useState<OSData>(osData)
   const [isOSGenerated, setIsOsGenerated] = useState(false)
+
+  // const osData = useData()
+
+  // const updateData = (osData: any) => {
+  //   if (osData?.length) {
+  //     osData.map((item) => {
+  //       setData(item)
+  //     })
+  //   }
+  //   if (!osData) {
+  //     setData(location?.state?.oSData)
+  //   }
+  // }
+
+  React.useEffect(() => {
+    if (!osData) {
+      setData(location?.state?.oSData)
+    } else {
+      setTimeout(() => {
+        handleClickToGenerateOS()
+      }, 2000)
+    }
+  }, [osData])
+
+  React.useEffect(() => {
+    scroll(0, 0)
+    return () => {
+      window.localStorage.removeItem('data')
+    }
+  }, [])
 
   const getCurrentDateAndHour = () => {
     const now = new Date()
@@ -62,14 +97,16 @@ const ServiceOrder: React.FC = () => {
     }
   }
 
-  React.useEffect(() => {
-    handleClickToGenerateOS()
-  }, [osData])
+  // React.useEffect(() => {
+  //   if (!osData) {
+  //     handleClickToGenerateOS()
+  //   }
+  // }, [data])
 
   const handleClickToGenerateOS = async () => {
     exportPDF(
       `Cliente_${data?.client.name}_Ordem_de_Servico_N_${data?.osNumber}_NSerie_${data?.serialNumber}`,
-      'pdf',
+      `pdf${data?._id}`,
       'open_new_window',
       osData ? false : true,
     )
@@ -100,17 +137,17 @@ const ServiceOrder: React.FC = () => {
 
   return (
     <>
-      <ButtonContainerLaunchInTheFinancial>
+      <ButtonContainerLaunchInTheFinancial isGeneratePDF={!!osData}>
         <Fab
           color="secondary"
           variant="extended"
           onClick={() => handleClickToGenerateOS()}
         >
           <CloudDownloadIcon sx={{ mr: 1 }} />
-          Gerar PDF
+          Baixar PDF
         </Fab>
       </ButtonContainerLaunchInTheFinancial>
-      <ButtonContainerGenerateOS>
+      <ButtonContainerGenerateOS isGeneratePDF={!!osData}>
         <Fab
           color="primary"
           variant="extended"
@@ -120,8 +157,9 @@ const ServiceOrder: React.FC = () => {
           Voltar
         </Fab>
       </ButtonContainerGenerateOS>
-      <Container>
-        <ContainerOS id="pdf">
+      {console.log({ data: location?.state?.oSData, osData })}
+      <Container isGeneratePDF={!!osData} isDisplay={!data}>
+        <ContainerOS id={`pdf${data?._id}`}>
           <PaperStyled elevation={1}>
             <Header>
               <HeaderTextFont>
