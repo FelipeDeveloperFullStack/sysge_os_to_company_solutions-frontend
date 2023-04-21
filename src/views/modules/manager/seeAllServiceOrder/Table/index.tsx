@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { IStore } from 'src/store/Types'
 import { useColumns } from './Columns'
 import { OSData } from '../../serviceOrder/create/type'
@@ -11,6 +11,10 @@ import { useLoading } from 'src/hooks/useLoading'
 import { toast } from 'src/components/Widgets/Toastify'
 import useLocalStorage from 'use-local-storage'
 import { Button } from 'src/components'
+import { useModal } from 'src/hooks/useModal'
+import { ModalPDF } from '../messages/ModalPDF'
+import { ModalInformation } from '../messages/ModalInformation'
+import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 
 const TableView: React.FC = () => {
   const serviceOrdersStore = useSelector(
@@ -19,16 +23,20 @@ const TableView: React.FC = () => {
   const columns = useColumns()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
+  const dispatch = useDispatch()
+  const { showMessage, closeModal } = useModal()
   const [oSData, setOSData] = useLocalStorage<OSData[]>(
     'oSData',
     [] as OSData[],
   )
-  const [isRowSelected, setIsRowSelected] = useState<MappedDataServiceOrders[]>(
-    [] as MappedDataServiceOrders[],
-  )
+  const osDataAdded = JSON.parse(window.localStorage.getItem('osDataAdded'))
+  // const [isRowSelected, setIsRowSelected] = useState<MappedDataServiceOrders[]>(
+  //   [] as MappedDataServiceOrders[],
+  // )
   const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
     [] as string[],
   )
+  const [isOpenModalInformation, setIsOpenModalInformation] = useState(false)
 
   const mappedDataServiceOrders = (
     serviceOrder: OSData[],
@@ -61,9 +69,14 @@ const TableView: React.FC = () => {
     }
   }
 
+  const removeLocalStorage = () => {
+    window.localStorage.removeItem('oSData')
+    window.localStorage.removeItem('osDataAdded')
+  }
+
   React.useEffect(() => {
     return () => {
-      window.localStorage.removeItem('oSData')
+      removeLocalStorage()
     }
   }, [])
 
@@ -74,10 +87,34 @@ const TableView: React.FC = () => {
       const item = selectedAllRowIds[index]
       await onHandleGeneratePDF(item)
       if (index === selectedAllRowIds.length - 1) {
-        window.location.reload()
+        //window.location.reload()
+        const data = JSON.parse(window.localStorage.getItem('oSData'))
+        showMessage(ModalPDF, { oSData: data })
+        setIsOpenModalInformation(true)
       }
     }
   }
+
+  const updateTableList = () => {
+    dispatch({
+      type: LAYOUT_MAKE_REQUEST,
+      payload: {
+        makeRequest: Math.random(),
+      },
+    })
+  }
+
+  useEffect(() => {
+    if (osDataAdded) {
+      const oSData = JSON.parse(window.localStorage.getItem('oSData'))
+      if (osDataAdded?.length === oSData?.length) {
+        setIsOpenModalInformation(false)
+        closeModal()
+        removeLocalStorage()
+        updateTableList()
+      }
+    }
+  }, [osDataAdded])
 
   return (
     <>
@@ -96,6 +133,12 @@ const TableView: React.FC = () => {
         //setCellClick={setIsRowSelected}
         setSelectedAllRowIds={setSelectedAllRowIds}
       />
+      {!!isOpenModalInformation && (
+        <ModalInformation
+          open={isOpenModalInformation}
+          setOpen={setIsOpenModalInformation}
+        />
+      )}
     </>
   )
 }

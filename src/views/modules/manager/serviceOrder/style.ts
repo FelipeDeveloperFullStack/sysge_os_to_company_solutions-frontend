@@ -92,7 +92,6 @@ export const ButtonContainerLaunchInTheFinancial = styled.div<{
 
 export const Container = styled.section<{
   isGeneratePDF: boolean
-  isDisplay: boolean
 }>`
   background-color: #fff;
   height: auto;
@@ -105,11 +104,6 @@ export const Container = styled.section<{
     css`
       /* visibility: hidden;*/
       height: 0px;
-    `}
-  ${({ isDisplay }) =>
-    isDisplay &&
-    css`
-      display: none;
     `}
 `
 

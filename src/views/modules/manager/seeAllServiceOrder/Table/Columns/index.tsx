@@ -76,16 +76,15 @@ export const useColumns = () => {
       disableColumnMenu: true,
       renderCell: (params: GridCellParams) => (
         <>
+          <IconButton
+            aria-label="PDF"
+            color="info"
+            onClick={() => onHandleGeneratePDF(params)}
+          >
+            <PdfIcon />
+          </IconButton>
           {params.row.status === 'PENDENTE' && (
             <>
-              <IconButton
-                aria-label="PDF"
-                color="info"
-                onClick={() => onHandleGeneratePDF(params)}
-              >
-                <PdfIcon />
-              </IconButton>
-
               {/* <IconButton aria-label="editar" color="info">
                 <EditIcon />
               </IconButton> */}

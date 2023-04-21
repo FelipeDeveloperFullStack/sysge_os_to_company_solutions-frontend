@@ -49,7 +49,6 @@ const CreateOrderService: React.FC = () => {
 
   const { resetTotal } = useTotalSum()
   const { showMessage } = useModal()
-  const [makeClearField, setMakeClearField] = useState(0)
 
   const { control, handleSubmit, formState, setValue } = useForm<ServiceOrderT>(
     {

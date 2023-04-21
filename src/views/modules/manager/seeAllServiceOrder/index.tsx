@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { useAdmin } from 'src/services/useAdmin'
@@ -12,9 +12,6 @@ import {
 } from 'src/store/actions'
 import { IStore } from 'src/store/Types'
 import { fromApi } from '../../administration/services/adapters'
-import ServiceOrder from '../serviceOrder'
-import { OSData } from '../serviceOrder/create/type'
-import { useData } from '../serviceOrder/hooks/useData'
 import Filters from './filters'
 import TableView from './Table'
 
@@ -27,7 +24,6 @@ const SeeAllServiceOrder = (props: Props) => {
     (state: IStore) => state.serviceOrder.serviceOrderFilter,
   )
   const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
-  const osData = JSON.parse(window.localStorage.getItem('oSData'))
 
   const getServices = async () => {
     try {
@@ -120,9 +116,6 @@ const SeeAllServiceOrder = (props: Props) => {
 
   return (
     <section>
-      {osData?.map((item, index) => {
-        return <ServiceOrder osData={item} key={index} />
-      })}
       <Filters />
       <TableView />
     </section>

@@ -37,15 +37,21 @@ import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
 import { toast } from 'src/components/Widgets/Toastify'
 import { format } from 'date-fns'
+import useLocalStorage from 'use-local-storage'
 
 type ServiceOrderProps = {
   osData?: OSData
+  setOsDataAdded?: React.Dispatch<React.SetStateAction<OSData[]>>
 }
 
-const ServiceOrder: React.FC<ServiceOrderProps> = ({ osData }) => {
+const ServiceOrder: React.FC<ServiceOrderProps> = ({
+  osData,
+  setOsDataAdded,
+}) => {
   const exportPDF = useGeneratePDF()
-  const location = useLocation()
   const history = useHistory()
+  // const location = useLocation()
+  const location = history?.location
   const { apiAdmin } = useAdmin()
   const [data, setData] = useState<OSData>(osData)
   const [isOSGenerated, setIsOsGenerated] = useState(false)
@@ -69,6 +75,9 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({ osData }) => {
     } else {
       setTimeout(() => {
         handleClickToGenerateOS()
+        if (setOsDataAdded) {
+          setOsDataAdded((previousState) => [...previousState, osData])
+        }
       }, 2000)
     }
   }, [osData])
@@ -157,8 +166,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({ osData }) => {
           Voltar
         </Fab>
       </ButtonContainerGenerateOS>
-      {console.log({ data: location?.state?.oSData, osData })}
-      <Container isGeneratePDF={!!osData} isDisplay={!data}>
+      <Container isGeneratePDF={!!osData}>
         <ContainerOS id={`pdf${data?._id}`}>
           <PaperStyled elevation={1}>
             <Header>

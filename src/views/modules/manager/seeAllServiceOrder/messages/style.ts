@@ -1,5 +1,10 @@
 import styled, { css } from 'styled-components'
 
+export const Modal = styled.section`
+  // width: 500px;
+  //display: none;
+`
+
 export const Container = styled.section`
   //padding: 15px;
   display: flex;
