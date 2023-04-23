@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -14,7 +14,6 @@ import { ADMINISTRATION_PIECES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
 import {
   LAYOUT_MAKE_REQUEST,
-  LAYOUT_TITLE_PAGE,
   PIECE_FILTER,
   PIECE_SEE_ALL,
 } from 'src/store/actions'
@@ -47,16 +46,6 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   })
 
   const history = useHistory()
-
-  useLayoutEffect(() => {
-    scroll(0, 0)
-    dispatch({
-      type: LAYOUT_TITLE_PAGE,
-      payload: {
-        title: 'Peça - Inclusão',
-      },
-    })
-  }, [])
 
   const onFormatterPrice = (value: string) => {
     const { formated, clean } = formatInputPrice(value)
@@ -121,6 +110,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        {!!isNewServiceByOS && <div>Nova peça</div>}
         <Row columns="5fr 1fr">
           <Controller
             name="description"

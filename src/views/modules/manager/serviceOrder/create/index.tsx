@@ -157,12 +157,6 @@ const CreateOrderService: React.FC = () => {
   useLayoutEffect(() => {
     scroll(0, 0)
     dispatch({
-      type: LAYOUT_TITLE_PAGE,
-      payload: {
-        title: 'Order de Serviço - Inclusão',
-      },
-    })
-    dispatch({
       type: SERVICE_ORDER_CREATE,
       payload: {
         laudos: [

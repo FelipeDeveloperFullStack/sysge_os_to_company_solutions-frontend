@@ -55,16 +55,6 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
 
   const history = useHistory()
 
-  useLayoutEffect(() => {
-    scroll(0, 0)
-    dispatch({
-      type: LAYOUT_TITLE_PAGE,
-      payload: {
-        title: 'Cliente - Inclusão',
-      },
-    })
-  }, [])
-
   const onSubmit = async (data: ClientT) => {
     try {
       await apiAdmin.post(`clients`, data)
@@ -138,6 +128,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        {!!isNewServiceByOS && <div>Novo cliente</div>}
         <Row columns="1fr">
           <Controller
             name="name"

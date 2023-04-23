@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useLayoutEffect } from 'react'
+import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -15,7 +15,6 @@ import {
   EQUIPAMENT_FILTER,
   EQUIPAMENT_SEE_ALL,
   LAYOUT_MAKE_REQUEST,
-  LAYOUT_TITLE_PAGE,
 } from 'src/store/actions'
 import { EquipamentT } from 'src/store/Types'
 import { Row } from 'src/styles'
@@ -41,16 +40,6 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
   })
 
   const history = useHistory()
-
-  useLayoutEffect(() => {
-    scroll(0, 0)
-    dispatch({
-      type: LAYOUT_TITLE_PAGE,
-      payload: {
-        title: 'Equipamento - Inclusão',
-      },
-    })
-  }, [])
 
   const getEquipaments = async () => {
     try {
@@ -110,6 +99,7 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        {!!isNewServiceByOS && <div>Novo equipamento</div>}
         <Row columns="1fr">
           <Controller
             name="equipamentName"

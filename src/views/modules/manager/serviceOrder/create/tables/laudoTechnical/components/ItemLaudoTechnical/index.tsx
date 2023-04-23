@@ -14,7 +14,6 @@ import hasNumber from 'src/helpers/hasNumber'
 import axios from 'axios'
 import { useAdmin } from 'src/services/useAdmin'
 import { ItemServices } from '../../../../type'
-import useLocalStorage from 'use-local-storage'
 
 type ItemLaudoTechnicalProps = {
   itemServices: ItemServices[]

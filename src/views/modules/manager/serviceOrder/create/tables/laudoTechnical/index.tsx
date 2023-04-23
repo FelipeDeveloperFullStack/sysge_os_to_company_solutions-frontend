@@ -56,11 +56,15 @@ const TableView: React.FC<TableViewProps> = ({
         if (services?.laudos.length > 1) {
           setLaudos((previousState) => {
             if (checkLengthLaudos(previousState)) {
-              showMessage(LaudoConfirmation, {
-                clickedValue,
-                setLaudosList,
-                laudosList,
-              })
+              showMessage(
+                LaudoConfirmation,
+                {
+                  clickedValue,
+                  setLaudosList,
+                  laudosList,
+                },
+                true,
+              )
             }
             return previousState
           })

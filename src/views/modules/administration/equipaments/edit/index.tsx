@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -10,7 +10,7 @@ import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { ADMINISTRATION_EQUIPAMENTS } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { EQUIPAMENT_FILTER, LAYOUT_TITLE_PAGE } from 'src/store/actions'
+import { EQUIPAMENT_FILTER } from 'src/store/actions'
 import { EquipamentT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaBrand } from '../schemaValidation'
@@ -30,16 +30,6 @@ const CreateBrand: React.FC = () => {
 
   const history = useHistory()
   const location = useLocation()
-
-  useLayoutEffect(() => {
-    scroll(0, 0)
-    dispatch({
-      type: LAYOUT_TITLE_PAGE,
-      payload: {
-        title: 'Equipamento - Edição',
-      },
-    })
-  }, [])
 
   useEffect(() => {
     const { equipamentName, _id, brand, model, serialNumber } = location?.state

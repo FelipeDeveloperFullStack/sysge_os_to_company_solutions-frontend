@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -11,7 +11,7 @@ import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { ADMINISTRATION_SERVICES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_TITLE_PAGE, SERVICE_FILTER } from 'src/store/actions'
+import { SERVICE_FILTER } from 'src/store/actions'
 import { ServiceT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaService } from '../schemaValidation'
@@ -35,16 +35,6 @@ const CreateService: React.FC = () => {
   const location = useLocation()
   const [valueClear, setValueClear] = useState(0)
   const [laudos, setLaudos] = useState<string[]>([])
-
-  useLayoutEffect(() => {
-    scroll(0, 0)
-    dispatch({
-      type: LAYOUT_TITLE_PAGE,
-      payload: {
-        title: 'Serviço - Edição',
-      },
-    })
-  }, [])
 
   useEffect(() => {
     const { description, _id, value, laudoService, laudos } = location?.state

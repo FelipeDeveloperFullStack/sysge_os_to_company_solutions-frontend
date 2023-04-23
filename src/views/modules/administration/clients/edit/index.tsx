@@ -42,15 +42,15 @@ const EditClient: React.FC = () => {
     resolver: yupResolver(schemaClient),
   })
 
-  useLayoutEffect(() => {
-    scroll(0, 0)
-    dispatch({
-      type: LAYOUT_TITLE_PAGE,
-      payload: {
-        title: 'Cliente - Edição',
-      },
-    })
-  }, [])
+  // useLayoutEffect(() => {
+  //   scroll(0, 0)
+  //   dispatch({
+  //     type: LAYOUT_TITLE_PAGE,
+  //     payload: {
+  //       title: 'Cliente - Edição',
+  //     },
+  //   })
+  // }, [])
 
   const onSubmit = async (data: ClientT) => {
     try {

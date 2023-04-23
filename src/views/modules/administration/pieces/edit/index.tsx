@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -11,7 +11,7 @@ import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { ADMINISTRATION_PIECES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_TITLE_PAGE, PIECE_FILTER } from 'src/store/actions'
+import { PIECE_FILTER } from 'src/store/actions'
 import { PieceT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaPiece } from '../schemaValidation'
@@ -30,15 +30,6 @@ const CreateClient: React.FC = () => {
   })
 
   const history = useHistory()
-
-  useLayoutEffect(() => {
-    dispatch({
-      type: LAYOUT_TITLE_PAGE,
-      payload: {
-        title: 'Peça - Edição',
-      },
-    })
-  }, [])
 
   useEffect(() => {
     scroll(0, 0)

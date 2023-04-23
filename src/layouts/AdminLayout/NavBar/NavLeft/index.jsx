@@ -49,10 +49,19 @@ const NavLeft = () => {
 
   const checkOutTitle = ({ title }) => {
     const pathName = document.location.pathname
-    const sufixPath = ['/create', '/edit']
+    const sufixPath = ['/novo', '/editar', 'nova']
     sufixPath.forEach((item) => {
       if (pathName.includes(item)) {
-        title = layout?.title
+        let pageName = ''
+        if (
+          String(item).replace('/', '') === 'novo' ||
+          String(item).replace('/', '') === 'nova'
+        ) {
+          pageName = 'Inclusão'
+        } else {
+          pageName = 'Edição'
+        }
+        title = title + ' - ' + pageName
       }
     })
     return title
@@ -60,9 +69,9 @@ const NavLeft = () => {
 
   return (
     <React.Fragment>
-      {!!titlePage && (
-        <TitlePage>{checkOutTitle({ title: item.title })}</TitlePage>
-      )}
+      {/* {!!titlePage && (
+        )} */}
+      <TitlePage>{checkOutTitle({ title: item.title })}</TitlePage>
       {/* <ListGroup as="ul" bsPrefix=" " className="navbar-nav mr-auto">
                 <ListGroup.Item as="li" bsPrefix=" " className={navItemClass.join(' ')}>
                     <Dropdown alignRight={dropdownRightAlign}>
