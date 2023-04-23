@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'src/components/Widgets/Toastify'
@@ -44,6 +46,7 @@ const Piece: React.FC = () => {
 
   useEffect(() => {
     getClients()
+    scroll(0, 0)
   }, [pieceFiltered, makeRequest])
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -47,6 +48,7 @@ const Service: React.FC = () => {
 
   useEffect(() => {
     getServices()
+    scroll(0, 0)
   }, [serviceFiltered, makeRequest])
 
   return (

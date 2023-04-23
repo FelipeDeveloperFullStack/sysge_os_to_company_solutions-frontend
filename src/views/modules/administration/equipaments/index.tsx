@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -50,6 +51,7 @@ const Equipament: React.FC = () => {
 
   useEffect(() => {
     getEquipaments()
+    scroll(0, 0)
   }, [equipamentFiltered, makeRequest])
 
   return (
