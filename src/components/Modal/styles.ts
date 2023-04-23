@@ -26,7 +26,8 @@ export const Container = styled.div<SimpleModalStylesProps>`
   ${({ show }) =>
     show &&
     css`
-      z-index: 2;
+      /* z-index: 2; */
+      z-index: 99999999999999999999999999999999;
       opacity: 1;
       visibility: visible;
     `}

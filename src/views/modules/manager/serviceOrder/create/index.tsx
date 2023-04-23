@@ -21,7 +21,7 @@ import { LAYOUT_TITLE_PAGE, SERVICE_ORDER_CREATE } from 'src/store/actions'
 import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaServiceOrder } from '../schemaValidation'
-import { toApi } from './adapters'
+import { fromApiSerialNumber, toApi } from './adapters'
 import InputText from './components/InputCurrency'
 import { useTotalSum } from './hooks/useTotalSum'
 import {
@@ -37,6 +37,10 @@ import { ItemPieces, ItemServices, OSData } from './type'
 import { LaunchFinancial } from './messages/LaunchFinancial'
 import { useModal } from 'src/hooks/useModal'
 import moment from 'moment'
+import { useAddLocalStorage } from './hooks/useAddLocalStorage'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import CreateClient from 'src/views/modules/administration/clients/create'
+import CreateEquipament from 'src/views/modules/administration/equipaments/create'
 
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
@@ -50,12 +54,31 @@ const CreateOrderService: React.FC = () => {
   const { resetTotal } = useTotalSum()
   const { showMessage } = useModal()
 
-  const { control, handleSubmit, formState, setValue } = useForm<ServiceOrderT>(
-    {
+  const { control, handleSubmit, formState, setValue, watch } =
+    useForm<ServiceOrderT>({
       shouldUnregister: false,
       resolver: yupResolver(schemaServiceOrder),
-    },
-  )
+    })
+
+  const [cable, setCable] = useLocalStorage('cable', '')
+  const [charger, setCharger] = useLocalStorage('charger', '')
+  const [breaked, setBreaked] = useLocalStorage('breaked', '')
+  const [detail, setDetail] = useLocalStorage('detail', '')
+  useAddLocalStorage({
+    watch,
+    setValue,
+    setCable,
+    setCharger,
+    setBreaked,
+    setDetail,
+  })
+
+  useEffect(() => {
+    setValue('cable', cable)
+    setValue('charger', charger)
+    setValue('breaked', breaked)
+    setValue('detail', detail)
+  }, [])
 
   const [optionClient, setOptionClient] = useState<AutocompleteOptions[]>(
     [] as AutocompleteOptions[],
@@ -126,6 +149,8 @@ const CreateOrderService: React.FC = () => {
     const formato = 'DD/MM/YYYY'
     return dataAtual.format(formato)
   }
+
+  const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
 
   const history = useHistory()
 
@@ -198,10 +223,7 @@ const CreateOrderService: React.FC = () => {
       label: item.model,
       value: item.model,
     }))
-    const resultSerialNumber = equipaments.map((item) => ({
-      label: item.serialNumber,
-      value: item.serialNumber,
-    }))
+    const resultSerialNumber = fromApiSerialNumber(equipaments)
     setEquipamentsNameOptions(resultEquipamentsName)
     setBrandOptions(resultBrand)
     setModelOptions(model)
@@ -400,7 +422,7 @@ const CreateOrderService: React.FC = () => {
     loadClient()
 
     return () => cancel && cancel()
-  }, [client])
+  }, [client, makeRequest])
 
   useEffect(() => {
     if (!equipamentName.label?.toUpperCase()) {
@@ -458,24 +480,25 @@ const CreateOrderService: React.FC = () => {
       )
     }
     if (!serialNumber.label?.toUpperCase()) {
-      setSerialNumberOptions(
-        equipaments.map((item) => ({
-          label: item.serialNumber,
-          value: item.serialNumber,
-        })),
-      )
+      // setSerialNumberOptions(
+      //   equipaments.map((item) => ({
+      //     label: item.serialNumber,
+      //     value: item.serialNumber,
+      //   })),
+      // )
+      setSerialNumberOptions(fromApiSerialNumber(equipaments))
     } else {
-      const result = equipaments.filter((item) =>
-        item.serialNumber.includes(serialNumber.label?.toUpperCase()),
+      const result = fromApiSerialNumber(equipaments).filter((item) =>
+        item.label.includes(serialNumber.label?.toUpperCase()),
       )
       setSerialNumberOptions(
         result.map((item) => ({
-          label: item.serialNumber,
-          value: item.serialNumber,
+          label: item.label,
+          value: item.value,
         })),
       )
     }
-  }, [equipamentName, brand, model, serialNumber])
+  }, [equipamentName, brand, model, serialNumber, makeRequest])
 
   const handleKeyDownManPower = (
     event: React.KeyboardEvent<HTMLInputElement>,
@@ -501,6 +524,26 @@ const CreateOrderService: React.FC = () => {
     }
   }
 
+  const onHandleAddNewClient = () => {
+    showMessage(
+      CreateClient,
+      {
+        isNewServiceByOS: true,
+      },
+      true,
+    )
+  }
+
+  const onHandleAddNewEquipament = () => {
+    showMessage(
+      CreateEquipament,
+      {
+        isNewServiceByOS: true,
+      },
+      true,
+    )
+  }
+
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -521,6 +564,10 @@ const CreateOrderService: React.FC = () => {
             setClickedValue={setClickedClientName}
             hasError={!!validateErrorMessageClientName}
             error={validateErrorMessageClientName}
+            isUseButton
+            iconButtonLabel={<AddCircleOutlineIcon />}
+            tooltipMessageButtonLabel="Clique aqui para adicionar um novo cliente."
+            onHandleClickButtonLabel={onHandleAddNewClient}
           />
           <Controller
             name="dateOS"
@@ -546,6 +593,10 @@ const CreateOrderService: React.FC = () => {
             setClickedValue={setClickedEquipament}
             hasError={!!validateErrorMessageEquipament}
             error={validateErrorMessageEquipament}
+            isUseButton
+            iconButtonLabel={<AddCircleOutlineIcon />}
+            tooltipMessageButtonLabel="Clique aqui para adicionar um novo Equipamento."
+            onHandleClickButtonLabel={onHandleAddNewEquipament}
           />
           <Autocomplete
             label="Marca"
@@ -568,7 +619,7 @@ const CreateOrderService: React.FC = () => {
             error={validateErrorMessageModel}
           />
           <Autocomplete
-            label="Nº Série'"
+            label="Nº Série"
             value={serialNumber}
             setValue={setSerialNumber}
             options={serialNumberOptions}
@@ -661,10 +712,22 @@ const CreateOrderService: React.FC = () => {
           />
           <PiecesTable setItemPieces={setItemPieces} itemPieces={itemPieces} />
         </Row>
-        <Row columns="1fr 1fr" marginTop="10px">
+        <Row columns="1fr 1fr 1fr" marginTop="10px">
           <InputText
             type="text"
             label="Mão de Obra"
+            mask={''}
+            value={manpower}
+            setValue={setManpower}
+            onChange={(event) => setManpower && setManpower(event.target.value)}
+            autoComplete="off"
+            onKeyUp={onKeyUpManpower}
+            onKeyDown={handleKeyDownManPower}
+            disabled={isDisableManPower}
+          />
+          <InputText
+            type="text"
+            label="Desconto"
             mask={''}
             value={manpower}
             setValue={setManpower}
@@ -688,7 +751,7 @@ const CreateOrderService: React.FC = () => {
         <ButtonContainer>
           <Button
             textButton="Salvar"
-            variant="outlined"
+            variant="contained"
             size="large"
             icon="add3"
             type="submit"

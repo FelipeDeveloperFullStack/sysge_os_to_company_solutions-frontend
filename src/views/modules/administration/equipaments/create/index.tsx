@@ -8,19 +8,32 @@ import { InputText } from 'src/components'
 import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
+import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_EQUIPAMENTS } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { EQUIPAMENT_FILTER, LAYOUT_TITLE_PAGE } from 'src/store/actions'
+import {
+  EQUIPAMENT_FILTER,
+  EQUIPAMENT_SEE_ALL,
+  LAYOUT_MAKE_REQUEST,
+  LAYOUT_TITLE_PAGE,
+} from 'src/store/actions'
 import { EquipamentT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import { fromApi } from '../adapters'
 import { schemaBrand } from '../schemaValidation'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
 
-const CreateBrand: React.FC = () => {
-  const dispatch = useDispatch()
+type CreateEquipamentProps = {
+  isNewServiceByOS?: boolean
+}
 
+const CreateEquipament: React.FC<CreateEquipamentProps> = ({
+  isNewServiceByOS,
+}) => {
+  const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
+  const { closeModal } = useModal()
 
   const { control, handleSubmit } = useForm<EquipamentT>({
     shouldUnregister: false,
@@ -39,6 +52,28 @@ const CreateBrand: React.FC = () => {
     })
   }, [])
 
+  const getEquipaments = async () => {
+    try {
+      const response = await apiAdmin.get(`equipaments`, {
+        params: {
+          equipamentName: undefined,
+          brand: undefined,
+          model: undefined,
+          serialNumber: undefined,
+        },
+      })
+      dispatch({
+        type: EQUIPAMENT_SEE_ALL,
+        payload: await fromApi(response),
+      })
+    } catch (error) {
+      exceptionHandle(
+        error,
+        'Ops! Houve um erro ao tentar buscar os equipamentos, atualize a página e tente novamente.',
+      )
+    }
+  }
+
   const onSubmit = async (data: EquipamentT) => {
     try {
       await apiAdmin.post(`equipaments`, toApi(data))
@@ -46,10 +81,29 @@ const CreateBrand: React.FC = () => {
         type: EQUIPAMENT_FILTER,
         payload: {},
       })
-      history.push(ADMINISTRATION_EQUIPAMENTS)
       toast.success('Equipamento cadastrado com sucesso.')
+      if (isNewServiceByOS) {
+        await getEquipaments()
+        closeModal()
+        dispatch({
+          type: LAYOUT_MAKE_REQUEST,
+          payload: {
+            makeRequest: Math.random(),
+          },
+        })
+      } else {
+        history.push(ADMINISTRATION_EQUIPAMENTS)
+      }
     } catch (error) {
       exceptionHandle(error)
+    }
+  }
+
+  const onHandleClose = () => {
+    if (isNewServiceByOS) {
+      closeModal()
+    } else {
+      history.push(ADMINISTRATION_EQUIPAMENTS)
     }
   }
 
@@ -111,7 +165,7 @@ const CreateBrand: React.FC = () => {
         <ButtonContainer>
           <Button
             textButton="Salvar"
-            variant="outlined"
+            variant="contained"
             size="large"
             icon="add"
             type="submit"
@@ -121,7 +175,7 @@ const CreateBrand: React.FC = () => {
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(ADMINISTRATION_EQUIPAMENTS)}
+            onClick={onHandleClose}
           />
         </ButtonContainer>
       </Form>
@@ -129,4 +183,4 @@ const CreateBrand: React.FC = () => {
   )
 }
 
-export default CreateBrand
+export default CreateEquipament

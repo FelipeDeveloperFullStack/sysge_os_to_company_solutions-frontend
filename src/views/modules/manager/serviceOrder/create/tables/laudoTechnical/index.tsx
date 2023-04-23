@@ -9,9 +9,13 @@ import { Row } from 'src/styles'
 import LaudoConfirmation from '../../messages/LaudoConfirmation'
 import LaudoDetails from '../laudoDetails'
 import { Laudo } from '../type'
-import { Container } from './Styles'
+import { Container, ContainerButtonServiceAdd } from './Styles'
 import { ItemLaudoTechnical } from './components'
 import { ItemServices } from '../../type'
+import IconButton from '@mui/material/IconButton'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import Tooltip from '@mui/material/Tooltip'
+import CreateService from 'src/views/modules/administration/services/create'
 
 type TableViewProps = {
   itemServices: ItemServices[]
@@ -49,7 +53,7 @@ const TableView: React.FC<TableViewProps> = ({
   useEffect(() => {
     if (clickedValue) {
       if (!!Object.keys(clickedValue).length) {
-        if (services.laudos.length > 1) {
+        if (services?.laudos.length > 1) {
           setLaudos((previousState) => {
             if (checkLengthLaudos(previousState)) {
               showMessage(LaudoConfirmation, {
@@ -60,7 +64,7 @@ const TableView: React.FC<TableViewProps> = ({
             }
             return previousState
           })
-        } else if (services.laudos.length === 1) {
+        } else if (services?.laudos.length === 1) {
           setLaudos((laudos) => [
             ...laudos,
             laudos.length <= 5
@@ -100,13 +104,51 @@ const TableView: React.FC<TableViewProps> = ({
     }
   }, [laudosList])
 
+  const onHandleAddNewService = () => {
+    showMessage(
+      CreateService,
+      {
+        isNewServiceByOS: true,
+      },
+      true,
+    )
+  }
+
   return (
     <Container>
-      <Row columns="5fr 1fr 1fr 1fr" gap={10} marginTop="5px">
-        <div>Serviços</div>
-        <div>Qtd</div>
-        <div>Unit</div>
-        <div>Preço</div>
+      <Row columns="5fr 0.1fr 1fr 1fr" gap={10} marginTop="5px">
+        <ContainerButtonServiceAdd>
+          <div>Serviços</div>
+          <Tooltip title="Clique aqui para adicionar um novo Serviço">
+            <IconButton aria-label="Adicionar" onClick={onHandleAddNewService}>
+              <AddCircleOutlineIcon />
+            </IconButton>
+          </Tooltip>
+        </ContainerButtonServiceAdd>
+        <div
+          style={{
+            position: 'relative',
+            right: '20px',
+          }}
+        >
+          Qtd
+        </div>
+        <div
+          style={{
+            position: 'relative',
+            left: '10px',
+          }}
+        >
+          Unit
+        </div>
+        <div
+          style={{
+            position: 'relative',
+            left: '10px',
+          }}
+        >
+          Preço
+        </div>
       </Row>
 
       <ItemLaudoTechnical

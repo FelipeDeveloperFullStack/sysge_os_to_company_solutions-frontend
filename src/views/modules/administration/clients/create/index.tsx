@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useLayoutEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -8,24 +9,33 @@ import Button from 'src/components/Form/Button'
 import InputCPF_CNPJ from 'src/components/Form/InputCPF_CNPJ'
 import InputMask from 'src/components/Form/InputMask'
 import InputPhone from 'src/components/Form/InputPhone'
+import { toast } from 'src/components/Widgets/Toastify'
 import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { validateCNPJ } from 'src/helpers/validateCNPJ'
 import validateCpf from 'src/helpers/validateCpf'
+import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
 import { useAdmin } from 'src/services/useAdmin'
-import { CLIENT_FILTER, LAYOUT_TITLE_PAGE } from 'src/store/actions'
+import {
+  CLIENT_FILTER,
+  LAYOUT_MAKE_REQUEST,
+  LAYOUT_TITLE_PAGE,
+} from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaClient } from '../schemaValidation'
 import { ButtonContainer, Container, Form } from './style'
 
-const CreateClient: React.FC = () => {
+type CreateClientProps = {
+  isNewServiceByOS?: boolean
+}
+
+const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   const dispatch = useDispatch()
-
+  const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
-
   const { getAddressByCEP } = useServiceCEP()
 
   const {
@@ -62,7 +72,18 @@ const CreateClient: React.FC = () => {
         type: CLIENT_FILTER,
         payload: {},
       })
-      history.push(ADMINISTRATION_CLIENTS)
+      toast.success('Cliente cadastrado com sucesso!')
+      if (isNewServiceByOS) {
+        closeModal()
+        dispatch({
+          type: LAYOUT_MAKE_REQUEST,
+          payload: {
+            makeRequest: Math.random(),
+          },
+        })
+      } else {
+        history.push(ADMINISTRATION_CLIENTS)
+      }
     } catch (error) {
       exceptionHandle(error)
     }
@@ -103,6 +124,14 @@ const CreateClient: React.FC = () => {
       } else {
         setError('cpfOrCnpj', { message: '' })
       }
+    }
+  }
+
+  const onHandleClose = () => {
+    if (isNewServiceByOS) {
+      closeModal()
+    } else {
+      history.push(ADMINISTRATION_CLIENTS)
     }
   }
 
@@ -210,7 +239,7 @@ const CreateClient: React.FC = () => {
         <ButtonContainer>
           <Button
             textButton="Salvar"
-            variant="outlined"
+            variant="contained"
             size="large"
             icon="add"
             type="submit"
@@ -220,7 +249,7 @@ const CreateClient: React.FC = () => {
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(ADMINISTRATION_CLIENTS)}
+            onClick={onHandleClose}
           />
         </ButtonContainer>
       </Form>

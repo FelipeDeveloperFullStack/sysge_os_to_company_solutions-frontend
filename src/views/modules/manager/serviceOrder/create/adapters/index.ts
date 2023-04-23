@@ -1,4 +1,19 @@
+import { EquipamentT } from 'src/store/Types'
 import { OSData } from '../type'
+
+export const fromApiSerialNumber = (equipaments: EquipamentT[]) => {
+  const resultSerialNumber = equipaments.map((item) => ({
+    label: item.serialNumber,
+    value: item.serialNumber,
+  }))
+  resultSerialNumber.push({
+    label: 'SEM NÚMERO DE SÉRIE',
+    value: 'SEM NÚMERO DE SÉRIE',
+  })
+  resultSerialNumber.push({ label: 'SEM PATRIMONIO', value: 'SEM PATRIMONIO' })
+  console.log(resultSerialNumber)
+  return resultSerialNumber
+}
 
 export const toApi = (data: OSData, osNumber: string): OSData => {
   return {

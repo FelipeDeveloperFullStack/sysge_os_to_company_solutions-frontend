@@ -14,6 +14,7 @@ import hasNumber from 'src/helpers/hasNumber'
 import axios from 'axios'
 import { useAdmin } from 'src/services/useAdmin'
 import { ItemServices } from '../../../../type'
+import useLocalStorage from 'use-local-storage'
 
 type ItemLaudoTechnicalProps = {
   itemServices: ItemServices[]
@@ -31,7 +32,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   const [msgErrorAutoComplete, setMsgErrorAutoComplete] = useState('')
   const [totalValue, setTotalValue] = useState('')
   const [itemAutocompleteClicked, setItemAutocompleteClicked] = useState('')
-  const [qtdeValue, setQtdeValue] = useState('')
+  const [qtdeValue, setQtdeValue] = useState<string>('')
   const { sum } = useTotalSum()
   const { apiAdmin } = useAdmin()
   const [optionLaudoTech, setOptionLaudoTech] = useState<AutocompleteOptions[]>(
@@ -40,6 +41,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   const [valueLaudoTech, setValueLaudoTech] = useState<AutocompleteOptions>(
     {} as AutocompleteOptions,
   )
+  const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
 
   const addValueArrayLaudoTech = (itemPiece: ItemServices) => {
     setItemServices((previousState) => [
@@ -82,7 +84,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     if (hasNumber(qtde)) {
       calcPrice(qtde)
     } else {
-      setQtdeValue('')
+      //setQtdeValue('')
     }
   }
 
@@ -94,7 +96,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   )
 
   const clearValues = () => {
-    setQtdeValue('')
+    //setQtdeValue('')
     setValueUnit('')
     setTotalValue('')
   }
@@ -161,7 +163,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     loadLaudoTech()
 
     return () => cancel && cancel()
-  }, [valueLaudoTech])
+  }, [valueLaudoTech, makeRequest])
 
   const onFormatterPrice = (value: string) => {
     const { formated } = formatInputPrice(value)
@@ -175,7 +177,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   }
 
   return (
-    <Row columns="5fr 1fr 1fr 1fr" gap={10} marginTop="5px">
+    <Row columns="5fr 0.1fr 1fr 1fr" gap={10} marginTop="5px">
       <Autocomplete
         value={valueLaudoTech}
         setValue={setValueLaudoTech}
@@ -197,6 +199,8 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
         onKeyUp={() => handleChange(qtdeValue)}
         hasError={!!msgError}
         msgError={msgError}
+        width="60px"
+        isCurrencyNumberOnly={false}
       />
       <InputText
         type="text"

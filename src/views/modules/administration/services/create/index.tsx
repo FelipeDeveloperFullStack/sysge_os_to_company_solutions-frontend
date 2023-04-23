@@ -9,19 +9,32 @@ import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice } from 'src/helpers/formatPrice'
+import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_SERVICES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_TITLE_PAGE, SERVICE_FILTER } from 'src/store/actions'
+import {
+  LAYOUT_MAKE_REQUEST,
+  LAYOUT_TITLE_PAGE,
+  SERVICE_FILTER,
+  SERVICE_SEE_ALL,
+} from 'src/store/actions'
 import { ServiceT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import { fromApi } from '../adapters'
 import { schemaService } from '../schemaValidation'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
 import TableView from './Table'
 
-const CreateService: React.FC = () => {
-  const dispatch = useDispatch()
+type CreateServiceProps = {
+  isNewServiceByOS?: boolean
+}
 
+const CreateService: React.FC<CreateServiceProps> = ({
+  isNewServiceByOS = false,
+}) => {
+  const dispatch = useDispatch()
+  const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
 
   const { control, handleSubmit, setValue, getValues, setError } =
@@ -45,6 +58,25 @@ const CreateService: React.FC = () => {
     })
   }, [])
 
+  const getServices = async () => {
+    try {
+      const response = await apiAdmin.get(`services`, {
+        params: {
+          description: undefined,
+        },
+      })
+      dispatch({
+        type: SERVICE_SEE_ALL,
+        payload: await fromApi(response),
+      })
+    } catch (error) {
+      exceptionHandle(
+        error,
+        'Ops! Houve um erro ao tentar buscar os servicos, atualize a página e tente novamente.',
+      )
+    }
+  }
+
   const onSubmit = async (data: ServiceT) => {
     // if (!laudos.length) {
     //   setError('laudoService', { message: 'Laudo do serviço obrigatório.' })
@@ -56,8 +88,19 @@ const CreateService: React.FC = () => {
         type: SERVICE_FILTER,
         payload: {},
       })
-      history.push(ADMINISTRATION_SERVICES)
       toast.success('Serviço cadastrado com sucesso.')
+      if (isNewServiceByOS) {
+        await getServices()
+        closeModal()
+        dispatch({
+          type: LAYOUT_MAKE_REQUEST,
+          payload: {
+            makeRequest: Math.random(),
+          },
+        })
+      } else {
+        history.push(ADMINISTRATION_SERVICES)
+      }
     } catch (error) {
       exceptionHandle(error)
     }
@@ -78,6 +121,14 @@ const CreateService: React.FC = () => {
       setError('laudoService', {
         message: 'Necessário informar o laudo do serviço.',
       })
+    }
+  }
+
+  const onHandleClose = () => {
+    if (isNewServiceByOS) {
+      closeModal()
+    } else {
+      history.push(ADMINISTRATION_SERVICES)
     }
   }
 
@@ -140,7 +191,7 @@ const CreateService: React.FC = () => {
         <ButtonContainer>
           <Button
             textButton="Salvar"
-            variant="outlined"
+            variant="contained"
             size="large"
             icon="add"
             type="submit"
@@ -150,7 +201,7 @@ const CreateService: React.FC = () => {
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(ADMINISTRATION_SERVICES)}
+            onClick={onHandleClose}
           />
         </ButtonContainer>
       </Form>

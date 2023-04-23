@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -237,7 +238,7 @@ const EditClient: React.FC = () => {
         <ButtonContainer>
           <Button
             textButton="Salvar"
-            variant="outlined"
+            variant="contained"
             size="large"
             icon="add"
             type="submit"

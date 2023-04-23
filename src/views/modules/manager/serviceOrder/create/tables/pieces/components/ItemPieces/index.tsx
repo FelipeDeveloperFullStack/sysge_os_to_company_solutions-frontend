@@ -38,6 +38,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
   const [valuePiece, setValuePiece] = useState<AutocompleteOptions>(
     {} as AutocompleteOptions,
   )
+  const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
 
   const calcPrice = (qtde: string) => {
     if (qtde?.trim() !== '') {
@@ -159,7 +160,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
     loadPiece()
 
     return () => cancel && cancel()
-  }, [valuePiece])
+  }, [valuePiece, makeRequest])
 
   /**
    * @description
@@ -180,7 +181,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
   }
 
   return (
-    <Row columns="5fr 1fr 1fr 1fr" gap={10} marginTop="5px">
+    <Row columns="5fr 0.1fr 1fr 1fr" gap={10} marginTop="5px">
       <Autocomplete
         value={valuePiece}
         setValue={setValuePiece}
@@ -201,6 +202,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
         onKeyUp={() => handleChange(qtdeValue)}
         hasError={!!msgError}
         msgError={msgError}
+        width="60px"
       />
       <InputText
         type="text"

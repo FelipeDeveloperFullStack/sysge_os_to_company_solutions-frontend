@@ -21,6 +21,7 @@
         "axios": "^0.21.1",
         "axios-mock-adapter": "^1.19.0",
         "bootstrap": "^4.6.0",
+        "crypto-js": "^4.1.1",
         "date-fns": "^2.29.2",
         "formik": "^2.2.6",
         "history": "^5.0.0",
@@ -87,6 +88,7 @@
         ]
     },
     "devDependencies": {
+        "@types/crypto-js": "^4.1.1",
         "@types/html2canvas": "^1.0.0",
         "@types/jest": "^28.1.8",
         "@types/node": "^18.7.13",

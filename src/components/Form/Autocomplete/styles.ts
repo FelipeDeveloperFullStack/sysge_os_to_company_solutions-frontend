@@ -34,6 +34,15 @@ export const Container = styled.div<ContainerProps>`
     line-height: 17.5px;
   }
 
+  > label {
+    margin-bottom: 0.1rem !important;
+    > button {
+      height: 18px;
+      position: relative;
+      bottom: 1px;
+    }
+  }
+
   ${({ variation }) =>
     variation === 'secondary' &&
     css`

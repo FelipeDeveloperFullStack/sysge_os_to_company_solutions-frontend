@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -8,20 +9,30 @@ import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice } from 'src/helpers/formatPrice'
+import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_PIECES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_TITLE_PAGE, PIECE_FILTER } from 'src/store/actions'
+import {
+  LAYOUT_MAKE_REQUEST,
+  LAYOUT_TITLE_PAGE,
+  PIECE_FILTER,
+  PIECE_SEE_ALL,
+} from 'src/store/actions'
 import { PieceT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import { fromApi } from '../adapters'
 import { schemaPiece } from '../schemaValidation'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
 
-const CreateClient: React.FC = () => {
+type CreatePieceProps = {
+  isNewServiceByOS?: boolean
+}
+
+const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const dispatch = useDispatch()
-
   const { apiAdmin } = useAdmin()
-
+  const { closeModal } = useModal()
   const [valueClear, setValueClear] = useState(0)
 
   const {
@@ -53,6 +64,25 @@ const CreateClient: React.FC = () => {
     setValueClear(clean)
   }
 
+  const getPieces = async () => {
+    try {
+      const response = await apiAdmin.get(`pieces`, {
+        params: {
+          description: undefined,
+        },
+      })
+      dispatch({
+        type: PIECE_SEE_ALL,
+        payload: await fromApi(response),
+      })
+    } catch (error) {
+      exceptionHandle(
+        error,
+        'Ops! Houve um erro ao tentar buscar as peças, atualize a página e tente novamente.',
+      )
+    }
+  }
+
   const onSubmit = async (data: PieceT) => {
     try {
       await apiAdmin.post(`pieces`, toApi(data, valueClear))
@@ -60,10 +90,31 @@ const CreateClient: React.FC = () => {
         type: PIECE_FILTER,
         payload: {},
       })
-      history.push(ADMINISTRATION_PIECES)
+
       toast.success('Peça cadastrada com sucesso.')
+
+      if (isNewServiceByOS) {
+        await getPieces()
+        closeModal()
+        dispatch({
+          type: LAYOUT_MAKE_REQUEST,
+          payload: {
+            makeRequest: Math.random(),
+          },
+        })
+      } else {
+        history.push(ADMINISTRATION_PIECES)
+      }
     } catch (error) {
       exceptionHandle(error)
+    }
+  }
+
+  const onHandleClose = () => {
+    if (isNewServiceByOS) {
+      closeModal()
+    } else {
+      history.push(ADMINISTRATION_PIECES)
     }
   }
 
@@ -100,7 +151,7 @@ const CreateClient: React.FC = () => {
         <ButtonContainer>
           <Button
             textButton="Salvar"
-            variant="outlined"
+            variant="contained"
             size="large"
             icon="add"
             type="submit"
@@ -110,7 +161,7 @@ const CreateClient: React.FC = () => {
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(ADMINISTRATION_PIECES)}
+            onClick={onHandleClose}
           />
         </ButtonContainer>
       </Form>
@@ -118,4 +169,4 @@ const CreateClient: React.FC = () => {
   )
 }
 
-export default CreateClient
+export default CreatePiece

@@ -1,6 +1,8 @@
 import { ChangeEvent, MouseEvent, useState } from 'react'
 import InputMask from '../InputMask'
 import { Container, ListSuggestions } from './styles'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
 
 export interface AutocompleteOptions {
   label: string
@@ -27,6 +29,10 @@ interface AutocompleteProps {
   setClickedValue?: (newState: AutocompleteOptions) => void
   onHandleClickAutoComplete?: any
   onSelect?: any
+  isUseButton?: boolean
+  onHandleClickButtonLabel?: () => void
+  tooltipMessageButtonLabel?: string
+  iconButtonLabel?: React.ReactNode
 }
 
 export const Autocomplete: React.FC<AutocompleteProps> = ({
@@ -46,6 +52,10 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   isUpperCase,
   onHandleClickAutoComplete,
   onSelect,
+  isUseButton = false,
+  onHandleClickButtonLabel,
+  tooltipMessageButtonLabel,
+  iconButtonLabel,
   ...rest
 }) => {
   const [showList, setShowList] = useState(false)
@@ -93,11 +103,23 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
 
   return (
     <Container variation={variation} shadow={shadow}>
-      {/* <label htmlFor={label}>{label}</label> */}
+      <label htmlFor={label}>
+        {label}
+        {!!isUseButton && (
+          <Tooltip title={tooltipMessageButtonLabel}>
+            <IconButton
+              aria-label="Adicionar"
+              onClick={onHandleClickButtonLabel}
+            >
+              {iconButtonLabel}
+            </IconButton>
+          </Tooltip>
+        )}
+      </label>
       <InputMask
         type="text"
         id={label || ''}
-        label={label || ''}
+        // label={label || ''}
         mask={mask || ''}
         value={value?.label ? String(value?.label).toUpperCase() : ''}
         onChange={onChangeInputValue}

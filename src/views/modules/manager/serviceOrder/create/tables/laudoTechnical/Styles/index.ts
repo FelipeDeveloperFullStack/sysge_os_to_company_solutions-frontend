@@ -27,3 +27,11 @@ export const Container = styled.div`
     margin-top: 10px;
   }
 `
+
+export const ContainerButtonServiceAdd = styled.div`
+  display: flex;
+  gap: 1px;
+  > button {
+    height: 23px;
+  }
+`

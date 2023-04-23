@@ -112,6 +112,9 @@ const SeeAllServiceOrder = (props: Props) => {
 
   useEffect(() => {
     getOrderServices()
+    getServices()
+    getPieces()
+    getEquipaments()
   }, [makeRequest, serviceOrderFiltered])
 
   return (

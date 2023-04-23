@@ -25,6 +25,7 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   price?: AutocompleteOptions
   setPrice?: (newState: AutocompleteOptions) => void
   isCurrencyNumberOnly?: boolean
+  width?: string
   [x: string]: any
 }
 
@@ -42,6 +43,7 @@ const InputText: React.FC<InputTextProps> = ({
   children,
   price,
   isCurrencyNumberOnly = false,
+  width,
   ...rest
 }) => {
   // const [value, setValue] = useState('')
@@ -77,6 +79,7 @@ const InputText: React.FC<InputTextProps> = ({
       hasError={msgError || hasError}
       variation={variation}
       isHasValue={value ? true : false}
+      width={width}
     >
       {label && <label htmlFor={label}>{label}</label>}
       {useIMask ? (

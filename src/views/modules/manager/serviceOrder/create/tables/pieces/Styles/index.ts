@@ -17,6 +17,14 @@ export const LinearProgressStyled = styled(LinearProgress)`
   width: 95%;
 `
 
+export const ContainerButtonPieceAdd = styled.div`
+  display: flex;
+  gap: 1px;
+  > button {
+    height: 23px;
+  }
+`
+
 export const Container = styled.div`
   > div:first-child {
     color: #909090;

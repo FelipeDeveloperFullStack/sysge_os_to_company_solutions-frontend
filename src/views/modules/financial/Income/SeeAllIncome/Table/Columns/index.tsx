@@ -74,16 +74,15 @@ export const useColumns = (props: ColumnsProps) => {
       disableColumnMenu: true,
       renderCell: (params: GridCellParams) => (
         <>
+          <IconButton
+            aria-label="update"
+            color="info"
+            onClick={() => onHandleUpdateSituationRow(params)}
+          >
+            <PublishedWithChangesIcon />
+          </IconButton>
           {params.row.situation === 'PENDENTE' && (
             <>
-              <IconButton
-                aria-label="update"
-                color="info"
-                onClick={() => onHandleUpdateSituationRow(params)}
-              >
-                <PublishedWithChangesIcon />
-              </IconButton>
-
               <IconButton
                 aria-label="delete"
                 color="default"
