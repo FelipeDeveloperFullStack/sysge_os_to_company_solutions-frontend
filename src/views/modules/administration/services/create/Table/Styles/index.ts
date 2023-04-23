@@ -18,5 +18,7 @@ export const LinearProgressStyled = styled(LinearProgress)`
 `
 
 export const TableCellStyle = styled(TableCell)`
-  padding-top: 19px;
+  > div {
+    padding-top: 16px;
+  }
 `
