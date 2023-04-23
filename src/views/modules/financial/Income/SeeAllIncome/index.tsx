@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState } from 'react'
 import useLocalStorage from 'use-local-storage'
 import Filters from './Filters'
@@ -12,6 +13,11 @@ const SeeAllIncome: React.FC = () => {
     'makeRequest',
     undefined,
   )
+
+  React.useEffect(() => {
+    scroll(0, 0)
+  }, [])
+
   return (
     <>
       <Filters

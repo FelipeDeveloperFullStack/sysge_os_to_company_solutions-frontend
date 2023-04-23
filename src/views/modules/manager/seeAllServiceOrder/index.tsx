@@ -108,6 +108,7 @@ const SeeAllServiceOrder = (props: Props) => {
     getServices()
     getPieces()
     getEquipaments()
+    scroll(0, 0)
   }, [])
 
   useEffect(() => {
