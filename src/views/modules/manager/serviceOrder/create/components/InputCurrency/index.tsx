@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useEffect } from 'react'
+import React, { InputHTMLAttributes, useEffect, useState } from 'react'
 import { IMaskInput } from 'react-imask'
 import ReactInputMask from 'react-input-mask'
 import { useSelector } from 'react-redux'
@@ -25,6 +25,7 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   price?: AutocompleteOptions
   setPrice?: (newState: AutocompleteOptions) => void
   isCurrencyNumberOnly?: boolean
+  isPercent?: boolean
   width?: string
   [x: string]: any
 }
@@ -44,6 +45,7 @@ const InputText: React.FC<InputTextProps> = ({
   price,
   isCurrencyNumberOnly = false,
   width,
+  isPercent = false,
   ...rest
 }) => {
   // const [value, setValue] = useState('')
@@ -56,7 +58,11 @@ const InputText: React.FC<InputTextProps> = ({
   )
 
   useEffect(() => {
-    if (setValue) setValue(formatPrice(value))
+    if (isPercent) {
+      setValue(`${value}%`)
+    } else {
+      if (setValue) setValue(formatPrice(value))
+    }
   }, [])
 
   const onFormatterPrice = (value: string) => {

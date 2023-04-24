@@ -41,44 +41,51 @@ const TableView: React.FC<TableViewProps> = ({
       )[0],
   )
 
-  const checkLengthLaudos = (laudos: Laudo[]): boolean => {
-    if (laudos.length > 5) {
-      showSimple.warning('Não é possível adicionar mais de 6 laudos.')
-      return false
-    } else {
-      return true
-    }
-  }
+  // const checkLengthLaudos = (laudos: Laudo[]): boolean => {
+  //   if (laudos.length > 5) {
+  //     showSimple.warning('Não é possível adicionar mais de 6 laudos.')
+  //     return false
+  //   } else {
+  //     return true
+  //   }
+  // }
 
   useEffect(() => {
     if (clickedValue) {
       if (!!Object.keys(clickedValue).length) {
         if (services?.laudos.length > 1) {
           setLaudos((previousState) => {
-            if (checkLengthLaudos(previousState)) {
-              showMessage(
-                LaudoConfirmation,
-                {
-                  clickedValue,
-                  setLaudosList,
-                  laudosList,
-                },
-                true,
-              )
-            }
+            showMessage(
+              LaudoConfirmation,
+              {
+                clickedValue,
+                setLaudosList,
+                laudosList,
+              },
+              true,
+            )
+            // if (checkLengthLaudos(previousState)) {}
             return previousState
           })
         } else if (services?.laudos.length === 1) {
           setLaudos((laudos) => [
             ...laudos,
-            laudos.length <= 5
-              ? {
-                  checked: true,
-                  description: String(services.laudos[0]).toUpperCase(),
-                  service: clickedValue.label,
-                }
-              : undefined,
+            {
+              checked: true,
+              description: String(services.laudos[0]).toUpperCase(),
+              service: clickedValue.label,
+            },
           ])
+          // setLaudos((laudos) => [
+          //   ...laudos,
+          //   laudos.length <= 5
+          //     ? {
+          //         checked: true,
+          //         description: String(services.laudos[0]).toUpperCase(),
+          //         service: clickedValue.label,
+          //       }
+          //     : undefined,
+          // ])
         }
       }
     }

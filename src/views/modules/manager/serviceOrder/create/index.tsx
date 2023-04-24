@@ -52,7 +52,7 @@ const CreateOrderService: React.FC = () => {
   )
 
   const { resetTotal } = useTotalSum()
-  const { showMessage } = useModal()
+  const { showMessage, showSimple } = useModal()
 
   const { control, handleSubmit, formState, setValue, watch } =
     useForm<ServiceOrderT>({
@@ -88,7 +88,7 @@ const CreateOrderService: React.FC = () => {
   const [client, setClient] = useState<AutocompleteOptions>(
     {} as AutocompleteOptions,
   )
-
+  const [discount, setDiscount] = useState('0')
   const [equipamentsNameOptions, setEquipamentsNameOptions] = useState<
     AutocompleteOptions[]
   >([] as AutocompleteOptions[])
@@ -349,6 +349,11 @@ const CreateOrderService: React.FC = () => {
       return
     }
 
+    if (laudos?.length > 6) {
+      showSimple.error('A quantidade de laudos não pode ser maior do que 6')
+      return
+    }
+
     setValidateErrorMessageClientName('')
     setMessageErrorTotal('')
 
@@ -513,13 +518,53 @@ const CreateOrderService: React.FC = () => {
       setManpower('')
     }
   }
+  const handleKeyDownDiscount = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (event.key === 'Backspace') {
+      setDiscount((previousState) => previousState.replace('%', ''))
+      let { clean: totalManPower } = formatInputPrice(manpower)
+      if (!totalManPower) {
+        totalManPower = 0
+      }
+      setTotal(formatPrice(totalPieces + totalLaudoTech + totalManPower))
+    }
+    if (event.key === 'Delete') {
+      let { clean: totalManPower } = formatInputPrice(manpower)
+      if (!totalManPower) {
+        totalManPower = 0
+      }
+      setTotal(formatPrice(totalPieces + totalLaudoTech + totalManPower))
+      setDiscount('')
+    }
+  }
+
+  const calculateDiscount = () => {
+    let { clean: totalManPower } = formatInputPrice(manpower)
+    if (!totalManPower) {
+      totalManPower = 0
+    }
+    let totalDiscount = discount.replace('%', '')
+    setDiscount(`${totalDiscount}%`)
+    let total = totalPieces + totalLaudoTech + totalManPower
+    total = total * (1 - Number(totalDiscount) / 100)
+    setTotal(() => formatPrice(total))
+  }
 
   const onKeyUpManpower = () => {
     const { formated, clean } = formatInputPrice(manpower)
     if (clean) {
       setManpower(formated)
-      setTotal(() => formatPrice(totalPieces + totalLaudoTech + clean))
+      if (discount) {
+        calculateDiscount()
+      } else {
+        setTotal(() => formatPrice(totalPieces + totalLaudoTech + clean))
+      }
     }
+  }
+
+  const onKeyUpDiscount = () => {
+    calculateDiscount()
   }
 
   const onHandleAddNewClient = () => {
@@ -731,13 +776,14 @@ const CreateOrderService: React.FC = () => {
             type="text"
             label="Desconto"
             mask={''}
-            value={manpower}
-            setValue={setManpower}
-            onChange={(event) => setManpower && setManpower(event.target.value)}
+            value={discount}
+            setValue={setDiscount}
+            onChange={(event) => setDiscount && setDiscount(event.target.value)}
             autoComplete="off"
-            onKeyUp={onKeyUpManpower}
-            onKeyDown={handleKeyDownManPower}
+            onKeyUp={onKeyUpDiscount}
+            onKeyDown={handleKeyDownDiscount}
             disabled={isDisableManPower}
+            isPercent
           />
           <InputText
             type="text"

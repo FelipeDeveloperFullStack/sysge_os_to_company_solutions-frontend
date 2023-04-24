@@ -34,10 +34,10 @@ const LaudoDetails: React.FC<LaudoDetailsProps> = ({
     <Container>
       {!!laudos.length && <div>Laudos</div>}
       {!!laudos.length &&
-        laudos.map((item: Laudo) => {
+        laudos?.map((item: Laudo) => {
           return (
             <>
-              {!!Object.keys(item).length && (
+              {!!Object.keys(item)?.length && (
                 <Row columns="21fr 1fr" marginTop="5px">
                   <InputText value={item.description} disabled />
                   <Tooltip title="Excluir" placement="left">
