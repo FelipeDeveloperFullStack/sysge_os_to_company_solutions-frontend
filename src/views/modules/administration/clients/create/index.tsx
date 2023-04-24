@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -18,11 +18,7 @@ import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
 import { useAdmin } from 'src/services/useAdmin'
-import {
-  CLIENT_FILTER,
-  LAYOUT_MAKE_REQUEST,
-  LAYOUT_TITLE_PAGE,
-} from 'src/store/actions'
+import { CLIENT_FILTER, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaClient } from '../schemaValidation'
@@ -38,17 +34,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   const { apiAdmin } = useAdmin()
   const { getAddressByCEP } = useServiceCEP()
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    watch,
-    setValue,
-    getValues,
-    register,
-    setError,
-    formState: { errors },
-  } = useForm<ClientT>({
+  const { control, handleSubmit, setValue, setError } = useForm<ClientT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaClient),
   })
@@ -124,6 +110,10 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
       history.push(ADMINISTRATION_CLIENTS)
     }
   }
+
+  useEffect(() => {
+    scroll(0, 0)
+  }, [])
 
   return (
     <Container>

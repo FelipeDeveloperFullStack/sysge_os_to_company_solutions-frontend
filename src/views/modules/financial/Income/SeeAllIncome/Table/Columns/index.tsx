@@ -30,11 +30,12 @@ export const useColumns = (props: ColumnsProps) => {
 
   const onHandleUpdateSituationRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
-      const { clientName, id, valueFormated } = params.row as Income
+      const { clientName, id, valueFormated, situation } = params.row as Income
       showMessage(UpdateConfirmation, {
         valueFormated,
         clientName,
         id,
+        situation,
         setMakeRequest: props.setMakeRequest,
       })
     }

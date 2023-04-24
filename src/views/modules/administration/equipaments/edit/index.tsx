@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useEffect, useState } from 'react'
@@ -32,12 +33,13 @@ const CreateBrand: React.FC = () => {
   const location = useLocation()
 
   useEffect(() => {
-    const { equipamentName, _id, brand, model, serialNumber } = location?.state
+    const { equipamentName, id, brand, model, serialNumber } = location?.state
     setValue('equipamentName', equipamentName)
     setValue('brand', brand)
     setValue('model', model)
     setValue('serialNumber', serialNumber)
-    setIdBrand(_id)
+    setIdBrand(id)
+    scroll(0, 0)
   }, [])
 
   const onSubmit = async (data: EquipamentT) => {

@@ -11,7 +11,6 @@ export const fromApiSerialNumber = (equipaments: EquipamentT[]) => {
     value: 'SEM NÚMERO DE SÉRIE',
   })
   resultSerialNumber.push({ label: 'SEM PATRIMONIO', value: 'SEM PATRIMONIO' })
-  console.log(resultSerialNumber)
   return resultSerialNumber
 }
 
@@ -38,6 +37,7 @@ export const toApi = (data: OSData, osNumber: string): OSData => {
       phoneNumber: data.client.phoneNumber || null,
       phoneNumberFixo: data.client.phoneNumberFixo || null,
       cep: data.client.cep || null,
+      id: data._id,
     },
     itemServices: data.itemServices || null,
     laudos: data.laudos || null,

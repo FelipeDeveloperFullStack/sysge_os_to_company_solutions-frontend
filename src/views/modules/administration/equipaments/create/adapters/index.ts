@@ -6,5 +6,6 @@ export const toApi = (data: EquipamentT): EquipamentT => {
     brand: data.brand,
     model: data.model,
     serialNumber: data.serialNumber,
+    id: data._id,
   }
 }

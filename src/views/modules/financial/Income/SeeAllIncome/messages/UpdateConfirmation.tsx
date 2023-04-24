@@ -13,6 +13,7 @@ type UpdateConfirmationProps = {
   valueFormated: string
   clientName: string
   id: string
+  situation: string
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
@@ -20,16 +21,21 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   clientName,
   id,
   valueFormated,
+  situation,
   setMakeRequest,
 }) => {
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
 
+  const changeSituation = () => {
+    return situation === 'PENDENTE' ? 'PAGO' : 'PENDENTE'
+  }
+
   const confirmation = () => {
     try {
       Loading.turnOn()
-      apiAdmin.put(`orderServices/${id}`, { status: 'PAGO' })
+      apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
       setMakeRequest(Math.random())
       toast.success('Receita financeira atualizada com sucesso.')
     } catch (error) {
@@ -50,7 +56,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
     <UpdateConfirmationContainer>
       <div>
         Deseja realmente atualizar o status desse registro financeiro para
-        Recebido?
+        <b>{changeSituation()}</b>?
       </div>
       <div>Cliente: {clientName}</div>
       <div>Valor: {valueFormated}</div>

@@ -12,6 +12,7 @@ export type ClientFromApi = {
 }
 export type Client = {
   _id: string
+  id: string
   name: string
   cpfOrCnpj: string
   email: string

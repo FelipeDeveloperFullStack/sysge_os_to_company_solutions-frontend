@@ -34,13 +34,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const { closeModal } = useModal()
   const [valueClear, setValueClear] = useState(0)
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setValue,
-  } = useForm<PieceT>({
+  const { control, handleSubmit, setValue } = useForm<PieceT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaPiece),
   })
@@ -106,6 +100,10 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
       history.push(ADMINISTRATION_PIECES)
     }
   }
+
+  React.useEffect(() => {
+    scroll(0, 0)
+  }, [])
 
   return (
     <Container>

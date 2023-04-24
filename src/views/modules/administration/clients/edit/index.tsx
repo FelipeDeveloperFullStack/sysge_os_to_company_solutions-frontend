@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
@@ -17,7 +18,7 @@ import validateCpf from 'src/helpers/validateCpf'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
 import { useAdmin } from 'src/services/useAdmin'
-import { CLIENT_FILTER, LAYOUT_TITLE_PAGE } from 'src/store/actions'
+import { CLIENT_FILTER } from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaClient } from '../schemaValidation'
@@ -41,16 +42,6 @@ const EditClient: React.FC = () => {
     shouldUnregister: false,
     resolver: yupResolver(schemaClient),
   })
-
-  // useLayoutEffect(() => {
-  //   scroll(0, 0)
-  //   dispatch({
-  //     type: LAYOUT_TITLE_PAGE,
-  //     payload: {
-  //       title: 'Cliente - Edição',
-  //     },
-  //   })
-  // }, [])
 
   const onSubmit = async (data: ClientT) => {
     try {
@@ -114,7 +105,7 @@ const EditClient: React.FC = () => {
       email,
       name,
       phoneNumber,
-      _id,
+      id,
       phoneNumberFixo,
     } = location.state
     setValue('address', address)
@@ -126,7 +117,8 @@ const EditClient: React.FC = () => {
     setValue('email', email)
     setValue('phoneNumber', phoneNumber)
     setValue('phoneNumberFixo', phoneNumberFixo)
-    setClientId(_id)
+    setClientId(id)
+    scroll(0, 0)
   }, [])
 
   return (

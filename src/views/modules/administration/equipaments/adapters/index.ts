@@ -7,6 +7,7 @@ export const fromApi = async (
   const { data } = response
   return data?.map((client: Client) => {
     delete client.__v
+    client.id = client._id
     return client
   })
 }

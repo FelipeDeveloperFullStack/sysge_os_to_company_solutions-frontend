@@ -58,11 +58,13 @@ export type ClientT = {
   uf?: string
   cep?: string
   _id?: string
+  id: string
 }
 export type PieceT = {
   description?: string
   value?: string
   _id?: string
+  id: string
 }
 
 export type ServiceT = {
@@ -116,6 +118,7 @@ export type EquipamentT = {
   model?: string
   serialNumber?: string
   _id?: string
+  id: string
 }
 
 export type PieceToApiT = {

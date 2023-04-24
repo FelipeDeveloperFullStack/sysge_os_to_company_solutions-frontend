@@ -10,7 +10,7 @@ import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { EquipamentT } from 'src/store/Types'
 import { ButtonGroup, Container, Text } from './style'
 
-const RemoveConfirmation: React.FC<EquipamentT> = ({ _id, equipamentName }) => {
+const RemoveConfirmation: React.FC<EquipamentT> = ({ id, equipamentName }) => {
   const { closeModal } = useModal()
   const { Loading } = useLoading()
   const { apiAdmin } = useAdmin()
@@ -19,7 +19,7 @@ const RemoveConfirmation: React.FC<EquipamentT> = ({ _id, equipamentName }) => {
   const deleteModel = async () => {
     try {
       Loading.turnOn()
-      await apiAdmin.delete(`equipaments/${_id}`)
+      await apiAdmin.delete(`equipaments/${id}`)
       toast.success(`Equipamento ${equipamentName} excluída com sucesso!`)
       closeModal()
       dispatch({

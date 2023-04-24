@@ -57,5 +57,8 @@ export const UpdateDeleteConfirmationContainer = styled.div`
 export const UpdateConfirmationContainer = styled.div`
   > div:first-child {
     font-size: 19px;
+    > b {
+      margin-left: 5px;
+    }
   }
 `

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useEffect, useState } from 'react'
@@ -33,10 +34,11 @@ const CreateClient: React.FC = () => {
 
   useEffect(() => {
     scroll(0, 0)
-    const { description, value, _id } = location.state
+    const { description, value, id } = location.state
     setValue('description', description)
     setValue('value', formatPrice(value))
-    setIdPieces(_id)
+    setIdPieces(id)
+    scroll(0, 0)
   }, [])
 
   const onFormatterPrice = (value: string) => {

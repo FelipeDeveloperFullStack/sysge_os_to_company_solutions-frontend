@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom'
 import { formatPrice } from 'src/helpers/formatPrice'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_SERVICES_EDIT } from 'src/layouts/typePath'
-import { IStore, PieceT } from 'src/store/Types'
+import { IStore, PieceT, ServiceT } from 'src/store/Types'
 import {
   IconButtonStyled,
   TableCellColumnStyled,
@@ -27,7 +27,7 @@ const TableView: React.FC = () => {
   const history = useHistory()
   const { showMessage } = useModal()
 
-  const removeClient = (client: PieceT) => {
+  const removeClient = (client: ServiceT) => {
     showMessage(RemoveConfirmation, client)
   }
 

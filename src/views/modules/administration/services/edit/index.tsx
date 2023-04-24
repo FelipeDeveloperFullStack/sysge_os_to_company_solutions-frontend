@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useEffect, useState } from 'react'
@@ -43,6 +44,7 @@ const CreateService: React.FC = () => {
     setValue('value', formatPrice(value))
     setLaudos(laudos)
     setIdService(_id)
+    scroll(0, 0)
   }, [])
 
   const addLaudo = () => {

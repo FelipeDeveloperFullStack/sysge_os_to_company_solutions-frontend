@@ -96,6 +96,10 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
     }
   }
 
+  React.useEffect(() => {
+    scroll(0, 0)
+  }, [])
+
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">

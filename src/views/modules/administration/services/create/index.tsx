@@ -121,6 +121,10 @@ const CreateService: React.FC<CreateServiceProps> = ({
     }
   }
 
+  React.useEffect(() => {
+    scroll(0, 0)
+  }, [])
+
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
