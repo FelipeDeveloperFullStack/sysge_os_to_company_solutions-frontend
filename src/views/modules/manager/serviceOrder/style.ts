@@ -19,6 +19,7 @@ type TextClientProps = {
   display?: string
   justifyContent?: string
   fontWeight?: string
+  fontSize?: string
 }
 
 const swingButtonFinancial = keyframes`
@@ -48,6 +49,8 @@ export const PaperStyled = styled(Paper)<{
   display?: string
   justifyContent?: string
   fontSize?: string
+  flexDirection?: string
+  alignItems?: string
 }>`
   border-style: solid;
   border-color: gray;
@@ -60,8 +63,10 @@ export const PaperStyled = styled(Paper)<{
     paddingBottom ? paddingBottom : '10px'};
   padding: ${({ padding }) => padding};
   display: ${({ display }) => display};
+  flex-direction: ${({ flexDirection }) => flexDirection};
   justify-content: ${({ justifyContent }) => justifyContent};
   font-size: ${({ fontSize }) => fontSize};
+  align-items: ${({ alignItems }) => alignItems};
 `
 
 export const ButtonContainerGenerateOS = styled.div<{ isGeneratePDF: boolean }>`
@@ -198,4 +203,5 @@ export const Text = styled.section<TextClientProps>`
   display: ${({ display }) => display};
   justify-content: ${({ justifyContent }) => justifyContent};
   font-weight: ${({ fontWeight }) => fontWeight};
+  font-size: ${({ fontSize }) => fontSize};
 `

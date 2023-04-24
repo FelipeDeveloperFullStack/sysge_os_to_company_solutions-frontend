@@ -44,5 +44,7 @@ export const toApi = (data: OSData, osNumber: string): OSData => {
     itemPieces: data.itemPieces || null,
     total: data.total || null,
     manpower: data.manpower || null,
+    discount: data.discount || null,
+    subTotal: data.subTotal || null,
   }
 }

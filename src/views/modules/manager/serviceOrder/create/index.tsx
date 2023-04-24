@@ -316,6 +316,18 @@ const CreateOrderService: React.FC = () => {
   //   scroll(0, 0)
   // }
 
+  const calcDiscount = (): string => {
+    let { clean: totalManPower } = formatInputPrice(manpower)
+    // let totalDiscount = Number(discount.replace('%', ''))
+    // if (!discount) {
+    //   totalDiscount = 0
+    // }
+    let totalValue = totalPieces + totalLaudoTech + totalManPower
+    // const valorDesconto = (totalValue * totalDiscount) / 100
+    //return formatPrice(Number(valorDesconto.toFixed(2)))
+    return formatPrice(totalValue)
+  }
+
   const onSubmit = async (data: ServiceOrderT & OSData) => {
     const { clean: totalCleanValue } = formatInputPrice(total)
     if (!clickedClientName?.label) {
@@ -366,13 +378,15 @@ const CreateOrderService: React.FC = () => {
       itemServices,
       laudos,
       itemPieces,
-      total,
       manpower: manpower === '' ? 'R$ 0,00' : manpower,
       equipament: equipamentName.label,
       brand: brand.label,
       model: model.label,
       serialNumber: serialNumber.label,
       osNumber,
+      discount,
+      total,
+      subTotal: calcDiscount(),
     }
 
     try {

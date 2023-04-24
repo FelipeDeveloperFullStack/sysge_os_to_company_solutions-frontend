@@ -173,12 +173,12 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               <HeaderTextFont>
                 <Image src={Logo} />
               </HeaderTextFont>
-              <HeaderText>
+              {/* <HeaderText>
                 <HeaderTextFont>
                   Instalação e manutenção de equipamentos em geral
                 </HeaderTextFont>
                 <HeaderTextFont>Manutenção de Ar Condicionado</HeaderTextFont>
-              </HeaderText>
+              </HeaderText> */}
             </Header>
 
             <DividerStyled />
@@ -189,7 +189,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   CNPJ: 46.293.911/0001-55
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={20} fontWeight>
-                  NOME DA EMPRESA AQUI
+                  SOLUTION
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
                   Av. Niemeyer QD 157 LT 24
@@ -201,7 +201,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   Fone: (62)98529-6795 (62)3222-6069
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
-                  E-mail: prflucas@gmail.com
+                  E-mail: slevandosolucao@gmail.com
                 </HeaderTextFont>
               </CompanyContact>
             </Header>
@@ -465,9 +465,16 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               display="flex"
               justifyContent="center"
               fontSize="17px"
+              flexDirection="column"
+              alignItems="center"
             >
+              {!!data?.discount && (
+                <Text isNotUsingBorderBottom fontSize="12px">
+                  <b>Desconto: </b> {data?.discount}
+                </Text>
+              )}
               <Text isNotUsingBorderBottom>
-                <b>Valor da mão de obra: </b> {data?.manpower}
+                <b>Mão de obra: </b> {data?.manpower}
               </Text>
             </PaperStyled>
             <PaperStyled
@@ -475,7 +482,14 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               display="flex"
               justifyContent="center"
               fontSize="17px"
+              flexDirection="column"
+              alignItems="center"
             >
+              {!!data?.subTotal && (
+                <Text marginRight="15px" isNotUsingBorderBottom fontSize="12px">
+                  <b>SubTotal: </b> {data?.subTotal}
+                </Text>
+              )}
               <Text marginRight="15px" isNotUsingBorderBottom>
                 <b>Total: </b> {data?.total}
               </Text>

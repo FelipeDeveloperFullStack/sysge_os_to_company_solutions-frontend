@@ -32,6 +32,8 @@ export type OSData = {
   laudos: Laudo[]
   itemPieces: ItemPieces[]
   total: string
+  subTotal: string
+  discount: string
   manpower: string
   osNumber: string
   formOfPayment?: string
