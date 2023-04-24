@@ -52,6 +52,16 @@ export const useColumns = () => {
       field: 'address',
       headerName: 'Endereço',
       width: 500,
+      renderCell: (params: GridCellParams) => {
+        const { address, city, uf } = params.row as ClientT
+        return (
+          <div>
+            <div>
+              {address} - {city}/{uf}
+            </div>
+          </div>
+        )
+      },
     },
     {
       field: 'phoneNumber',

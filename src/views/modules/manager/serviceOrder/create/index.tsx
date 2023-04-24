@@ -243,7 +243,11 @@ const CreateOrderService: React.FC = () => {
   }, [itemServices])
 
   useEffect(() => {
-    setTotal(formatPrice(totalPieces + totalLaudoTech))
+    let { clean: totalManPower } = formatInputPrice(manpower)
+    if (!totalManPower) {
+      totalManPower = 0
+    }
+    setTotal(formatPrice(totalPieces + totalLaudoTech + totalManPower))
   }, [totalPieces, totalLaudoTech])
 
   useEffect(() => {
@@ -538,6 +542,10 @@ const CreateOrderService: React.FC = () => {
     )
   }
 
+  const back = () => {
+    history.push(MANAGER_SERVICE_ORDER)
+  }
+
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -755,7 +763,7 @@ const CreateOrderService: React.FC = () => {
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(MANAGER_SERVICE_ORDER)}
+            onClick={back}
           />
         </ButtonContainer>
       </Form>
