@@ -99,6 +99,7 @@ const SeeAllServiceOrder = (props: Props) => {
     } catch (error) {
       exceptionHandle(
         error,
+
         'Ops! Houve um erro ao tentar buscar os equipamentos, atualize a página e tente novamente.',
       )
     }
