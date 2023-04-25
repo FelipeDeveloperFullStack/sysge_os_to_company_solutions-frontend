@@ -9,6 +9,7 @@ import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice } from 'src/helpers/formatPrice'
+import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_PIECES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
@@ -32,6 +33,7 @@ type CreatePieceProps = {
 const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
+  const { Loading } = useLoading()
   const { closeModal, showMessage } = useModal()
   const [valueClear, setValueClear] = useState(0)
 
@@ -74,6 +76,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
 
   const onSubmit = async (data: PieceT) => {
     try {
+      Loading.turnOn()
       await apiAdmin.post(`pieces`, toApi(data, valueClear))
       dispatch({
         type: PIECE_FILTER,
@@ -96,6 +99,8 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
       }
     } catch (error) {
       exceptionHandle(error)
+    } finally {
+      Loading.turnOff()
     }
   }
 

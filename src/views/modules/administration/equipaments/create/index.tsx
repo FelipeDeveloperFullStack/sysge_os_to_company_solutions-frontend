@@ -8,6 +8,7 @@ import { InputText } from 'src/components'
 import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
+import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_EQUIPAMENTS } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
@@ -33,6 +34,7 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const { closeModal } = useModal()
+  const { Loading } = useLoading()
 
   const { control, handleSubmit } = useForm<EquipamentT>({
     shouldUnregister: false,
@@ -65,6 +67,7 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
 
   const onSubmit = async (data: EquipamentT) => {
     try {
+      Loading.turnOn()
       await apiAdmin.post(`equipaments`, toApi(data))
       dispatch({
         type: EQUIPAMENT_FILTER,
@@ -85,6 +88,8 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
       }
     } catch (error) {
       exceptionHandle(error)
+    } finally {
+      Loading.turnOff()
     }
   }
 

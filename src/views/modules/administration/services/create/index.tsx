@@ -9,6 +9,7 @@ import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice } from 'src/helpers/formatPrice'
+import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_SERVICES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
@@ -35,6 +36,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
   const dispatch = useDispatch()
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
+  const { Loading } = useLoading()
 
   const { control, handleSubmit, setValue, getValues, setError } =
     useForm<ServiceT>({
@@ -72,6 +74,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
     //   return
     // }
     try {
+      Loading.turnOn()
       await apiAdmin.post(`services`, toApi(data, valueClear, laudos))
       dispatch({
         type: SERVICE_FILTER,
@@ -92,6 +95,8 @@ const CreateService: React.FC<CreateServiceProps> = ({
       }
     } catch (error) {
       exceptionHandle(error)
+    } finally {
+      Loading.turnOff()
     }
   }
 

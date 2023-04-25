@@ -183,7 +183,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               </HeaderText> */}
               <CompanyContact>
                 <HeaderTextFont fontSize={20} fontWeight>
-                  Contato
+                  Contatos
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
                   Whatsapp: (62)98529-6795
@@ -193,6 +193,9 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
                   E-mail: slevandosolucao@gmail.com
+                </HeaderTextFont>
+                <HeaderTextFont fontSize={12}>
+                  Instagram: solutionprestadoradeservico
                 </HeaderTextFont>
               </CompanyContact>
             </Header>

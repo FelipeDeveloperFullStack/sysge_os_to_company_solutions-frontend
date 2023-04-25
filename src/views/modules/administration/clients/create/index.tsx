@@ -14,6 +14,7 @@ import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { validateCNPJ } from 'src/helpers/validateCNPJ'
 import validateCpf from 'src/helpers/validateCpf'
+import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
@@ -33,6 +34,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const { getAddressByCEP } = useServiceCEP()
+  const { Loading } = useLoading()
 
   const { control, handleSubmit, setValue, setError } = useForm<ClientT>({
     shouldUnregister: false,
@@ -43,6 +45,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
 
   const onSubmit = async (data: ClientT) => {
     try {
+      Loading.turnOn()
       await apiAdmin.post(`clients`, data)
       dispatch({
         type: CLIENT_FILTER,
@@ -62,6 +65,8 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
       }
     } catch (error) {
       exceptionHandle(error)
+    } finally {
+      Loading.turnOff()
     }
   }
 
