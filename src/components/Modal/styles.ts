@@ -27,7 +27,8 @@ export const Container = styled.div<SimpleModalStylesProps>`
     show &&
     css`
       /* z-index: 2; */
-      z-index: 99999999999999999999999999999999;
+      /* z-index: 99999999999999999999999999999999; */
+      z-index: 9999999999;
       opacity: 1;
       visibility: visible;
     `}

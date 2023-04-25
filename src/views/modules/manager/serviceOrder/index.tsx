@@ -1,12 +1,13 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useCallback, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import BackIcon from '@mui/icons-material/Reply'
 import { useGeneratePDF } from 'src/hooks/useGeneratePDF'
 import { Row } from 'src/styles'
-import Logo from './assets/images/logo.png'
+import Logo from './assets/images/logo-solution.png'
+import Signature from './assets/images/signature.png'
 import { ItemPieces, ItemServices, OSData } from './create/type'
 import { formatPrice } from 'src/helpers/formatPrice'
 import Fab from '@mui/material/Fab'
@@ -30,6 +31,7 @@ import {
   OSNumber,
   OSText,
   PaperStyled,
+  TecnicalResponsible,
   Text,
 } from './style'
 import { Laudo } from './create/tables/type'
@@ -179,11 +181,19 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 </HeaderTextFont>
                 <HeaderTextFont>Manutenção de Ar Condicionado</HeaderTextFont>
               </HeaderText> */}
+              <CompanyContact>
+                <HeaderTextFont fontSize={20} fontWeight>
+                  Fone: (62)98529-6795 (62)3222-6069
+                </HeaderTextFont>
+                <HeaderTextFont fontSize={12}>
+                  E-mail: slevandosolucao@gmail.com
+                </HeaderTextFont>
+              </CompanyContact>
             </Header>
 
-            <DividerStyled />
+            {/* <DividerStyled /> */}
 
-            <Header>
+            {/* <Header>
               <CompanyAddress>
                 <HeaderTextFont fontSize={12} marginBottom="10px">
                   CNPJ: 46.293.911/0001-55
@@ -204,7 +214,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   E-mail: slevandosolucao@gmail.com
                 </HeaderTextFont>
               </CompanyContact>
-            </Header>
+            </Header> */}
           </PaperStyled>
 
           <ContainerOSNumberAndDate>
@@ -469,8 +479,13 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               alignItems="center"
             >
               {!!data?.discount && (
-                <Text isNotUsingBorderBottom fontSize="12px">
-                  <b>Desconto: </b> {data?.discount}
+                <Text
+                  isNotUsingBorderBottom
+                  fontSize="11px"
+                  display="flex"
+                  gap="5px"
+                >
+                  <b>Desconto: </b> <span>{data?.discount}</span>
                 </Text>
               )}
               <Text isNotUsingBorderBottom>
@@ -486,32 +501,36 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               alignItems="center"
             >
               {!!data?.subTotal && (
-                <Text marginRight="15px" isNotUsingBorderBottom fontSize="12px">
-                  <b>SubTotal: </b> {data?.subTotal}
+                <Text
+                  marginRight="15px"
+                  isNotUsingBorderBottom
+                  fontSize="11px"
+                  display="flex"
+                  gap="5px"
+                >
+                  <b>SubTotal: </b> <span>{data?.subTotal}</span>
                 </Text>
               )}
-              <Text marginRight="15px" isNotUsingBorderBottom>
+              <Text marginRight="15px" isNotUsingBorderBottom display="flex">
                 <b>Total: </b> {data?.total}
               </Text>
             </PaperStyled>
           </Row>
           <PaperStyled elevation={1} padding="40px">
-            <Row marginLeft="15px" columns="repeat(2, 1fr)" marginBottom="5px">
+            <Row
+              marginLeft="15px"
+              columns="repeat(2, 1fr)"
+              marginBottom="5px"
+              marginTop="16px"
+            >
               <Text
                 isNotUsingBorderBottom
-                borderTop="1px solid gray"
                 display="flex"
                 justifyContent="center"
+                position="relative"
               >
-                <b
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    width: '100%',
-                  }}
-                >
-                  Técnico Responsável
-                </b>
+                <Image src={Signature} />
+                <TecnicalResponsible>Técnico Responsável</TecnicalResponsible>
               </Text>
               <Text
                 isNotUsingBorderBottom

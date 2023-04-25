@@ -20,6 +20,8 @@ type TextClientProps = {
   justifyContent?: string
   fontWeight?: string
   fontSize?: string
+  gap?: string
+  position?: string
 }
 
 const swingButtonFinancial = keyframes`
@@ -41,6 +43,14 @@ const swingButtonFinancial = keyframes`
   100% {
     transform: translateX(0);
   }
+`
+
+export const TecnicalResponsible = styled.b`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  z-index: 9999999999;
+  border-top: 1px solid gray;
 `
 
 export const PaperStyled = styled(Paper)<{
@@ -67,6 +77,16 @@ export const PaperStyled = styled(Paper)<{
   justify-content: ${({ justifyContent }) => justifyContent};
   font-size: ${({ fontSize }) => fontSize};
   align-items: ${({ alignItems }) => alignItems};
+  > div {
+    > section {
+      > img {
+        position: absolute;
+        top: -53px;
+        width: 92px;
+        z-index: 0;
+      }
+    }
+  }
 `
 
 export const ButtonContainerGenerateOS = styled.div<{ isGeneratePDF: boolean }>`
@@ -135,8 +155,11 @@ export const HeaderTextFont = styled.section<HeaderTextFontProps>`
 `
 
 export const Image = styled.img`
-  width: 180px;
-  margin-bottom: 5px;
+  //width: 180px;
+  width: 171px;
+  /* margin-bottom: 5px; */
+  position: relative;
+  top: 7px;
 `
 
 export const CompanyAddress = styled.section`
@@ -204,4 +227,6 @@ export const Text = styled.section<TextClientProps>`
   justify-content: ${({ justifyContent }) => justifyContent};
   font-weight: ${({ fontWeight }) => fontWeight};
   font-size: ${({ fontSize }) => fontSize};
+  gap: ${({ gap }) => gap};
+  position: ${({ position }) => position};
 `
