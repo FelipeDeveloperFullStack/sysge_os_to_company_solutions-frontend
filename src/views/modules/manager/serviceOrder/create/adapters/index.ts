@@ -2,10 +2,12 @@ import { EquipamentT } from 'src/store/Types'
 import { OSData } from '../type'
 
 export const fromApiSerialNumber = (equipaments: EquipamentT[]) => {
-  const resultSerialNumber = equipaments.map((item) => ({
-    label: item.serialNumber,
-    value: item.serialNumber,
-  }))
+  const resultSerialNumber = equipaments
+    .map((item) => ({
+      label: item.serialNumber,
+      value: item.serialNumber,
+    }))
+    .filter((item) => item.label)
   resultSerialNumber.push({
     label: 'SEM NÚMERO DE SÉRIE',
     value: 'SEM NÚMERO DE SÉRIE',

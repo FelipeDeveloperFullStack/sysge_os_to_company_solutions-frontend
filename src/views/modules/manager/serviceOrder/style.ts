@@ -159,7 +159,7 @@ export const Image = styled.img`
   width: 171px;
   /* margin-bottom: 5px; */
   position: relative;
-  top: 7px;
+  top: 0px;
 `
 
 export const CompanyAddress = styled.section`

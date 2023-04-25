@@ -20,6 +20,7 @@ import {
 import { PieceT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { fromApi } from '../adapters'
+import ConfirmationToSave from '../messages/ConfirmationToSave'
 import { schemaPiece } from '../schemaValidation'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
@@ -31,7 +32,7 @@ type CreatePieceProps = {
 const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
-  const { closeModal } = useModal()
+  const { closeModal, showMessage } = useModal()
   const [valueClear, setValueClear] = useState(0)
 
   const { control, handleSubmit, setValue } = useForm<PieceT>({
@@ -45,6 +46,11 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
     const { formated, clean } = formatInputPrice(value)
     setValue('value', formated)
     setValueClear(clean)
+  }
+
+  const clearAllFields = () => {
+    setValue('description', '')
+    setValue('value', '')
   }
 
   const getPieces = async () => {
@@ -86,7 +92,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
           },
         })
       } else {
-        history.push(ADMINISTRATION_PIECES)
+        showMessage(ConfirmationToSave, { history, clearAllFields })
       }
     } catch (error) {
       exceptionHandle(error)
