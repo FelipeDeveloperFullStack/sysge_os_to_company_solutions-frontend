@@ -320,7 +320,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   justifyContent="center"
                   fontWeight="bold"
                 >
-                  Qtde
+                  Quantidade
                 </Text>
                 <Text
                   isNotUsingBorderBottom
@@ -328,7 +328,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   justifyContent="center"
                   fontWeight="bold"
                 >
-                  Unit
+                  Unidade
                 </Text>
                 <Text isNotUsingBorderBottom fontWeight="bold">
                   Total
@@ -417,7 +417,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 marginBottom="-16px"
               >
                 <Text isNotUsingBorderBottom fontWeight="bold">
-                  Peças e Serviços
+                  Peças
                 </Text>
                 <Text
                   isNotUsingBorderBottom
@@ -425,7 +425,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   justifyContent="center"
                   fontWeight="bold"
                 >
-                  Qtde
+                  Quantidade
                 </Text>
                 <Text
                   isNotUsingBorderBottom
@@ -433,7 +433,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   fontWeight="bold"
                   justifyContent="center"
                 >
-                  Unit
+                  Unidade
                 </Text>
                 <Text isNotUsingBorderBottom fontWeight="bold">
                   Total
@@ -494,7 +494,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   <b>Desconto: </b> <span>{data?.discount}</span>
                 </Text>
               )}
-              <Text isNotUsingBorderBottom>
+              <Text isNotUsingBorderBottom fontSize="11px">
                 <b>Mão de obra: </b> {data?.manpower}
               </Text>
             </PaperStyled>
@@ -514,7 +514,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   display="flex"
                   gap="5px"
                 >
-                  <b>SubTotal: </b> <span>{data?.subTotal}</span>
+                  <b>Valor c/desconto: </b> <span>{data?.subTotal}</span>
                 </Text>
               )}
               <Text marginRight="15px" isNotUsingBorderBottom display="flex">
@@ -527,13 +527,14 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               marginLeft="15px"
               columns="repeat(2, 1fr)"
               marginBottom="5px"
-              marginTop="16px"
+              marginTop="150px"
             >
               <Text
                 isNotUsingBorderBottom
                 display="flex"
                 justifyContent="center"
                 position="relative"
+                bottom="60px"
               >
                 <Image src={Signature} />
                 <TecnicalResponsible>Técnico Responsável</TecnicalResponsible>
@@ -543,6 +544,8 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 borderTop="1px solid gray"
                 display="flex"
                 justifyContent="center"
+                position="relative"
+                bottom="60px"
               >
                 <b
                   style={{

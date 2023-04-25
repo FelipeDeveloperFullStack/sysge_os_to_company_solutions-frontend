@@ -22,6 +22,7 @@ type TextClientProps = {
   fontSize?: string
   gap?: string
   position?: string
+  bottom?: string
 }
 
 const swingButtonFinancial = keyframes`
@@ -230,4 +231,5 @@ export const Text = styled.section<TextClientProps>`
   font-size: ${({ fontSize }) => fontSize};
   gap: ${({ gap }) => gap};
   position: ${({ position }) => position};
+  bottom: ${({ bottom }) => bottom};
 `
