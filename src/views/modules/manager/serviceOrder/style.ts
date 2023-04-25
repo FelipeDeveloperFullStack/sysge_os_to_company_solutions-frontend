@@ -82,8 +82,8 @@ export const PaperStyled = styled(Paper)<{
     > section {
       > img {
         position: absolute;
-        top: -53px;
-        width: 92px;
+        top: -93px;
+        width: 165px;
         z-index: 0;
       }
     }

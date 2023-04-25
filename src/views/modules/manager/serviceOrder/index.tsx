@@ -186,16 +186,16 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   Contatos
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
-                  Whatsapp: (62)98529-6795
+                  <b>Whatsapp:</b> (62)98529-6795
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
-                  Fixo: (62)3222-6069
+                  <b>Fixo:</b> (62)3222-6069
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
-                  E-mail: slevandosolucao@gmail.com
+                  <b>E-mail:</b> slevandosolucao@gmail.com
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
-                  Instagram: solutionprestadoradeservico
+                  <b>Instagram:</b> solutionprestadoradeservico
                 </HeaderTextFont>
               </CompanyContact>
             </Header>
@@ -521,7 +521,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 </Text>
               )}
               <Text marginRight="15px" isNotUsingBorderBottom display="flex">
-                <b>Total a Pagar: </b> {data?.total}
+                <b>Total A Pagar: </b> {data?.total}
               </Text>
             </PaperStyled>
           </Row>
