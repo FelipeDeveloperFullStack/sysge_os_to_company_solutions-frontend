@@ -168,7 +168,8 @@ export const CompanyAddress = styled.section`
 export const CompanyContact = styled.section`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
+  justify-content: center;
 `
 
 export const DividerStyled = styled(Divider)<{ marginTop?: string }>`

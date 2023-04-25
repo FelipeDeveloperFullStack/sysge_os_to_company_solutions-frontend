@@ -183,7 +183,13 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               </HeaderText> */}
               <CompanyContact>
                 <HeaderTextFont fontSize={20} fontWeight>
-                  Fone: (62)98529-6795 (62)3222-6069
+                  Contato
+                </HeaderTextFont>
+                <HeaderTextFont fontSize={12}>
+                  Whatsapp: (62)98529-6795
+                </HeaderTextFont>
+                <HeaderTextFont fontSize={12}>
+                  Fixo: (62)3222-6069
                 </HeaderTextFont>
                 <HeaderTextFont fontSize={12}>
                   E-mail: slevandosolucao@gmail.com
