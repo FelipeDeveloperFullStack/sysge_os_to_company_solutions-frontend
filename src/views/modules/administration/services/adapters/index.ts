@@ -5,10 +5,8 @@ export const fromApi = async (
   response: AxiosResponse,
 ): Promise<Array<ClientFromApi>> => {
   const { data } = response
-  return data
-    ?.map((item) => {
-      delete item.__v
-      return item
-    })
-    .filter((item) => item.status === 'PENDENTE')
+  return data?.map((item) => {
+    delete item.__v
+    return item
+  })
 }

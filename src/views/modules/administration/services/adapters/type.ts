@@ -9,6 +9,7 @@ export type ClientFromApi = {
   city: string
   uf: string
   cep: string
+  status?: string
 }
 export type Client = {
   _id: string

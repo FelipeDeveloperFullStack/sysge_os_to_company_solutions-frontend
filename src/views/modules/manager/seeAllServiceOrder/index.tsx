@@ -94,7 +94,9 @@ const SeeAllServiceOrder = (props: Props) => {
       })
       dispatch({
         type: SERVICE_ORDER_SEE_ALL,
-        payload: await fromApi(response),
+        payload: await (
+          await fromApi(response)
+        ).filter((item) => item.status === 'PENDENTE'),
       })
     } catch (error) {
       exceptionHandle(
