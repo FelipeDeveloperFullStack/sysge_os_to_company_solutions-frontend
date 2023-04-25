@@ -82,9 +82,10 @@ export const PaperStyled = styled(Paper)<{
     > section {
       > img {
         position: absolute;
-        top: -93px;
+        top: -94px;
         width: 165px;
         z-index: 0;
+        transform: rotate(348deg);
       }
     }
   }
