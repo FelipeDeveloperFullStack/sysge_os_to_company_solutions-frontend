@@ -7,6 +7,8 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import BackIcon from '@mui/icons-material/Reply'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
+import SyncIcon from '@mui/icons-material/Sync'
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 import PdfIcon from '@mui/icons-material/PictureAsPdf'
 import Button from '@mui/material/Button'
 import React from 'react'
@@ -45,6 +47,8 @@ type iconType =
   | 'close'
   | 'pdf'
   | 'doc'
+  | 'update'
+  | 'update2'
 
 const icons = {
   add: <AddIcon />,
@@ -57,6 +61,8 @@ const icons = {
   close: <CloseIcon />,
   pdf: <PdfIcon />,
   doc: <ReceiptLongIcon />,
+  update: <SyncIcon />,
+  update2: <PublishedWithChangesIcon />,
 }
 
 const defineIcon = (icon: iconType) => {

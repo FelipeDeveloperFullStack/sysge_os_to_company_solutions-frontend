@@ -32,10 +32,10 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
     return situation === 'PENDENTE' ? 'PAGO' : 'PENDENTE'
   }
 
-  const confirmation = () => {
+  const confirmation = async () => {
     try {
       Loading.turnOn()
-      apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
+      await apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
       setMakeRequest(Math.random())
       toast.success('Receita financeira atualizada com sucesso.')
     } catch (error) {

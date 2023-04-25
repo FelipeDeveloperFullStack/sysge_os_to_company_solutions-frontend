@@ -28,10 +28,10 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
 
-  const confirmation = () => {
+  const confirmation = async () => {
     try {
       Loading.turnOn()
-      apiAdmin.delete(`orderServices/${id}`)
+      await apiAdmin.delete(`orderServices/${id}`)
       setMakeRequest(Math.random())
       toast.success('Receita financeira excluída com sucesso.')
     } catch (error) {

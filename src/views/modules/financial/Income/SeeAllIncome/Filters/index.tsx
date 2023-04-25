@@ -53,7 +53,7 @@ const Filters: React.FC<FiltersProps> = ({
       const result = dateFilter(
         `${monthSelected}/${yearSelected}`,
         dataIncomeResponseFromApi,
-        'PENDENTE',
+        !selectedButton ? 'PENDENTE' : selectedButton,
       )
       setIncomesFiltered(result)
     } else {
@@ -100,7 +100,7 @@ const Filters: React.FC<FiltersProps> = ({
     const currentYear = String(getYear(new Date()))
     setMonthSelected(currentMonth)
     setYearSelected(currentYear)
-    setSelectedButton('PENDENTE')
+    setSelectedButton(!selectedButton ? 'PENDENTE' : selectedButton)
     return {
       monthSelected: currentMonth,
       yearSelected: currentYear,

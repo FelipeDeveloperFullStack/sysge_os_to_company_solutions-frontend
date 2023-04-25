@@ -1,6 +1,7 @@
 import { GridCellParams, GridColDef } from '@mui/x-data-grid'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
+import SyncIcon from '@mui/icons-material/Sync'
 import IconButton from '@mui/material/IconButton'
 import Chip from '@mui/material/Chip'
 import { useModal } from 'src/hooks/useModal'
@@ -80,7 +81,11 @@ export const useColumns = (props: ColumnsProps) => {
             color="info"
             onClick={() => onHandleUpdateSituationRow(params)}
           >
-            <PublishedWithChangesIcon />
+            {params.row.situation === 'PENDENTE' ? (
+              <PublishedWithChangesIcon />
+            ) : (
+              <SyncIcon />
+            )}
           </IconButton>
           {params.row.situation === 'PENDENTE' && (
             <>
