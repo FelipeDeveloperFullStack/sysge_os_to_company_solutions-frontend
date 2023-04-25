@@ -5,6 +5,7 @@ import { IStore } from 'src/store/Types'
 import { useColumns } from './Columns'
 import { OSData } from '../../serviceOrder/create/type'
 import { DataTable } from 'src/components/Widgets/DataTable'
+import Badge from '@mui/material/Badge'
 import { MappedDataServiceOrders } from '../types'
 import { useAdmin } from 'src/services/useAdmin'
 import { useLoading } from 'src/hooks/useLoading'
@@ -15,6 +16,7 @@ import { useModal } from 'src/hooks/useModal'
 import { ModalPDF } from '../messages/ModalPDF'
 import { ModalInformation } from '../messages/ModalInformation'
 import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { ButtonGenerateOSContainer } from './Styles'
 
 const TableView: React.FC = () => {
   const serviceOrdersStore = useSelector(
@@ -112,6 +114,7 @@ const TableView: React.FC = () => {
         closeModal()
         removeLocalStorage()
         updateTableList()
+        setSelectedAllRowIds([])
       }
     }
   }, [osDataAdded])
@@ -119,11 +122,17 @@ const TableView: React.FC = () => {
   return (
     <>
       {!!selectedAllRowIds?.length && (
-        <Button
-          textButton={`Gerar Ordens de Serviço (${selectedAllRowIds?.length})`}
-          variant="contained"
-          onClick={onHandleGenerateOS}
-        />
+        <ButtonGenerateOSContainer>
+          <Badge badgeContent={selectedAllRowIds?.length} color="primary">
+            <Button
+              textButton={`Gerar`}
+              variant="contained"
+              onClick={onHandleGenerateOS}
+              size="small"
+              icon="doc"
+            />
+          </Badge>
+        </ButtonGenerateOSContainer>
       )}
       <DataTable
         rows={mappedDataServiceOrders(serviceOrdersStore)}

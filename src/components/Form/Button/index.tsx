@@ -3,6 +3,7 @@ import AddTaskIcon from '@mui/icons-material/AddTask'
 import CloseIcon from '@mui/icons-material/Close'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import EditIcon from '@mui/icons-material/Edit'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import BackIcon from '@mui/icons-material/Reply'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
@@ -43,6 +44,7 @@ type iconType =
   | 'back'
   | 'close'
   | 'pdf'
+  | 'doc'
 
 const icons = {
   add: <AddIcon />,
@@ -54,6 +56,7 @@ const icons = {
   back: <BackIcon />,
   close: <CloseIcon />,
   pdf: <PdfIcon />,
+  doc: <ReceiptLongIcon />,
 }
 
 const defineIcon = (icon: iconType) => {

@@ -23,3 +23,7 @@ export const ContainerButton = styled.div`
   margin-top: 5px;
   margin-bottom: 5px;
 `
+
+export const ButtonGenerateOSContainer = styled.div`
+  padding: 10px 0px 10px 0px;
+`
