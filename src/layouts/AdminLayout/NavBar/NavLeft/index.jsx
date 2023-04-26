@@ -49,7 +49,7 @@ const NavLeft = () => {
 
   const checkOutTitle = ({ title }) => {
     const pathName = document.location.pathname
-    const sufixPath = ['/novo', '/editar', 'nova']
+    const sufixPath = ['/novo', '/editar', '/nova', '/dashboard']
     sufixPath.forEach((item) => {
       if (pathName.includes(item)) {
         let pageName = ''
@@ -58,10 +58,14 @@ const NavLeft = () => {
           String(item).replace('/', '') === 'nova'
         ) {
           pageName = 'Inclusão'
+          title = title + ' - ' + pageName
+        } else if (String(item).replace('/', '') === 'dashboard') {
+          pageName = 'Dashboard'
+          title = pageName
         } else {
           pageName = 'Edição'
+          title = title + ' - ' + pageName
         }
-        title = title + ' - ' + pageName
       }
     })
     return title
