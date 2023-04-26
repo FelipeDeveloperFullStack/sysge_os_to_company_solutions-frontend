@@ -33,7 +33,7 @@ export const LaunchFinancialConfirmation: React.FC<
 
   return (
     <LaunchFinancialConfirmationContainer>
-      <div>Deseja iniciar uma nova Ordem de Serviço?</div>
+      <div>Deseja Iniciar Uma Nova OS?</div>
       <ButtonLaunchFinancialConfirmationContainer>
         <Button
           textButton="Sim"

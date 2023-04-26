@@ -62,6 +62,7 @@ export const PaperStyled = styled(Paper)<{
   fontSize?: string
   flexDirection?: string
   alignItems?: string
+  isNotUseBorder?: boolean
 }>`
   border-style: solid;
   border-color: gray;
@@ -78,6 +79,14 @@ export const PaperStyled = styled(Paper)<{
   justify-content: ${({ justifyContent }) => justifyContent};
   font-size: ${({ fontSize }) => fontSize};
   align-items: ${({ alignItems }) => alignItems};
+  ${({ isNotUseBorder }) =>
+    isNotUseBorder &&
+    css`
+      box-shadow: none;
+      .css-1ps6pg7-MuiPaper-root {
+        border-style: none;
+      }
+    `}
   > div {
     > section {
       > img {
@@ -95,6 +104,7 @@ export const ButtonContainerGenerateOS = styled.div<{ isGeneratePDF: boolean }>`
   position: fixed;
   bottom: 31px;
   right: 23px;
+  z-index: 9;
   ${({ isGeneratePDF }) =>
     isGeneratePDF &&
     css`
@@ -108,6 +118,7 @@ export const ButtonContainerLaunchInTheFinancial = styled.div<{
   position: fixed;
   bottom: 85px;
   right: 23px;
+  z-index: 9;
   //animation: ${swingButtonFinancial} 1s ease-in-out infinite;
   ${({ isGeneratePDF }) =>
     isGeneratePDF &&
@@ -137,6 +148,8 @@ export const Container = styled.section<{
 export const ContainerOS = styled.section`
   padding: 15px;
   width: 1024px;
+  position: relative;
+  left: 5px;
 `
 
 export const Header = styled.section`

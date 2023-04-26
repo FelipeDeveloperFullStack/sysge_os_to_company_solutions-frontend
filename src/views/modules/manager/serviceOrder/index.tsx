@@ -126,11 +126,15 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
   }
 
   const resultNewArray = (data: any[]) => {
-    const lengthData = 6 - data?.length
-    if (lengthData < 6) {
-      return [...data, ...new Array(lengthData).fill('')]
+    if (data?.length) {
+      const lengthData = 6 - data?.length
+      if (lengthData < 6) {
+        return [...data, ...new Array(lengthData).fill('')]
+      } else {
+        return data
+      }
     } else {
-      return data
+      return [...new Array(6).fill('')]
     }
   }
 
@@ -304,8 +308,22 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 <b>Nº Série:</b> {data?.serialNumber}
               </Text>
             </Row>
+            <Row marginLeft="15px" columns="repeat(4, 1fr)" marginBottom="5px">
+              <Text>
+                <b>Cabo:</b> {data?.cable}
+              </Text>
+              <Text marginRight="15px">
+                <b>Carregador:</b> {data?.charger}
+              </Text>
+              <Text marginRight="15px">
+                <b>Quabrado:</b> {data?.breaked}
+              </Text>
+              <Text marginRight="15px">
+                <b>Detalhes:</b> {data?.detail}
+              </Text>
+            </Row>
           </PaperStyled>
-          {!!data?.itemServices.length && (
+          {!!resultRowItemServices(data?.itemServices)?.length && (
             <PaperStyled elevation={1} paddingBottom="20px">
               <Row
                 columns="8fr 1fr 1fr 1fr"
@@ -333,7 +351,11 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 >
                   Unidade
                 </Text>
-                <Text isNotUsingBorderBottom fontWeight="bold">
+                <Text
+                  isNotUsingBorderBottom
+                  fontWeight="bold"
+                  justifyContent="center"
+                >
                   Total
                 </Text>
               </Row>
@@ -373,7 +395,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               })}
             </PaperStyled>
           )}
-          {!!data?.laudos.length && (
+          {!!resultRowLaudos(data?.laudos)?.length && (
             <PaperStyled elevation={1} paddingBottom="20px">
               <Text
                 marginLeft="15px"
@@ -394,23 +416,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               })}
             </PaperStyled>
           )}
-          <PaperStyled elevation={1}>
-            <Row marginLeft="15px" columns="repeat(4, 1fr)" marginBottom="5px">
-              <Text>
-                <b>Cabo?</b> {data?.cable}
-              </Text>
-              <Text marginRight="15px">
-                <b>Carregador?</b> {data?.charger}
-              </Text>
-              <Text marginRight="15px">
-                <b>Quabrado?</b> {data?.breaked}
-              </Text>
-              <Text marginRight="15px">
-                <b>Detalhes?</b> {data?.detail}
-              </Text>
-            </Row>
-          </PaperStyled>
-          {!!data?.itemPieces.length && (
+          {!!resultRowItemPieces(data?.itemPieces)?.length && (
             <PaperStyled elevation={1} paddingBottom="20px">
               <Row
                 columns="8fr 1fr 1fr 1fr"
@@ -438,7 +444,11 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 >
                   Unidade
                 </Text>
-                <Text isNotUsingBorderBottom fontWeight="bold">
+                <Text
+                  isNotUsingBorderBottom
+                  fontWeight="bold"
+                  justifyContent="center"
+                >
                   Total
                 </Text>
               </Row>
@@ -525,7 +535,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               </Text>
             </PaperStyled>
           </Row>
-          <PaperStyled elevation={1} padding="40px">
+          <PaperStyled elevation={1} padding="40px" isNotUseBorder>
             <Row
               marginLeft="15px"
               columns="repeat(2, 1fr)"

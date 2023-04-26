@@ -47,11 +47,7 @@ const Filters: React.FC = () => {
               control={control}
               defaultValue=""
               render={({ field, fieldState }) => (
-                <InputText
-                  label="Nome do serviço"
-                  field={field}
-                  fieldState={fieldState}
-                />
+                <InputText label="Nome" field={field} fieldState={fieldState} />
               )}
             />
           </Row>

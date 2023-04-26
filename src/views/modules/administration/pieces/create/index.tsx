@@ -126,11 +126,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
             control={control}
             defaultValue=""
             render={({ field, fieldState }) => (
-              <InputText
-                label={'Nome da peça'}
-                field={field}
-                fieldState={fieldState}
-              />
+              <InputText label={'Nome'} field={field} fieldState={fieldState} />
             )}
           />
           <Controller

@@ -93,11 +93,7 @@ const CreateService: React.FC = () => {
             control={control}
             defaultValue=""
             render={({ field, fieldState }) => (
-              <InputText
-                label={'Nome do serviço'}
-                field={field}
-                fieldState={fieldState}
-              />
+              <InputText label={'Nome'} field={field} fieldState={fieldState} />
             )}
           />
           <Controller
@@ -124,6 +120,7 @@ const CreateService: React.FC = () => {
                 label={'Laudo do serviço'}
                 field={field}
                 fieldState={fieldState}
+                toUpperCase={false}
               />
             )}
           />
