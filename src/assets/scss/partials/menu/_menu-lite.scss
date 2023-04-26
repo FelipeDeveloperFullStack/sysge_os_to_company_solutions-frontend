@@ -988,7 +988,8 @@
     }
 
     &:hover {
-      width: $Menu-width !important;
+      // width: $Menu-width !important;
+      width: $Menu-collapsed-width !important;
 
       .pcoded-badge {
         transition-delay: 0.3s;
@@ -997,7 +998,8 @@
       }
 
       .header-logo {
-        width: $Menu-width;
+        // width: $Menu-width;
+        width: $Menu-collapsed-width !important;
 
         img {
           transform: rotateY(0deg);
@@ -1017,8 +1019,9 @@
 
       .pcoded-menu-caption {
         > label {
-          transform: rotateY(0deg);
-          opacity: 1;
+          // transform: rotateY(0deg);
+          // opacity: 1;
+          visibility: hidden;
         }
 
         &:after {
@@ -1035,8 +1038,8 @@
         > li {
           > a {
             > .pcoded-mtext {
-              transform: rotateY(0deg);
-              opacity: 1;
+              // transform: rotateY(0deg);
+              // opacity: 1;
 
               &:after {
                 opacity: 1;
