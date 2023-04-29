@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { ListGroup, Dropdown, Media } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { ListGroup, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 // import PerfectScrollbar from 'react-perfect-scrollbar'
 //import axios from 'axios'
@@ -17,6 +17,7 @@ const NavRight = () => {
   //const account = useSelector((state) => state.account)
   const dispatcher = useDispatch()
   const [listOpen, setListOpen] = useState(false)
+  const user = useSelector((state) => state.account.user)
 
   const handleLogout = () => {
     dispatcher({ type: LOGOUT })
@@ -149,6 +150,10 @@ const NavRight = () => {
             </Dropdown.Toggle>
           </Dropdown>
         </ListGroup.Item> */}
+
+        <ListGroup.Item as="li" bsPrefix=" ">
+          {user.name}
+        </ListGroup.Item>
 
         <ListGroup.Item as="li" bsPrefix=" ">
           <Dropdown className="drp-user">
