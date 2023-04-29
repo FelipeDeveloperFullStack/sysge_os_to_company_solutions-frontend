@@ -6,68 +6,51 @@ import { useAdmin } from 'src/services/useAdmin'
 import { useModal } from 'src/hooks/useModal'
 import { useLoading } from 'src/hooks/useLoading'
 import { toast } from 'src/components/Widgets/Toastify'
+import { useDashBoard } from './functions'
+import { formatPrice } from 'src/helpers/formatPrice'
+import { totalmem } from 'os'
 // import { Link } from 'react-router-dom'
 // import AmChartEarnings from './chart/AmChartEarnings'
 // import avatar1 from '../../../assets/images/user/avatar-1.jpg'
 // import avatar2 from '../../../assets/images/user/avatar-2.jpg'
 // import avatar3 from '../../../assets/images/user/avatar-3.jpg'
 
-type Total = {
+export type Total = {
   totalClients: number
   totalOrderService: number
   totalPieces: number
   totalServices: number
   totalEquipaments: number
+  totalIncomes: number
+  totalExpenses: number
 }
 
 const DashDefault: React.FC = () => {
-  const { apiAdmin } = useAdmin()
   const [total, setTotal] = useState<Total>({
     totalClients: 0,
     totalOrderService: 0,
     totalPieces: 0,
     totalServices: 0,
     totalEquipaments: 0,
+    totalIncomes: 0,
+    totalExpenses: 0,
   } as Total)
-  const { Loading } = useLoading()
-
-  const getTotalClients = async () => {
-    try {
-      Loading.turnOn()
-      const { data } = await apiAdmin.get('clients/total')
-      setTotal((previousState) => ({
-        ...previousState,
-        totalClients: data.total,
-      }))
-    } catch (error) {
-      toast.error(
-        'Houve um erro ao tentar retornar o total de clientes cadastrado na plataforma.',
-      )
-    } finally {
-      Loading.turnOff()
-    }
-  }
-
-  const getTotalOrderServices = async () => {
-    try {
-      Loading.turnOn()
-      const { data } = await apiAdmin.get('orderServices/total')
-      setTotal((previousState) => ({
-        ...previousState,
-        totalOrderService: data.total,
-      }))
-    } catch (error) {
-      toast.error(
-        'Houve um erro ao tentar retornar o total de ordem de serviços cadastrado na plataforma.',
-      )
-    } finally {
-      Loading.turnOff()
-    }
-  }
+  const {
+    getTotalClients,
+    getTotalOrderServices,
+    getTotalPecas,
+    getTotalServices,
+    getTotalEquipaments,
+    getTotalIncomes,
+  } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
     await getTotalClients()
     await getTotalOrderServices()
+    await getTotalPecas()
+    await getTotalServices()
+    await getTotalEquipaments()
+    await getTotalIncomes()
   }
 
   React.useEffect(() => {
@@ -85,12 +68,12 @@ const DashDefault: React.FC = () => {
                 <div className="col-9">
                   <h3 className="f-w-300 d-flex align-items-center m-b-0">
                     <i className="feather icon-arrow-up text-c-green f-30 m-r-5" />{' '}
-                    R$ 249.95
+                    {formatPrice(total.totalIncomes)}
                   </h3>
                 </div>
 
                 <div className="col-3 text-right">
-                  <p className="m-b-0">50%</p>
+                  {/* <p className="m-b-0">50%</p> */}
                 </div>
               </div>
               {/* <div className="progress m-t-30" style={{ height: '7px' }}>
@@ -114,12 +97,12 @@ const DashDefault: React.FC = () => {
                 <div className="col-9">
                   <h3 className="f-w-300 d-flex align-items-center m-b-0">
                     <i className="feather icon-arrow-down text-c-red f-30 m-r-5" />{' '}
-                    R$ 2.942.32
+                    {formatPrice(total.totalExpenses)}
                   </h3>
                 </div>
 
                 <div className="col-3 text-right">
-                  <p className="m-b-0">36%</p>
+                  {/* <p className="m-b-0">36%</p> */}
                 </div>
               </div>
               {/* <div className="progress m-t-30" style={{ height: '7px' }}>
@@ -142,13 +125,19 @@ const DashDefault: React.FC = () => {
               <div className="row d-flex align-items-center">
                 <div className="col-9">
                   <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                    <i className="feather icon-arrow-up text-c-green f-30 m-r-5" />{' '}
-                    R$ 8.638.32
+                    <i
+                      className={`feather ${
+                        total.totalIncomes - total.totalExpenses < 0
+                          ? 'icon-arrow-down text-c-red'
+                          : 'icon-arrow-up text-c-green'
+                      } f-30 m-r-5`}
+                    />{' '}
+                    {formatPrice(total.totalIncomes - total.totalExpenses)}
                   </h3>
                 </div>
 
                 <div className="col-3 text-right">
-                  <p className="m-b-0">70%</p>
+                  {/* <p className="m-b-0">70%</p> */}
                 </div>
               </div>
               {/* <div className="progress m-t-30" style={{ height: '7px' }}>

@@ -77,5 +77,7 @@ export const formatPrice = (value: String | number) => {
       style: 'currency',
       currency: 'BRL',
     })
+  } else {
+    return 'R$ 0,00'
   }
 }
