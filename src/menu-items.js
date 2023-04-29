@@ -102,6 +102,13 @@ const menuItems = {
           // icon: 'feather icon-monitor',
           icon: 'equipamentIcon',
         },
+        // {
+        //   id: 'charts',
+        //   title: 'Charts',
+        //   type: 'item',
+        //   url: '/charts/nvd3',
+        //   icon: 'feather icon-pie-chart',
+        // },
         {
           // id: 'basic',
           // title: 'Equipamentos',
