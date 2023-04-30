@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material'
+import { Badge, Paper } from '@mui/material'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -9,9 +9,18 @@ import { ModelT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import Button from '../../../../../components/Form/Button'
 import InputText from '../../../../../components/Form/InputText/index_old'
+import { ButtonGenerateOSContainer } from '../Table/Styles'
 import { ButtonContainer, Container } from './styles'
 
-const Filters: React.FC = () => {
+type FiltersProps = {
+  onHandleGenerateOS: () => void
+  selectedAllRowIds: string[]
+}
+
+const Filters: React.FC<FiltersProps> = ({
+  onHandleGenerateOS,
+  selectedAllRowIds,
+}) => {
   const { control, handleSubmit, reset } = useForm<ModelT>()
 
   const history = useHistory()
@@ -75,7 +84,20 @@ const Filters: React.FC = () => {
               icon="add"
               onClick={() => history.push(MANAGER_SERVICE_ORDER_CREATE)}
             />
-            <div>
+            {!!selectedAllRowIds?.length && (
+              <ButtonGenerateOSContainer>
+                <Badge badgeContent={selectedAllRowIds?.length} color="primary">
+                  <Button
+                    textButton={`Gerar`}
+                    variant="contained"
+                    onClick={onHandleGenerateOS}
+                    size="medium"
+                    icon="doc"
+                  />
+                </Badge>
+              </ButtonGenerateOSContainer>
+            )}
+            {/* <div>
               <Button
                 textButton="Limpar Filtro "
                 variant="outlined"
@@ -87,7 +109,7 @@ const Filters: React.FC = () => {
                 variant="outlined"
                 type="submit"
               />
-            </div>
+            </div> */}
           </ButtonContainer>
         </form>
       </Paper>

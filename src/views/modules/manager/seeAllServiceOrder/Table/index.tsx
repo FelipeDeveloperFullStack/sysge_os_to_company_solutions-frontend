@@ -1,44 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IStore } from 'src/store/Types'
 import { useColumns } from './Columns'
 import { OSData } from '../../serviceOrder/create/type'
 import { DataTable } from 'src/components/Widgets/DataTable'
-import Badge from '@mui/material/Badge'
 import { MappedDataServiceOrders } from '../types'
-import { useAdmin } from 'src/services/useAdmin'
-import { useLoading } from 'src/hooks/useLoading'
-import { toast } from 'src/components/Widgets/Toastify'
-import useLocalStorage from 'use-local-storage'
-import { Button } from 'src/components'
 import { useModal } from 'src/hooks/useModal'
-import { ModalPDF } from '../messages/ModalPDF'
 import { ModalInformation } from '../messages/ModalInformation'
 import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
-import { ButtonGenerateOSContainer } from './Styles'
 
-const TableView: React.FC = () => {
+type TableViewProps = {
+  setSelectedAllRowIds: React.Dispatch<React.SetStateAction<string[]>>
+  setIsOpenModalInformation: React.Dispatch<React.SetStateAction<boolean>>
+  isOpenModalInformation: boolean
+}
+
+const TableView: React.FC<TableViewProps> = ({
+  setSelectedAllRowIds,
+  setIsOpenModalInformation,
+  isOpenModalInformation,
+}) => {
   const serviceOrdersStore = useSelector(
     (state: IStore) => state.serviceOrder.serviceOrders,
   )
   const columns = useColumns()
-  const { apiAdmin } = useAdmin()
-  const { Loading } = useLoading()
   const dispatch = useDispatch()
-  const { showMessage, closeModal } = useModal()
-  const [oSData, setOSData] = useLocalStorage<OSData[]>(
-    'oSData',
-    [] as OSData[],
-  )
+  const { closeModal } = useModal()
+
   const osDataAdded = JSON.parse(window.localStorage.getItem('osDataAdded'))
-  // const [isRowSelected, setIsRowSelected] = useState<MappedDataServiceOrders[]>(
-  //   [] as MappedDataServiceOrders[],
-  // )
-  const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
-    [] as string[],
-  )
-  const [isOpenModalInformation, setIsOpenModalInformation] = useState(false)
 
   const mappedDataServiceOrders = (
     serviceOrder: OSData[],
@@ -58,19 +48,6 @@ const TableView: React.FC = () => {
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))
   }
 
-  const onHandleGeneratePDF = async (id: string) => {
-    try {
-      Loading.turnOn()
-      const { data } = await apiAdmin.get(`orderServices/${id}`)
-      // window.localStorage.setItem('oSData', JSON.stringify(data))
-      setOSData((previousState) => [...previousState, data])
-    } catch (error) {
-      toast.error('Opss! Houve um erro ao tentar gerar a Ordem de Serviço.')
-    } finally {
-      Loading.turnOff()
-    }
-  }
-
   const removeLocalStorage = () => {
     window.localStorage.removeItem('oSData')
     window.localStorage.removeItem('osDataAdded')
@@ -81,21 +58,6 @@ const TableView: React.FC = () => {
       removeLocalStorage()
     }
   }, [])
-
-  const onHandleGenerateOS = async () => {
-    setOSData([])
-    let index = 0
-    for (index; index < selectedAllRowIds.length; index++) {
-      const item = selectedAllRowIds[index]
-      await onHandleGeneratePDF(item)
-      if (index === selectedAllRowIds.length - 1) {
-        //window.location.reload()
-        const data = JSON.parse(window.localStorage.getItem('oSData'))
-        showMessage(ModalPDF, { oSData: data })
-        setIsOpenModalInformation(true)
-      }
-    }
-  }
 
   const updateTableList = () => {
     dispatch({
@@ -121,19 +83,6 @@ const TableView: React.FC = () => {
 
   return (
     <>
-      {!!selectedAllRowIds?.length && (
-        <ButtonGenerateOSContainer>
-          <Badge badgeContent={selectedAllRowIds?.length} color="primary">
-            <Button
-              textButton={`Gerar`}
-              variant="contained"
-              onClick={onHandleGenerateOS}
-              size="small"
-              icon="doc"
-            />
-          </Badge>
-        </ButtonGenerateOSContainer>
-      )}
       <DataTable
         rows={mappedDataServiceOrders(serviceOrdersStore)}
         columns={columns}

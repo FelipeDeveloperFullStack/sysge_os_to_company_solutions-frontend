@@ -1,8 +1,10 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { exceptionHandle } from 'src/helpers/exceptions'
+import { useLoading } from 'src/hooks/useLoading'
+import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
 import {
   EQUIPAMENT_SEE_ALL,
@@ -11,8 +13,11 @@ import {
   SERVICE_SEE_ALL,
 } from 'src/store/actions'
 import { IStore } from 'src/store/Types'
+import useLocalStorage from 'use-local-storage'
 import { fromApi } from '../../administration/services/adapters'
+import { OSData } from '../serviceOrder/create/type'
 import Filters from './filters'
+import { ModalPDF } from './messages/ModalPDF'
 import TableView from './Table'
 
 type Props = {}
@@ -20,10 +25,20 @@ type Props = {}
 const SeeAllServiceOrder = (props: Props) => {
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
+  const { Loading } = useLoading()
+  const { showMessage, closeModal } = useModal()
+  const [isOpenModalInformation, setIsOpenModalInformation] = useState(false)
   const serviceOrderFiltered = useSelector(
     (state: IStore) => state.serviceOrder.serviceOrderFilter,
   )
   const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
+  const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
+    [] as string[],
+  )
+  const [oSData, setOSData] = useLocalStorage<OSData[]>(
+    'oSData',
+    [] as OSData[],
+  )
 
   const getServices = async () => {
     try {
@@ -107,6 +122,37 @@ const SeeAllServiceOrder = (props: Props) => {
     }
   }
 
+  const onHandleGeneratePDF = async (id: string) => {
+    try {
+      Loading.turnOn()
+      const { data } = await apiAdmin.get(`orderServices/${id}`)
+      setOSData((previousState) => [...previousState, data])
+    } catch (error) {
+      exceptionHandle(
+        error,
+
+        'Opss! Houve um erro ao tentar gerar a Ordem de Serviço.',
+      )
+    } finally {
+      Loading.turnOff()
+    }
+  }
+
+  const onHandleGenerateOS = async () => {
+    setOSData([])
+    let index = 0
+    for (index; index < selectedAllRowIds.length; index++) {
+      const item = selectedAllRowIds[index]
+      await onHandleGeneratePDF(item)
+      if (index === selectedAllRowIds.length - 1) {
+        //window.location.reload()
+        const data = JSON.parse(window.localStorage.getItem('oSData'))
+        showMessage(ModalPDF, { oSData: data })
+        setIsOpenModalInformation(true)
+      }
+    }
+  }
+
   useEffect(() => {
     getServices()
     getPieces()
@@ -123,8 +169,15 @@ const SeeAllServiceOrder = (props: Props) => {
 
   return (
     <section>
-      <Filters />
-      <TableView />
+      <Filters
+        onHandleGenerateOS={onHandleGenerateOS}
+        selectedAllRowIds={selectedAllRowIds}
+      />
+      <TableView
+        setSelectedAllRowIds={setSelectedAllRowIds}
+        setIsOpenModalInformation={setIsOpenModalInformation}
+        isOpenModalInformation={isOpenModalInformation}
+      />
     </section>
   )
 }

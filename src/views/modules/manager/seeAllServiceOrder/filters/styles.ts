@@ -11,9 +11,9 @@ export const Container = styled.div`
 export const ButtonContainer = styled.section`
   margin-top: 18px;
   display: flex;
-  justify-content: space-between;
-  > div {
+  gap: 10px;
+  /* > div {
     display: flex;
     gap: 14px;
-  }
+  } */
 `
