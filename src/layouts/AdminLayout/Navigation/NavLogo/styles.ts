@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 
 export const LinkStyled = styled(Link)`
   position: absolute;
-  left: 69px;
-  top: 24px;
+  left: 54px;
+  top: -9px;
+  /* left: 69px;
+  top: 24px; */
   > svg {
     width: 28px;
     height: 28px;

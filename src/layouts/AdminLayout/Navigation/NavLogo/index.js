@@ -39,7 +39,8 @@ const NavLogo = () => {
             src={InovationIcon}
             alt="Logo"
             style={{
-              width: '50px',
+              // width: '50px',
+              width: '34px',
               marginLeft: `${!collapseMenu ? '46px' : '0px'}`,
             }}
           />
