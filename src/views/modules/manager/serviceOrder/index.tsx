@@ -488,7 +488,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               })}
             </PaperStyled>
           )}
-          <Row columns="repeat(2, 1fr)" marginBottom="5px" gap={5}>
+          <Row columns="repeat(2, 1fr)" gap={5}>
             <PaperStyled
               elevation={1}
               display="flex"
