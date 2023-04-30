@@ -31,6 +31,10 @@ const SeeAllServiceOrder = (props: Props) => {
   const serviceOrderFiltered = useSelector(
     (state: IStore) => state.serviceOrder.serviceOrderFilter,
   )
+  const serviceOrdersStore = useSelector(
+    (state: IStore) => state.serviceOrder.serviceOrders,
+  )
+  const [dataListTable, setDataListTable] = useState<OSData[]>([] as OSData[])
   const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
   const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
     [] as string[],
@@ -109,9 +113,7 @@ const SeeAllServiceOrder = (props: Props) => {
       })
       dispatch({
         type: SERVICE_ORDER_SEE_ALL,
-        payload: await (
-          await fromApi(response)
-        ).filter((item) => item.status === 'PENDENTE'),
+        payload: await await fromApi(response),
       })
     } catch (error) {
       exceptionHandle(
@@ -145,7 +147,6 @@ const SeeAllServiceOrder = (props: Props) => {
       const item = selectedAllRowIds[index]
       await onHandleGeneratePDF(item)
       if (index === selectedAllRowIds.length - 1) {
-        //window.location.reload()
         const data = JSON.parse(window.localStorage.getItem('oSData'))
         showMessage(ModalPDF, { oSData: data })
         setIsOpenModalInformation(true)
@@ -167,16 +168,23 @@ const SeeAllServiceOrder = (props: Props) => {
     getEquipaments()
   }, [makeRequest, serviceOrderFiltered])
 
+  useEffect(() => {
+    setDataListTable(serviceOrdersStore)
+  }, [])
+
   return (
     <section>
       <Filters
         onHandleGenerateOS={onHandleGenerateOS}
         selectedAllRowIds={selectedAllRowIds}
+        serviceOrdersStore={serviceOrdersStore}
+        setDataListTable={setDataListTable}
       />
       <TableView
         setSelectedAllRowIds={setSelectedAllRowIds}
         setIsOpenModalInformation={setIsOpenModalInformation}
         isOpenModalInformation={isOpenModalInformation}
+        serviceOrdersStore={dataListTable}
       />
     </section>
   )

@@ -54,7 +54,7 @@ const TableView: React.FC = () => {
           </div>
         )}
       </div>
-      <DataTable rows={mapped(clientsStore)} columns={columns} pageSize={5} />
+      <DataTable rows={mapped(clientsStore)} columns={columns} pageSize={10} />
     </>
     // <TableContainer component={Paper}>
     //   <Table sx={{ minWidth: 650 }} aria-label="simple table">

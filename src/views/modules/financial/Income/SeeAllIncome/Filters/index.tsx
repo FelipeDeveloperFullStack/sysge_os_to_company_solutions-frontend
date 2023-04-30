@@ -141,19 +141,23 @@ const Filters: React.FC<FiltersProps> = ({
             dataDado.getFullYear() === dataPesquisa.getFullYear()
           )
         })
-        .filter((item) => (situation ? item.situation === situation : item))
         .filter((item) =>
           valuesFields.nameOrOsNumber !== ''
             ? item.clientName
                 .toUpperCase()
-                .includes(valuesFields?.nameOrOsNumber?.toUpperCase())
+                .trim()
+                .includes(valuesFields?.nameOrOsNumber?.toUpperCase().trim())
             : item,
         )
         .filter((item) =>
           income
-            ? item.clientName.toUpperCase().includes(income?.toUpperCase())
+            ? item.clientName
+                .toUpperCase()
+                .trim()
+                .includes(income?.toUpperCase().trim())
             : item,
         )
+        .filter((item) => (situation ? item.situation === situation : item))
     } catch (err) {
       toast.error('Ocorreu um erro ao realizar a filtragem dos dados.')
     } finally {

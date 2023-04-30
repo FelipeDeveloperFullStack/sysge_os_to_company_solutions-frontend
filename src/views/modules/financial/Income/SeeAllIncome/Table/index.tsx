@@ -117,7 +117,7 @@ const TableView: React.FC<TableViewProps> = ({
       <DataTable
         rows={mappedIncomeFinancial(incomesFiltered)}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         checkboxSelection
         setSelectedAllRowIds={setSelectedAllRowIds}
       />

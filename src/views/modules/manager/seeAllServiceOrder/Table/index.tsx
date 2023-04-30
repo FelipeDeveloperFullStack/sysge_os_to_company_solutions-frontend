@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { IStore } from 'src/store/Types'
+import { useDispatch } from 'react-redux'
 import { useColumns } from './Columns'
 import { OSData } from '../../serviceOrder/create/type'
 import { DataTable } from 'src/components/Widgets/DataTable'
@@ -14,20 +13,18 @@ type TableViewProps = {
   setSelectedAllRowIds: React.Dispatch<React.SetStateAction<string[]>>
   setIsOpenModalInformation: React.Dispatch<React.SetStateAction<boolean>>
   isOpenModalInformation: boolean
+  serviceOrdersStore: OSData[]
 }
 
 const TableView: React.FC<TableViewProps> = ({
   setSelectedAllRowIds,
   setIsOpenModalInformation,
   isOpenModalInformation,
+  serviceOrdersStore,
 }) => {
-  const serviceOrdersStore = useSelector(
-    (state: IStore) => state.serviceOrder.serviceOrders,
-  )
   const columns = useColumns()
   const dispatch = useDispatch()
   const { closeModal } = useModal()
-
   const osDataAdded = JSON.parse(window.localStorage.getItem('osDataAdded'))
 
   const mappedDataServiceOrders = (
@@ -86,7 +83,7 @@ const TableView: React.FC<TableViewProps> = ({
       <DataTable
         rows={mappedDataServiceOrders(serviceOrdersStore)}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         checkboxSelection
         //setCellClick={setIsRowSelected}
         setSelectedAllRowIds={setSelectedAllRowIds}

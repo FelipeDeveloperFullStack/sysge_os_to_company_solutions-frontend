@@ -35,7 +35,7 @@ const TableView: React.FC = () => {
       <DataTable
         rows={mapped(equipamentsStore)}
         columns={columns}
-        pageSize={5}
+        pageSize={10}
       />
     </>
   )
