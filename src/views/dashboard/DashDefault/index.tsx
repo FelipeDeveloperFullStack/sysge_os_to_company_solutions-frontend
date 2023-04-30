@@ -63,7 +63,7 @@ const DashDefault: React.FC = () => {
         <Col md={6} xl={4}>
           <Card>
             <Card.Body>
-              <h6 className="mb-4">Total de Receitas</h6>
+              <h6 className="mb-4">Receitas</h6>
               <div className="row d-flex align-items-center">
                 <div className="col-9">
                   <h3 className="f-w-300 d-flex align-items-center m-b-0">
@@ -92,7 +92,7 @@ const DashDefault: React.FC = () => {
         <Col md={6} xl={4}>
           <Card>
             <Card.Body>
-              <h6 className="mb-4">Total de Despesas</h6>
+              <h6 className="mb-4">Despesas</h6>
               <div className="row d-flex align-items-center">
                 <div className="col-9">
                   <h3 className="f-w-300 d-flex align-items-center m-b-0">
