@@ -196,6 +196,7 @@ export const DividerStyled = styled(Divider)<{ marginTop?: string }>`
 export const ContainerOSNumberAndDate = styled.section`
   display: grid;
   grid-template-columns: 3fr 1fr;
+  gap: 5px;
 `
 
 export const ContainerOSText = styled.section`
