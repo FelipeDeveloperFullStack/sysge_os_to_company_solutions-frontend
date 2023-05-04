@@ -25,6 +25,7 @@ import {
   ADMINISTRATION_SERVICES_CREATE,
   ADMINISTRATION_SERVICES_EDIT,
   DASHBOARD,
+  FINANCIAL_SEE_ALL_EXPENSES,
   FINANCIAL_SEE_ALL_INCOME,
   MANAGER_SERVICE_ORDER,
   MANAGER_SERVICE_ORDER_CREATE,
@@ -199,6 +200,13 @@ const routes = [
         path: FINANCIAL_SEE_ALL_INCOME,
         component: lazy(() =>
           import('./views/modules/financial/Income/SeeAllIncome'),
+        ),
+      },
+      {
+        exact: true,
+        path: FINANCIAL_SEE_ALL_EXPENSES,
+        component: lazy(() =>
+          import('./views/modules/financial/Expenses/SeeAllExpenses'),
         ),
       },
       {

@@ -21,5 +21,6 @@ export const MANAGER_SERVICE_ORDER_CREATE = '/ordem-servico/nova'
 export const MANAGER_SERVICE_ORDER_EDIT = '/ordem-servico/editar'
 // Financial
 export const FINANCIAL_SEE_ALL_INCOME = '/financeiro/receitas'
+export const FINANCIAL_SEE_ALL_EXPENSES = '/financeiro/despesas'
 // Dashboard
 export const DASHBOARD = '/dashboard'

@@ -3,6 +3,7 @@ import {
   ADMINISTRATION_EQUIPAMENTS,
   ADMINISTRATION_PIECES,
   ADMINISTRATION_SERVICES,
+  FINANCIAL_SEE_ALL_EXPENSES,
   FINANCIAL_SEE_ALL_INCOME,
   MANAGER_SERVICE_ORDER,
 } from './layouts/typePath'
@@ -58,7 +59,7 @@ const menuItems = {
           id: 'income',
           title: 'Despesas',
           type: 'item',
-          url: '/administration/clients',
+          url: FINANCIAL_SEE_ALL_EXPENSES,
           // icon: 'feather icon-thumbs-down',
           icon: 'expensesIcon',
         },
