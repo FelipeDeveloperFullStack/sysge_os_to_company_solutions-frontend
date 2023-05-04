@@ -18,12 +18,10 @@ export const useColumns = (props: ColumnsProps) => {
 
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
-      const { clientName, id, osNumber, valueFormated } = params.row as Expense
+      const { id, valueFormated } = params.row as Expense
       showMessage(DeleteConfirmation, {
-        osNumber,
         id,
         valueFormated,
-        clientName,
         setMakeRequest: props.setMakeRequest,
       })
     }
@@ -31,12 +29,10 @@ export const useColumns = (props: ColumnsProps) => {
 
   const onHandleUpdateSituationRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
-      const { clientName, id, valueFormated, situation } = params.row as Expense
+      const { id, valueFormated } = params.row as Expense
       showMessage(UpdateConfirmation, {
         valueFormated,
-        clientName,
         id,
-        situation,
         setMakeRequest: props.setMakeRequest,
       })
     }
