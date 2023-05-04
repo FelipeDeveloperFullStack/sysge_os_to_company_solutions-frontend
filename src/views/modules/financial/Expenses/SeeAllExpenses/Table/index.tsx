@@ -32,9 +32,7 @@ const TableView: React.FC<TableViewProps> = ({
   const status = JSON.parse(window.localStorage.getItem('selectedButton'))
 
   const mappedIncomeFinancial = (serviceOrder: Expense[]): Expense[] => {
-    return serviceOrder
-      .map((item: Expense) => item)
-      .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))
+    return serviceOrder.map((item: Expense) => item)
   }
 
   const updateStatus = async (id: string) => {
@@ -82,10 +80,7 @@ const TableView: React.FC<TableViewProps> = ({
               <div style={{ fontSize: '12px', marginTop: '7px' }}>
                 Total:{' '}
                 {formatPrice(
-                  incomesFiltered?.reduce(
-                    (sum, row) => sum + row.valueNumber,
-                    0,
-                  ),
+                  incomesFiltered?.reduce((sum, row) => sum + row.value, 0),
                 )}
               </div>
               <div style={{ fontSize: '12px', marginTop: '7px' }}>

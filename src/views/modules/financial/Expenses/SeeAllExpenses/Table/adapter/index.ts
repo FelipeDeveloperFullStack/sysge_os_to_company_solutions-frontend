@@ -10,7 +10,7 @@ export type Expense = {
   valueFormated: string
   month: string
   year: string
-  id?: string
+  id: string
 }
 
 type ResponseFromApi = {

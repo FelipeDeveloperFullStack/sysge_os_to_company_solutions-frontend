@@ -15,6 +15,9 @@ import { toast } from 'src/components/Widgets/Toastify'
 import { Row } from 'src/styles'
 import { SeeAllExpenseProps } from '../types'
 import { formatInputPrice } from 'src/helpers/formatPrice'
+import { toApi } from './adapter/toApi'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { schemaExpense } from './schemaValidation'
 
 // type UpdateConfirmationProps = {
 //   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -25,18 +28,20 @@ export const NewExpenses: React.FC = () => {
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
   const [valueClear, setValueClear] = useState(0)
-  const { control, handleSubmit, getValues, watch, setValue } =
-    useForm<SeeAllExpenseProps>()
+  const { control, handleSubmit, setValue } = useForm<SeeAllExpenseProps>({
+    resolver: yupResolver(schemaExpense),
+    shouldUnregister: false,
+  })
 
-  const confirmation = async () => {
+  const save = async (data: SeeAllExpenseProps) => {
     try {
       Loading.turnOn()
-      // await apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
+      await apiAdmin.post(`expense`, toApi(data))
       // setMakeRequest(Math.random())
-      toast.success('Receita financeira atualizada com sucesso.')
+      toast.success('Despesa financeira adicionada com sucesso.')
     } catch (error) {
       toast.error(
-        'Opss! Ocorreu um erro ao tentar atualiza o status do registro financeiro.',
+        'Opss! Ocorreu um erro ao tentar inserir o registro financeiro.',
       )
     } finally {
       Loading.turnOff()
@@ -48,8 +53,8 @@ export const NewExpenses: React.FC = () => {
     closeModal()
   }
 
-  const onSubmitIncome = (data: SeeAllExpenseProps) => {
-    console.log(data)
+  const onSubmitIncome = async (data: SeeAllExpenseProps) => {
+    await save(data)
   }
 
   const onFormatterPrice = (value: string) => {
@@ -110,6 +115,9 @@ export const NewExpenses: React.FC = () => {
                 <InputMask
                   label="Entrada"
                   variant="outlined"
+                  fieldState={fieldState}
+                  hasError={!!fieldState.error}
+                  msgError={fieldState.error?.message}
                   mask="99/99/9999"
                   {...field}
                 />

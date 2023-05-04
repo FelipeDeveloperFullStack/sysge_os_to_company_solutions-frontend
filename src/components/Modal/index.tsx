@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { MouseEvent, useEffect, useRef } from 'react'
 import closeIcon from '../../assets/icons/close.svg'
 import { useModal } from '../../hooks/useModal'
@@ -29,7 +30,7 @@ const Modal: React.FC = () => {
 
   const onClickOutModal = (event: MouseEvent) => {
     if (closeable && event.target === modalRef.current) {
-      closeModal()
+      //closeModal()
     }
   }
 
@@ -38,7 +39,7 @@ const Modal: React.FC = () => {
       <div>
         {closeable && (
           <span data-test="fechar-modal" onClick={closeModal}>
-            <img src={closeIcon} />
+            <img src={closeIcon} alt="" />
           </span>
         )}
         {message}
