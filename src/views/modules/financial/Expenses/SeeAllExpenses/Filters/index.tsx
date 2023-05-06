@@ -23,11 +23,13 @@ type SeeAllIncomeProps = {
 type FiltersProps = {
   setIncomesFiltered: React.Dispatch<React.SetStateAction<Expense[]>>
   makeRequest: number
+  setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
 const Filters: React.FC<FiltersProps> = ({
   setIncomesFiltered,
   makeRequest,
+  setMakeRequest,
 }) => {
   const { control, handleSubmit, getValues, watch } =
     useForm<SeeAllIncomeProps>()
@@ -40,10 +42,10 @@ const Filters: React.FC<FiltersProps> = ({
   const [incomes, setIncomes] = useState<Expense[]>([] as Expense[])
   const { Loading } = useLoading()
   const [selectedButton, setSelectedButton] = useLocalStorage(
-    'selectedButton',
-    '',
+    'selectedButtonExpense',
+    'A PAGAR',
   )
-  const inputValueName = watch('expense')
+  const expense = watch('expense')
 
   const onSubmitIncome = (nameOrOsNumber: SeeAllIncomeProps) => {
     // const result = dateFilter(`${monthSelected}/${yearSelected}`, incomes)
@@ -56,7 +58,7 @@ const Filters: React.FC<FiltersProps> = ({
       const result = dateFilter(
         `${monthSelected}/${yearSelected}`,
         dataIncomeResponseFromApi,
-        !selectedButton ? 'PENDENTE' : selectedButton,
+        !selectedButton ? 'A PAGAR' : selectedButton,
       )
       setIncomesFiltered(result)
     } else {
@@ -67,8 +69,12 @@ const Filters: React.FC<FiltersProps> = ({
   const getDataOrderServices = async () => {
     try {
       Loading.turnOn()
-      const { data } = await apiAdmin.get('orderServices')
-      const { resultFromApi, orderedMonth, orderedYear } = fromApi(data)
+      const { data: dataExpense } = await apiAdmin.get('expense')
+      const { data: dataPieces } = await apiAdmin.get('pieces')
+      const { resultFromApi, orderedMonth, orderedYear } = fromApi(
+        dataExpense,
+        dataPieces,
+      )
       setMonths(orderedMonth)
       setYears(orderedYear)
       setIncomes(resultFromApi)
@@ -82,7 +88,11 @@ const Filters: React.FC<FiltersProps> = ({
 
   const onHandleClickYear = (year: string) => {
     setYearSelected(year)
-    const result = dateFilter(`${monthSelected}/${year}`, incomes)
+    const result = dateFilter(
+      `${monthSelected}/${year}`,
+      incomes,
+      selectedButton,
+    )
     setIncomesFiltered(result)
   }
 
@@ -92,7 +102,11 @@ const Filters: React.FC<FiltersProps> = ({
       return
     }
     setMonthSelected(month)
-    const result = dateFilter(`${month}/${yearSelected}`, incomes)
+    const result = dateFilter(
+      `${month}/${yearSelected}`,
+      incomes,
+      selectedButton,
+    )
     setIncomesFiltered(result)
   }
 
@@ -103,7 +117,7 @@ const Filters: React.FC<FiltersProps> = ({
     const currentYear = String(getYear(new Date()))
     setMonthSelected(currentMonth)
     setYearSelected(currentYear)
-    setSelectedButton(!selectedButton ? 'PENDENTE' : selectedButton)
+    setSelectedButton(!selectedButton ? 'A PAGAR' : selectedButton)
     return {
       monthSelected: currentMonth,
       yearSelected: currentYear,
@@ -124,7 +138,7 @@ const Filters: React.FC<FiltersProps> = ({
     data: string,
     arrayDatas: Expense[],
     situation?: string,
-    income?: string,
+    expense?: string,
   ): any[] {
     try {
       Loading.turnOn()
@@ -153,11 +167,11 @@ const Filters: React.FC<FiltersProps> = ({
             : item,
         )
         .filter((item) =>
-          income
+          expense
             ? item.expense
                 .toUpperCase()
                 .trim()
-                .includes(income?.toUpperCase().trim())
+                .includes(expense?.toUpperCase().trim())
             : item,
         )
         .filter((item) => (situation ? item.status === situation : item))
@@ -169,7 +183,7 @@ const Filters: React.FC<FiltersProps> = ({
   }
 
   const onHandleNewExpenses = () => {
-    showMessage(NewExpenses, {}, true)
+    showMessage(NewExpenses, { setMakeRequest }, true)
   }
 
   useEffect(() => {
@@ -181,14 +195,20 @@ const Filters: React.FC<FiltersProps> = ({
       `${monthSelected}/${yearSelected}`,
       incomes,
       '',
-      inputValueName,
+      expense,
     )
     setIncomesFiltered(result)
-  }, [inputValueName])
+  }, [expense])
+
+  useEffect(() => {
+    return () => {
+      window.localStorage.removeItem('selectedButtonExpense')
+    }
+  }, [])
 
   return (
     <>
-      {!!incomes.length && (
+      {!!incomes.length ? (
         <Paper elevation={1}>
           <Container>
             <Row display="flex" flexDirection="column" gap={1}>
@@ -236,11 +256,11 @@ const Filters: React.FC<FiltersProps> = ({
                 <Row display="flex" flexDirection="row" gap={10}>
                   <Button
                     variant={
-                      selectedButton === 'PENDENTE' ? 'contained' : 'outlined'
+                      selectedButton === 'A PAGAR' ? 'contained' : 'outlined'
                     }
                     textButton="Pendentes a Pagar"
                     color="warning"
-                    onClick={() => onHandleSituation('PENDENTE')}
+                    onClick={() => onHandleSituation('A PAGAR')}
                   />
                   <Button
                     variant={
@@ -281,6 +301,14 @@ const Filters: React.FC<FiltersProps> = ({
             </Row>
           </Container>
         </Paper>
+      ) : (
+        <Button
+          variant="outlined"
+          textButton="Incluir"
+          color="info"
+          icon="add"
+          onClick={onHandleNewExpenses}
+        />
       )}
     </>
   )

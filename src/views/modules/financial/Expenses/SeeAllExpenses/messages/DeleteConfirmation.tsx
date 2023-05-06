@@ -3,22 +3,27 @@ import { Button } from 'src/components'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
-import { UpdateDeleteConfirmationContainer, NewExpenseContainer } from './style'
+import {
+  UpdateDeleteConfirmationContainer,
+  DeleteConfirmationContainer,
+  Text,
+} from './style'
 import { toast } from 'src/components/Widgets/Toastify'
+import Alert from '@mui/material/Alert'
 
 type DeleteConfirmationProps = {
-  osNumber: number
-  valueFormated: string
-  clientName: string
   id: string
+  valueFormated: string
+  expense: string
+  status: string
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
-  clientName,
   id,
-  osNumber,
   valueFormated,
+  expense,
+  status,
   setMakeRequest,
 }) => {
   const { closeModal } = useModal()
@@ -28,9 +33,9 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   const confirmation = async () => {
     try {
       Loading.turnOn()
-      await apiAdmin.delete(`orderServices/${id}`)
+      await apiAdmin.delete(`expense/${id}`)
       setMakeRequest(Math.random())
-      toast.success('Receita financeira excluída com sucesso.')
+      toast.success('Despesa financeira excluída com sucesso.')
     } catch (error) {
       toast.error(
         'Opss! Ocorreu um erro ao tentar excluir o registro financeiro.',
@@ -46,14 +51,18 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   }
 
   return (
-    <NewExpenseContainer>
-      <div>Deseja realmente excluir essa receita?</div>
-      <div>Cliente: {clientName}</div>
-      <div>Valor: {valueFormated}</div>
-      <div>
-        Ao clicar em SIM a ordem de serviço de Nº {osNumber} também será
-        excluída do sistema.
-      </div>
+    <DeleteConfirmationContainer>
+      <Text>
+        <Alert severity="warning">
+          Deseja realmente <b>excluir</b> essa despesa?
+        </Alert>
+      </Text>
+      <p />
+      <Alert severity="info">Despesa: {expense}</Alert>
+      <Alert severity="info">Valor: {valueFormated}</Alert>
+      <Alert severity="info">
+        Status: <b>{status}</b>
+      </Alert>
       <UpdateDeleteConfirmationContainer>
         <Button
           textButton="Sim"
@@ -71,6 +80,6 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
           onClick={cancel}
         />
       </UpdateDeleteConfirmationContainer>
-    </NewExpenseContainer>
+    </DeleteConfirmationContainer>
   )
 }

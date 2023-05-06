@@ -20,6 +20,10 @@ export const Text = styled.section<{ bold?: boolean }>`
     css`
       font-weight: bold;
     `}
+  > svg {
+    width: 80px;
+    height: 80px;
+  }
 `
 
 export const FormControlLabelStyled = styled(FormControlLabel)`
@@ -55,7 +59,15 @@ export const UpdateDeleteConfirmationContainer = styled.div`
 `
 
 export const NewExpenseContainer = styled.div`
-  width: 700px;
+  width: 730px;
+  > div:first-child {
+    font-size: 19px;
+    > b {
+      margin-left: 5px;
+    }
+  }
+`
+export const DeleteConfirmationContainer = styled.div`
   > div:first-child {
     font-size: 19px;
     > b {

@@ -23,6 +23,7 @@ const SeeAllExpenses: React.FC = () => {
       <Filters
         setIncomesFiltered={setIncomesFiltered}
         makeRequest={makeRequest}
+        setMakeRequest={setMakeRequest}
       />
       <TableView
         incomesFiltered={incomesFiltered}

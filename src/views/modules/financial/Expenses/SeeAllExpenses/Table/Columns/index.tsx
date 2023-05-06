@@ -18,10 +18,12 @@ export const useColumns = (props: ColumnsProps) => {
 
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
-      const { id, valueFormated } = params.row as Expense
+      const { id, valueFormated, expense, status } = params.row as Expense
       showMessage(DeleteConfirmation, {
         id,
         valueFormated,
+        expense,
+        status,
         setMakeRequest: props.setMakeRequest,
       })
     }
@@ -29,42 +31,53 @@ export const useColumns = (props: ColumnsProps) => {
 
   const onHandleUpdateSituationRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
-      const { id, valueFormated } = params.row as Expense
+      const { id, valueFormated, status, expense } = params.row as Expense
       showMessage(UpdateConfirmation, {
         valueFormated,
         id,
+        situation: status,
+        expense,
         setMakeRequest: props.setMakeRequest,
       })
     }
   }
 
   const columns: GridColDef[] = [
-    { field: 'clientName', headerName: 'Nome', width: 410 },
-    { field: 'osNumber', headerName: 'Nº OS' },
+    { field: 'expense', headerName: 'Despesa', width: 370 },
     {
       field: 'valueFormated',
       headerName: 'Valor',
     },
     {
-      field: 'situation',
+      field: 'status',
       headerName: 'Status',
       width: 125,
       renderCell: (params: GridCellParams) => {
         const situation = params.value as string
         return (
           <Chip
-            label={situation === 'PAGO' ? 'RECEBIDO' : 'PENDENTE'}
+            label={situation === 'PAGO' ? 'PAGO' : 'A PAGAR'}
             color={situation === 'PAGO' ? 'success' : 'warning'}
           />
         )
       },
     },
     {
-      field: 'formOfPayment',
-      headerName: 'Forma Pagamento',
+      field: 'isRegister',
+      headerName: 'Peças',
       width: 170,
+      renderCell: (params: GridCellParams) => {
+        const isRegister = params.value as boolean
+        return (
+          <Chip
+            label={isRegister ? 'REGISTRADO' : 'NÃO REGISTRADO'}
+            color={isRegister ? 'info' : 'error'}
+          />
+        )
+      },
     },
-    { field: 'dateOS', headerName: 'Data' },
+    { field: 'dateIn', headerName: 'Entrada' },
+    { field: 'maturity', headerName: 'Vencimento' },
     {
       field: 'group-buttons',
       headerName: ' ',
@@ -77,13 +90,13 @@ export const useColumns = (props: ColumnsProps) => {
             color="info"
             onClick={() => onHandleUpdateSituationRow(params)}
           >
-            {params.row.situation === 'PENDENTE' ? (
+            {params.row.situation?.toUpperCase().trim() === 'A PAGAR' ? (
               <PublishedWithChangesIcon />
             ) : (
               <SyncIcon />
             )}
           </IconButton>
-          {params.row.situation === 'PENDENTE' && (
+          {params.row.situation?.toUpperCase().trim() === 'A PAGAR' && (
             <>
               <IconButton
                 aria-label="delete"

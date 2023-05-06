@@ -3,19 +3,24 @@ import { Button } from 'src/components'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
-import { UpdateDeleteConfirmationContainer, NewExpenseContainer } from './style'
+import {
+  UpdateDeleteConfirmationContainer,
+  NewExpenseContainer,
+  Text,
+} from './style'
 import { toast } from 'src/components/Widgets/Toastify'
+import Alert from '@mui/material/Alert'
 
 type UpdateConfirmationProps = {
   valueFormated: string
-  clientName: string
+  expense: string
   id: string
   situation: string
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
-  clientName,
+  expense,
   id,
   valueFormated,
   situation,
@@ -26,15 +31,15 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   const { Loading } = useLoading()
 
   const changeSituation = () => {
-    return situation === 'PENDENTE' ? 'PAGO' : 'PENDENTE'
+    return situation === 'A PAGAR' ? 'PAGO' : 'A PAGAR'
   }
 
   const confirmation = async () => {
     try {
       Loading.turnOn()
-      await apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
+      await apiAdmin.put(`expense/${id}`, { status: changeSituation() })
       setMakeRequest(Math.random())
-      toast.success('Receita financeira atualizada com sucesso.')
+      toast.success('Despesa financeira atualizada com sucesso.')
     } catch (error) {
       toast.error(
         'Opss! Ocorreu um erro ao tentar atualiza o status do registro financeiro.',
@@ -51,15 +56,16 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
 
   return (
     <NewExpenseContainer>
-      <div>
-        Deseja realmente atualizar o status desse registro financeiro para
+      <Text>
+        Deseja realmente atualizar o status desse registro financeiro para{' '}
         <b>{changeSituation()}</b>?
-      </div>
-      <div>Cliente: {clientName}</div>
-      <div>Valor: {valueFormated}</div>
-      <div>
+      </Text>
+      <p />
+      <Alert severity="info">Despesa: {expense}</Alert>
+      <Alert severity="info">Valor: {valueFormated}</Alert>
+      <Alert severity="warning">
         <b>Ao clicar em SIM o procedimento não poderá ser desfeito.</b>
-      </div>
+      </Alert>
       <UpdateDeleteConfirmationContainer>
         <Button
           textButton="Sim"

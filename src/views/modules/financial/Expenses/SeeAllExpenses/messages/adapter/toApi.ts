@@ -4,6 +4,7 @@ type ToApi = {
   expense: string
   value: string
   dateIn: string
+  maturity: string
   status: string
 }
 
@@ -12,6 +13,7 @@ export const toApi = (data: SeeAllExpenseProps): ToApi => {
     expense: data.expense,
     value: data.valueFormated,
     dateIn: data.dateIn,
+    maturity: data.maturity,
     status: data.status,
   }
 }

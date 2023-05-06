@@ -4,6 +4,7 @@ export type SeeAllExpenseProps = {
   expense: string
   valueFormated: string
   dateIn: string
+  maturity: string
   status: string
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react'
 import { Button } from 'src/components'
 import { useLoading } from 'src/hooks/useLoading'
@@ -18,28 +19,56 @@ import { formatInputPrice } from 'src/helpers/formatPrice'
 import { toApi } from './adapter/toApi'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schemaExpense } from './schemaValidation'
+import { Select } from 'src/components/Widgets/Select'
+import {
+  Autocomplete,
+  AutocompleteOptions,
+} from 'src/components/Form/Autocomplete'
+import { addDaysMaturity, statusOptions } from './statics'
+import onlyNumbers from 'src/helpers/clear/onlyNumbers'
 
-// type UpdateConfirmationProps = {
-//   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
-// }
+type UpdateConfirmationProps = {
+  setMakeRequest: React.Dispatch<React.SetStateAction<number>>
+}
 
-export const NewExpenses: React.FC = () => {
+export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
+  setMakeRequest,
+}) => {
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
-  const [valueClear, setValueClear] = useState(0)
-  const { control, handleSubmit, setValue } = useForm<SeeAllExpenseProps>({
-    resolver: yupResolver(schemaExpense),
-    shouldUnregister: false,
-  })
+  const [_, setValueClear] = useState(0)
+
+  const { control, handleSubmit, setValue, watch } =
+    useForm<SeeAllExpenseProps>({
+      resolver: yupResolver(schemaExpense),
+      shouldUnregister: false,
+    })
+
+  const [optionMaturity, setOptionMaturity] = useState<AutocompleteOptions[]>(
+    [] as AutocompleteOptions[],
+  )
+
+  const [clickedMaturity, setClickedMaturity] = useState(
+    {} as AutocompleteOptions,
+  )
+
+  const dateIn = watch('dateIn')
+  const maturity = watch('maturity')
+  setValue('status', statusOptions[0].label)
 
   const save = async (data: SeeAllExpenseProps) => {
     try {
       Loading.turnOn()
+      data = {
+        ...data,
+        maturity: clickedMaturity?.label || maturity,
+      }
       await apiAdmin.post(`expense`, toApi(data))
-      // setMakeRequest(Math.random())
+      setMakeRequest(Math.random())
       toast.success('Despesa financeira adicionada com sucesso.')
     } catch (error) {
+      console.log(error)
       toast.error(
         'Opss! Ocorreu um erro ao tentar inserir o registro financeiro.',
       )
@@ -62,6 +91,31 @@ export const NewExpenses: React.FC = () => {
     setValue('valueFormated', formated)
     setValueClear(clean)
   }
+
+  React.useEffect(() => {
+    if (dateIn) {
+      const onlyNumber = onlyNumbers(dateIn)
+      if (onlyNumber.length === 8) {
+        setOptionMaturity(addDaysMaturity(dateIn))
+      }
+    }
+  }, [dateIn])
+
+  React.useEffect(() => {
+    if (maturity) {
+      const onlyNumberMaturity = onlyNumbers(maturity)
+      if (!onlyNumberMaturity.length) {
+        if (dateIn) {
+          const onlyNumberDateIn = onlyNumbers(dateIn)
+          if (onlyNumberDateIn.length === 8) {
+            setOptionMaturity(addDaysMaturity(dateIn))
+          }
+        } else {
+          setOptionMaturity([])
+        }
+      }
+    }
+  }, [maturity])
 
   return (
     <NewExpenseContainer>
@@ -90,7 +144,7 @@ export const NewExpenses: React.FC = () => {
           </Row>
           <Row
             display="grid"
-            columns="repeat(3, 1fr)"
+            columns="repeat(4, 1fr)"
             alignItems="end"
             gap={10}
           >
@@ -124,14 +178,40 @@ export const NewExpenses: React.FC = () => {
               )}
             />
             <Controller
+              name="maturity"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <Autocomplete
+                  label="Vencimento"
+                  value={{ label: field.value, value: field.value }}
+                  setValue={(previousState: AutocompleteOptions) =>
+                    setValue('maturity', previousState.label)
+                  }
+                  mask="99/99/9999"
+                  options={optionMaturity}
+                  setOptions={setOptionMaturity}
+                  setClickedValue={setClickedMaturity}
+                  hasError={!!fieldState.error}
+                  error={fieldState.error?.message}
+                  isUseButton
+                />
+              )}
+            />
+            <Controller
               name="status"
               control={control}
               defaultValue=""
               render={({ field, fieldState }) => (
-                <InputText
+                <Select
                   label={'Status'}
-                  field={field}
-                  fieldState={fieldState}
+                  value={field.value}
+                  setValue={(previousState) =>
+                    setValue('status', previousState)
+                  }
+                  options={statusOptions}
+                  hasError={!!fieldState.error}
+                  msgError={fieldState.error?.message}
                 />
               )}
             />

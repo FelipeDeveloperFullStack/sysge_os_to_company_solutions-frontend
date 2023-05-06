@@ -1,13 +1,27 @@
 import { format, parse } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { formatInputPrice } from 'src/helpers/formatPrice'
+import { PieceT } from 'src/store/Types'
+
+export type Response = {
+  expense: string
+  value?: string
+  dateIn: string
+  maturity: string
+  status: string
+  month: string
+  year: string
+  _id: string
+}
 
 export type Expense = {
   expense: string
   value?: number
   dateIn: string
+  maturity: string
   status: string
   valueFormated: string
+  isRegister?: PieceT
   month: string
   year: string
   id: string
@@ -24,7 +38,10 @@ type MonthAndYear = {
   year: string
 }
 
-export const fromApi = (expense: Expense[]): ResponseFromApi => {
+export const fromApi = (
+  expense: Response[],
+  pieces: PieceT[],
+): ResponseFromApi => {
   const monthSet = new Set<string>()
   const orderMonth = [
     'JAN',
@@ -56,14 +73,20 @@ export const fromApi = (expense: Expense[]): ResponseFromApi => {
 
   const resultFromApi = expense.map((item) => ({
     expense: item.expense,
-    value: item.value,
+    value: removeFormatValueOs(item.value),
     dateIn: item.dateIn,
+    maturity: item.maturity,
     status: item.status,
-    valueFormated: item.valueFormated,
     situation: item.status,
-    month: item.month,
-    year: item.year,
-    id: item.id,
+    month: getMonthAndYear(item.dateIn).month,
+    year: getMonthAndYear(item.dateIn).year,
+    valueFormated: item.value,
+    isRegister: pieces.find(
+      (piece) =>
+        piece.description?.toUpperCase().trim() ===
+        item.expense?.toUpperCase().trim(),
+    ),
+    id: item._id,
   }))
 
   const orderedYear = (resultFromApi: Expense[]): string[] => {

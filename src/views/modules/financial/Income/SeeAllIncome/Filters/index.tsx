@@ -38,7 +38,7 @@ const Filters: React.FC<FiltersProps> = ({
   const { Loading } = useLoading()
   const [selectedButton, setSelectedButton] = useLocalStorage(
     'selectedButton',
-    '',
+    'PENDENTE',
   )
   const inputValueName = watch('nameOrOsNumber')
 
@@ -79,7 +79,11 @@ const Filters: React.FC<FiltersProps> = ({
 
   const onHandleClickYear = (year: string) => {
     setYearSelected(year)
-    const result = dateFilter(`${monthSelected}/${year}`, incomes)
+    const result = dateFilter(
+      `${monthSelected}/${year}`,
+      incomes,
+      selectedButton,
+    )
     setIncomesFiltered(result)
   }
 
@@ -89,7 +93,11 @@ const Filters: React.FC<FiltersProps> = ({
       return
     }
     setMonthSelected(month)
-    const result = dateFilter(`${month}/${yearSelected}`, incomes)
+    const result = dateFilter(
+      `${month}/${yearSelected}`,
+      incomes,
+      selectedButton,
+    )
     setIncomesFiltered(result)
   }
 
@@ -178,6 +186,12 @@ const Filters: React.FC<FiltersProps> = ({
     )
     setIncomesFiltered(result)
   }, [inputValueName])
+
+  useEffect(() => {
+    return () => {
+      window.localStorage.removeItem('selectedButton')
+    }
+  }, [])
 
   return (
     <>
