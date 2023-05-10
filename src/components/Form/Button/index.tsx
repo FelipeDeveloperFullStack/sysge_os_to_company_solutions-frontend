@@ -11,6 +11,9 @@ import SyncIcon from '@mui/icons-material/Sync'
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 import PdfIcon from '@mui/icons-material/PictureAsPdf'
 import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import { green } from '@mui/material/colors'
 import React from 'react'
 
 interface buttonProps {
@@ -22,6 +25,7 @@ interface buttonProps {
   size?: sizeType
   onClick?: () => void
   type?: string
+  loading?: boolean
   [x: string]: any
 }
 
@@ -72,18 +76,33 @@ const defineIcon = (icon: iconType) => {
 const _Button: React.FunctionComponent<buttonProps> = (props, { ...rest }) => {
   return (
     <React.Fragment>
-      <Button
-        variant={props.variant}
-        color={props.color}
-        disabled={props.disabled || false}
-        onClick={props.onClick}
-        startIcon={defineIcon(props.icon)}
-        size={props.size}
-        type={props.type}
-        {...rest}
-      >
-        {props.textButton}
-      </Button>
+      <Box sx={{ m: 1, position: 'relative' }}>
+        <Button
+          variant={props.variant}
+          color={props.color}
+          disabled={props.disabled || false || props.loading}
+          onClick={props.onClick}
+          startIcon={defineIcon(props.icon)}
+          size={props.size}
+          type={props.type}
+          {...rest}
+        >
+          {props.textButton}
+        </Button>
+        {props.loading && (
+          <CircularProgress
+            size={24}
+            sx={{
+              color: green[500],
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              marginTop: '-12px',
+              marginLeft: '-12px',
+            }}
+          />
+        )}
+      </Box>
     </React.Fragment>
   )
 }

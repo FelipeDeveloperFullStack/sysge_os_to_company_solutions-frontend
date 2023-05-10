@@ -71,7 +71,7 @@ export const useColumns = (props: ColumnsProps) => {
         return (
           <Chip
             label={isRegister ? 'REGISTRADO' : 'NÃO REGISTRADO'}
-            color={isRegister ? 'info' : 'error'}
+            color={isRegister ? 'info' : 'secondary'}
           />
         )
       },

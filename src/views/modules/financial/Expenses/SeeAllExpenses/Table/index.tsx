@@ -35,7 +35,9 @@ const TableView: React.FC<TableViewProps> = ({
   const [selectedAllRow, setSelectedAllRow] = useState<Expense[]>(
     [] as Expense[],
   )
-  const status = JSON.parse(window.localStorage.getItem('selectedButton'))
+  const status = JSON.parse(
+    window.localStorage.getItem('selectedButtonExpense'),
+  )
 
   const mappedIncomeFinancial = (serviceOrder: Expense[]): Expense[] => {
     return serviceOrder.map((item: Expense) => item)
@@ -165,6 +167,7 @@ const TableView: React.FC<TableViewProps> = ({
           )}
           {!!selectedAllRowIds?.length && (
             <>
+              {console.log({ status })}
               <ButtonGenerateOSContainer>
                 <Badge
                   badgeContent={selectedAllRowIds?.length}
@@ -182,7 +185,7 @@ const TableView: React.FC<TableViewProps> = ({
                   />
                 </Badge>
               </ButtonGenerateOSContainer>
-              {!!selectedAllRow.length && (
+              {/* {!!selectedAllRow.length && (
                 <ButtonGenerateOSContainer>
                   <Badge
                     badgeContent={selectedAllRowIds?.length}
@@ -198,7 +201,7 @@ const TableView: React.FC<TableViewProps> = ({
                     />
                   </Badge>
                 </ButtonGenerateOSContainer>
-              )}
+              )} */}
             </>
           )}
         </div>

@@ -7,6 +7,8 @@ import { useAdmin } from 'src/services/useAdmin'
 import InputText from 'src/components/Form/InputText/index_old'
 import { Controller, useForm } from 'react-hook-form'
 import InputMask from 'src/components/Form/InputMask'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 import {
   UpdateDeleteConfirmationContainer,
   NewExpenseContainer,
@@ -20,12 +22,15 @@ import { toApi } from './adapter/toApi'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schemaExpense } from './schemaValidation'
 import { Select } from 'src/components/Widgets/Select'
+import { Alert } from '@mui/material'
+import { green } from '@mui/material/colors'
 import {
   Autocomplete,
   AutocompleteOptions,
 } from 'src/components/Form/Autocomplete'
 import { addDaysMaturity, statusOptions } from './statics'
 import onlyNumbers from 'src/helpers/clear/onlyNumbers'
+import { Checkbox } from 'src/components/Form/Checkbox'
 
 type UpdateConfirmationProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -36,8 +41,10 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
 }) => {
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
-  const { Loading } = useLoading()
   const [_, setValueClear] = useState(0)
+  const [isToLaunchInPiece, setIsToLaunchInPiece] = useState(false)
+  const [messageError, setMessageError] = useState(null)
+  const [loading, setLoading] = React.useState(false)
 
   const { control, handleSubmit, setValue, watch } =
     useForm<SeeAllExpenseProps>({
@@ -55,11 +62,47 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
 
   const dateIn = watch('dateIn')
   const maturity = watch('maturity')
+  const expense = watch('expense')
   setValue('status', statusOptions[0].label)
 
-  const save = async (data: SeeAllExpenseProps) => {
+  const getExpenses = async () => {
     try {
-      Loading.turnOn()
+      const { data: dataExpense } = await apiAdmin.get('expense')
+    } catch ({ response }) {
+      if (response?.status === 403) {
+        setMessageError(response?.data?.message)
+      } else {
+        setMessageError(
+          'Opss! Ocorreu um erro ao tentar buscar os registros de despesas.',
+        )
+      }
+    }
+  }
+
+  const regiterPiece = async (expense: SeeAllExpenseProps) => {
+    try {
+      setLoading(true)
+      const { clean: value } = formatInputPrice(expense.valueFormated)
+      await apiAdmin.post(`pieces/register`, {
+        description: expense.expense,
+        value,
+      })
+      toast.success('Registrado em Peças com sucesso.')
+      await saveExpense(expense)
+    } catch ({ response }) {
+      if (response?.status === 403) {
+        setMessageError(response?.data?.message)
+      } else {
+        setMessageError('Opss! Ocorreu um erro ao tentar registrar em peças.')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const saveExpense = async (data: SeeAllExpenseProps) => {
+    try {
+      setLoading(true)
       data = {
         ...data,
         maturity: clickedMaturity?.label || maturity,
@@ -67,15 +110,26 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
       await apiAdmin.post(`expense`, toApi(data))
       setMakeRequest(Math.random())
       toast.success('Despesa financeira adicionada com sucesso.')
-    } catch (error) {
-      console.log(error)
-      toast.error(
-        'Opss! Ocorreu um erro ao tentar inserir o registro financeiro.',
-      )
+    } catch ({ response }) {
+      if (response?.status === 403) {
+        toast.error(response?.data?.message)
+      } else {
+        toast.error('Opss! Ocorreu um erro ao tentar registrar em peças.')
+      }
     } finally {
-      Loading.turnOff()
       closeModal()
+      setLoading(false)
     }
+  }
+
+  const save = async (data: SeeAllExpenseProps) => {
+    try {
+      if (isToLaunchInPiece) {
+        await regiterPiece(data)
+      } else {
+        await saveExpense(data)
+      }
+    } catch (error) {}
   }
 
   const cancel = () => {
@@ -117,10 +171,15 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
     }
   }, [maturity])
 
+  React.useEffect(() => {
+    setMessageError('')
+  }, [expense])
+
   return (
     <NewExpenseContainer>
       <form onSubmit={handleSubmit(onSubmitIncome)} autoComplete="off">
         <Row display="flex" flexDirection="column" gap={1}>
+          {!!messageError && <Alert severity="error">{messageError}</Alert>}
           <TitleModalNewExpense>Nova Despesa</TitleModalNewExpense>
           <Row
             display="grid"
@@ -134,12 +193,33 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
               control={control}
               defaultValue=""
               render={({ field, fieldState }) => (
-                <InputText
+                // <InputText
+                //   label="Despesa:"
+                //   field={field}
+                //   fieldState={fieldState}
+                // />
+                <Autocomplete
                   label="Despesa:"
-                  field={field}
-                  fieldState={fieldState}
+                  value={{ label: field.value, value: field.value }}
+                  setValue={(previousState: AutocompleteOptions) =>
+                    setValue('expense', previousState.label)
+                  }
+                  mask=""
+                  options={optionMaturity}
+                  setOptions={setOptionMaturity}
+                  setClickedValue={setClickedMaturity}
+                  hasError={!!fieldState.error}
+                  error={fieldState.error?.message}
+                  isUseButton
                 />
               )}
+            />
+          </Row>
+          <Row>
+            <Checkbox
+              label="Registrar em Peças?"
+              setValue={setIsToLaunchInPiece}
+              checked={isToLaunchInPiece}
             />
           </Row>
           <Row
@@ -154,7 +234,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
               defaultValue=""
               render={({ field, fieldState }) => (
                 <InputText
-                  label={'Valor'}
+                  label={isToLaunchInPiece ? 'Valor p/ Revenda' : 'Valor'}
                   field={field}
                   fieldState={fieldState}
                   onKeyUp={() => onFormatterPrice(field.value)}
@@ -223,8 +303,8 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
             variant="outlined"
             size="large"
             icon="add2"
-            // onClick={confirmation}
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Cancelar"

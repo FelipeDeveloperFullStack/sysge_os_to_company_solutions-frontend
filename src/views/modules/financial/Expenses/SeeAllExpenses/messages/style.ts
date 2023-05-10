@@ -1,11 +1,16 @@
 import { FormControlLabel } from '@mui/material'
 import styled, { css } from 'styled-components'
 
-export const Container = styled.section`
+export const Container = styled.section<{ isUseWidth?: boolean }>`
   //padding: 15px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  ${({ isUseWidth }) =>
+    isUseWidth &&
+    css`
+      width: 695px;
+    `}
 `
 export const ButtonGroup = styled.section`
   display: flex;
