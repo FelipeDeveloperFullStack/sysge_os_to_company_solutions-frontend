@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import { toast } from 'src/components/Widgets/Toastify'
-import { formatPrice } from 'src/helpers/formatPrice'
 import { useLoading } from 'src/hooks/useLoading'
 import { useAdmin } from 'src/services/useAdmin'
 import { Total } from '..'
@@ -12,6 +10,23 @@ type DashboardProps = {
 export const useDashBoard = ({ setTotal }: DashboardProps) => {
   const { Loading } = useLoading()
   const { apiAdmin } = useAdmin()
+
+  const getTotalExpenses = async () => {
+    try {
+      Loading.turnOn()
+      const { data } = await apiAdmin.get('expense/total')
+      setTotal((previousState) => ({
+        ...previousState,
+        totalExpenses: data.total,
+      }))
+    } catch (error) {
+      toast.error(
+        'Houve um erro ao tentar retornar o total de despesas na plataforma.',
+      )
+    } finally {
+      Loading.turnOff()
+    }
+  }
 
   const getTotalIncomes = async () => {
     try {
@@ -29,6 +44,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       Loading.turnOff()
     }
   }
+
   const getTotalEquipaments = async () => {
     try {
       Loading.turnOn()
@@ -120,5 +136,6 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
     getTotalServices,
     getTotalEquipaments,
     getTotalIncomes,
+    getTotalExpenses,
   }
 }

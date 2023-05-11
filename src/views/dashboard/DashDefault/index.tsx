@@ -9,6 +9,12 @@ import { toast } from 'src/components/Widgets/Toastify'
 import { useDashBoard } from './functions'
 import { formatPrice } from 'src/helpers/formatPrice'
 import { totalmem } from 'os'
+import GroupIcon from '@mui/icons-material/Group'
+import { ContainerIcon } from './style'
+import ContentPasteIcon from '@mui/icons-material/ContentPaste'
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
 // import { Link } from 'react-router-dom'
 // import AmChartEarnings from './chart/AmChartEarnings'
 // import avatar1 from '../../../assets/images/user/avatar-1.jpg'
@@ -42,6 +48,7 @@ const DashDefault: React.FC = () => {
     getTotalServices,
     getTotalEquipaments,
     getTotalIncomes,
+    getTotalExpenses,
   } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
@@ -51,6 +58,7 @@ const DashDefault: React.FC = () => {
     await getTotalServices()
     await getTotalEquipaments()
     await getTotalIncomes()
+    await getTotalExpenses()
   }
 
   React.useEffect(() => {
@@ -187,7 +195,10 @@ const DashDefault: React.FC = () => {
             <Card.Body className="border-bottom">
               <div className="row d-flex align-items-center">
                 <div className="col-auto">
-                  <i className="feather icon-zap f-30 text-c-green" />
+                  {/* <i className="feather icon-zap f-30 text-c-green" /> */}
+                  <ContainerIcon>
+                    <GroupIcon />
+                  </ContainerIcon>
                 </div>
                 <div className="col">
                   <h3 className="f-w-300">{total.totalClients}</h3>
@@ -200,7 +211,10 @@ const DashDefault: React.FC = () => {
             <Card.Body className="border-bottom">
               <div className="row d-flex align-items-center">
                 <div className="col-auto">
-                  <i className="feather icon-map-pin f-30 text-c-blue" />
+                  {/* <i className="feather icon-map-pin f-30 text-c-blue" /> */}
+                  <ContainerIcon>
+                    <ContentPasteIcon />
+                  </ContainerIcon>
                 </div>
                 <div className="col">
                   <h3 className="f-w-300">{total.totalOrderService}</h3>
@@ -213,7 +227,10 @@ const DashDefault: React.FC = () => {
             <Card.Body className="border-bottom">
               <div className="row d-flex align-items-center">
                 <div className="col-auto">
-                  <i className="feather icon-map-pin f-30 text-c-blue" />
+                  {/* <i className="feather icon-map-pin f-30 text-c-blue" /> */}
+                  <ContainerIcon>
+                    <HomeRepairServiceIcon />
+                  </ContainerIcon>
                 </div>
                 <div className="col">
                   <h3 className="f-w-300">{total.totalPieces}</h3>
@@ -226,7 +243,10 @@ const DashDefault: React.FC = () => {
             <Card.Body className="border-bottom">
               <div className="row d-flex align-items-center">
                 <div className="col-auto">
-                  <i className="feather icon-map-pin f-30 text-c-blue" />
+                  {/* <i className="feather icon-map-pin f-30 text-c-blue" /> */}
+                  <ContainerIcon>
+                    <ManageAccountsIcon />
+                  </ContainerIcon>
                 </div>
                 <div className="col">
                   <h3 className="f-w-300">{total.totalServices}</h3>
@@ -239,7 +259,10 @@ const DashDefault: React.FC = () => {
             <Card.Body className="border-bottom">
               <div className="row d-flex align-items-center">
                 <div className="col-auto">
-                  <i className="feather icon-map-pin f-30 text-c-blue" />
+                  {/* <i className="feather icon-map-pin f-30 text-c-blue" /> */}
+                  <ContainerIcon>
+                    <ImportantDevicesIcon />
+                  </ContainerIcon>
                 </div>
                 <div className="col">
                   <h3 className="f-w-300">{total.totalEquipaments}</h3>
