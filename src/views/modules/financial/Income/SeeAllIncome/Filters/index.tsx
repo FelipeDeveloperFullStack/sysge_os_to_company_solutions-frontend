@@ -13,6 +13,7 @@ import { fromApi, Income } from '../Table/adapter'
 import { Container, Form } from './style'
 import { format, getYear, parse } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import hasNumber from 'src/helpers/hasNumber'
 
 type SeeAllIncomeProps = {
   nameOrOsNumber: string
@@ -40,7 +41,7 @@ const Filters: React.FC<FiltersProps> = ({
     'selectedButton',
     'PENDENTE',
   )
-  const inputValueName = watch('nameOrOsNumber')
+  const nameOrOsNumber = watch('nameOrOsNumber')
 
   const onSubmitIncome = (nameOrOsNumber: SeeAllIncomeProps) => {
     // const result = dateFilter(`${monthSelected}/${yearSelected}`, incomes)
@@ -141,31 +142,48 @@ const Filters: React.FC<FiltersProps> = ({
         new Date(),
         { locale: ptBR },
       )
-      return arrayDatas
-        .filter((dado) => {
-          const dataDado = parse(dado.dateOS, 'dd/MM/yyyy', new Date())
+      return arrayDatas.filter((data) => {
+        const dataDado = parse(data.dateOS, 'dd/MM/yyyy', new Date())
+        if (!income) {
           return (
             dataDado.getMonth() === dataPesquisa.getMonth() &&
-            dataDado.getFullYear() === dataPesquisa.getFullYear()
+            dataDado.getFullYear() === dataPesquisa.getFullYear() &&
+            data.situation === situation
           )
-        })
-        .filter((item) =>
-          valuesFields.nameOrOsNumber !== ''
-            ? item.clientName
-                .toUpperCase()
+        } else {
+          if (hasNumber(valuesFields?.nameOrOsNumber)) {
+            return (
+              data.osNumber.trim() === income?.trim() &&
+              data.situation === situation
+            )
+          } else {
+            return (
+              dataDado.getMonth() === dataPesquisa.getMonth() &&
+              dataDado.getFullYear() === dataPesquisa.getFullYear() &&
+              data.situation === situation &&
+              data.clientName
+                ?.toUpperCase()
                 .trim()
-                .includes(valuesFields?.nameOrOsNumber?.toUpperCase().trim())
-            : item,
-        )
-        .filter((item) =>
-          income
-            ? item.clientName
-                .toUpperCase()
-                .trim()
-                .includes(income?.toUpperCase().trim())
-            : item,
-        )
-        .filter((item) => (situation ? item.situation === situation : item))
+                .includes(income?.toUpperCase()?.trim())
+            )
+          }
+        }
+      })
+      // .filter((item) =>
+      //   item.osNumber
+      //     .toUpperCase()
+      //     .trim()
+      //     .includes(valuesFields?.nameOrOsNumber?.toUpperCase().trim()),
+      // )
+      // .filter((item) =>
+      //   income
+      //     ? item.clientName
+      //         .toUpperCase()
+      //         .trim()
+      //         .includes(income?.toUpperCase().trim())
+      //     : item,
+      // )
+      // .filter((item) => (situation ? item.situation === situation : item))
     } catch (err) {
       toast.error('Ocorreu um erro ao realizar a filtragem dos dados.')
     } finally {
@@ -181,11 +199,11 @@ const Filters: React.FC<FiltersProps> = ({
     const result = dateFilter(
       `${monthSelected}/${yearSelected}`,
       incomes,
-      '',
-      inputValueName,
+      selectedButton,
+      nameOrOsNumber,
     )
     setIncomesFiltered(result)
-  }, [inputValueName])
+  }, [nameOrOsNumber])
 
   useEffect(() => {
     return () => {
@@ -204,7 +222,7 @@ const Filters: React.FC<FiltersProps> = ({
                 display="flex"
                 justifyContent="flex-start"
                 alignItems="center"
-                gap={10}
+                gap={2}
               >
                 {years.map((year, index) => (
                   <Button
@@ -221,7 +239,7 @@ const Filters: React.FC<FiltersProps> = ({
                 display="flex"
                 justifyContent="flex-start"
                 alignItems="center"
-                gap={10}
+                gap={2}
               >
                 {months.map((month) => (
                   <Button
@@ -238,7 +256,7 @@ const Filters: React.FC<FiltersProps> = ({
                 display="flex"
                 justifyContent="flex-start"
                 alignItems="center"
-                gap={10}
+                gap={2}
               >
                 <Button
                   variant={
