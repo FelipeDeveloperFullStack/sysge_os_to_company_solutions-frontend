@@ -385,10 +385,10 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                       display="flex"
                       justifyContent="center"
                     >
-                      {formatPrice(item.unit)}
+                      {!!item.unit && formatPrice(item.unit)}
                     </Text>
                     <Text marginTop="20px" height="19px">
-                      {formatPrice(item.total)}
+                      {!!item.total && formatPrice(item.total)}
                     </Text>
                   </Row>
                 )
@@ -478,10 +478,10 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                       display="flex"
                       justifyContent="center"
                     >
-                      {formatPrice(item.unit)}
+                      {!!item.unit && formatPrice(item.unit)}
                     </Text>
                     <Text marginTop="20px" height="19px">
-                      {formatPrice(item.total)}
+                      {!!item.total && formatPrice(item.total)}
                     </Text>
                   </Row>
                 )
