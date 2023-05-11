@@ -251,9 +251,8 @@ const Filters: React.FC<FiltersProps> = ({
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                gap={10}
               >
-                <Row display="flex" flexDirection="row" gap={10}>
+                <Row display="flex" flexDirection="row" gap={5}>
                   <Button
                     variant={
                       selectedButton === 'A PAGAR' ? 'contained' : 'outlined'

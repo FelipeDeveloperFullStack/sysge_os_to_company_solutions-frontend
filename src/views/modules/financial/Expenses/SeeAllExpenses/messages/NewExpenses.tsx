@@ -31,6 +31,7 @@ import {
 import { addDaysMaturity, statusOptions } from './statics'
 import onlyNumbers from 'src/helpers/clear/onlyNumbers'
 import { Checkbox } from 'src/components/Form/Checkbox'
+import { fromApi } from './adapter/fromApi'
 
 type UpdateConfirmationProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -56,18 +57,26 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
     [] as AutocompleteOptions[],
   )
 
+  const [optionExpense, setOptionExpense] = useState<AutocompleteOptions[]>(
+    [] as AutocompleteOptions[],
+  )
+
   const [clickedMaturity, setClickedMaturity] = useState(
+    {} as AutocompleteOptions,
+  )
+  const [clickedExpense, setClickedExpense] = useState(
     {} as AutocompleteOptions,
   )
 
   const dateIn = watch('dateIn')
   const maturity = watch('maturity')
   const expense = watch('expense')
-  setValue('status', statusOptions[0].label)
+  //setValue('status', statusOptions[0].label)
 
   const getExpenses = async () => {
     try {
       const { data: dataExpense } = await apiAdmin.get('expense')
+      setOptionExpense(fromApi(dataExpense))
     } catch ({ response }) {
       if (response?.status === 403) {
         setMessageError(response?.data?.message)
@@ -106,6 +115,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
       data = {
         ...data,
         maturity: clickedMaturity?.label || maturity,
+        expense: clickedExpense?.label || data.expense,
       }
       await apiAdmin.post(`expense`, toApi(data))
       setMakeRequest(Math.random())
@@ -175,6 +185,10 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
     setMessageError('')
   }, [expense])
 
+  React.useEffect(() => {
+    getExpenses()
+  }, [])
+
   return (
     <NewExpenseContainer>
       <form onSubmit={handleSubmit(onSubmitIncome)} autoComplete="off">
@@ -193,11 +207,6 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
               control={control}
               defaultValue=""
               render={({ field, fieldState }) => (
-                // <InputText
-                //   label="Despesa:"
-                //   field={field}
-                //   fieldState={fieldState}
-                // />
                 <Autocomplete
                   label="Despesa:"
                   value={{ label: field.value, value: field.value }}
@@ -205,9 +214,9 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
                     setValue('expense', previousState.label)
                   }
                   mask=""
-                  options={optionMaturity}
-                  setOptions={setOptionMaturity}
-                  setClickedValue={setClickedMaturity}
+                  options={optionExpense}
+                  setOptions={setOptionExpense}
+                  setClickedValue={setClickedExpense}
                   hasError={!!fieldState.error}
                   error={fieldState.error?.message}
                   isUseButton
