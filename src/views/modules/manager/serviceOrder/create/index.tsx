@@ -608,13 +608,31 @@ const CreateOrderService: React.FC = () => {
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        <Row columns="1fr 6fr 1fr" gap={10}>
+        <Row columns="1fr 2fr 6fr 1fr" gap={10}>
           <InputText
             type="text"
             label="Nº OS"
             isCurrencyNumberOnly
             value={osNumber}
             disabled
+          />
+          <Controller
+            name="typeDocument"
+            control={control}
+            defaultValue={''}
+            render={({ field, formState }) => (
+              <Select
+                {...field}
+                labelDefaultOption="Selecione"
+                label="Tipo Documento"
+                hasError={!!formState.errors.typeDocument?.message}
+                msgError={formState.errors.typeDocument?.message}
+                options={[
+                  { label: 'ORÇAMENTO', value: 'ORÇAMENTO' },
+                  { label: 'ORDEM DE SERVIÇO', value: 'ORDEM DE SERVIÇO' },
+                ]}
+              />
+            )}
           />
           <Autocomplete
             label="Cliente"

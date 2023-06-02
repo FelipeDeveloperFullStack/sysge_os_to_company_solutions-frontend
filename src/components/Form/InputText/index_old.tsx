@@ -62,6 +62,7 @@ const InputText: React.FC<InputTextProps> = ({
         error={!!error}
         helperText={error ? error.message : null}
         focused
+
         {...rest}
       />
     </Container>

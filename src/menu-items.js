@@ -27,7 +27,7 @@ const menuItems = {
     // },
     {
       id: 'navigation',
-      title: 'Orçamento e Order de serviço',
+      title: 'Orçamento e Ordem de serviço',
       type: 'group',
       icon: 'icon-navigation',
       children: [

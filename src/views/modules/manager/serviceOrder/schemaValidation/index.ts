@@ -6,5 +6,6 @@ export const schemaServiceOrder = yup
     charger: yup.string().required('Campo obrigatório'),
     breaked: yup.string().required('Campo obrigatório'),
     detail: yup.string().required('Campo obrigatório'),
+    typeDocument: yup.string().required('Tipo de documento obrigatório'),
   })
   .required()

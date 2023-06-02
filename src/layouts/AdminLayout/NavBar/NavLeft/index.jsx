@@ -49,11 +49,19 @@ const NavLeft = () => {
 
   const checkOutTitle = ({ title }) => {
     const pathName = document.location.pathname
-    const sufixPath = ['/novo', '/editar', '/nova', '/dashboard']
+    const sufixPath = [
+      '/novo',
+      '/editar',
+      '/nova',
+      '/dashboard',
+      '/ordem-servico',
+    ]
     sufixPath.forEach((item) => {
       if (pathName.includes(item)) {
         let pageName = ''
-        if (
+        if (String(item).replace('/', '') === 'ordem-servico') {
+          title = 'Gestão O.S - Inclusão'
+        } else if (
           String(item).replace('/', '') === 'novo' ||
           String(item).replace('/', '') === 'nova'
         ) {
@@ -68,6 +76,9 @@ const NavLeft = () => {
         }
       }
     })
+    if (pathName.includes('/ordem-servicos')) {
+      title = 'Gestão O.S'
+    }
     return title
   }
 

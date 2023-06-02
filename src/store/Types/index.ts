@@ -82,6 +82,7 @@ export type ModelT = {
 
 export type ServiceOrderT = {
   clientName: string
+  typeDocument: string
   osNumber: string
   dateOS: string
   status: string
