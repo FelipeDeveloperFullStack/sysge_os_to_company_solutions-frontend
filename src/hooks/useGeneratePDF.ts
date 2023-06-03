@@ -10,10 +10,22 @@ export const useGeneratePDF = () => {
   const { Loading } = useLoading()
   const { apiAdmin } = useAdmin()
 
-  const generatePDF = async (base64Pdf: string, fileName: string) => {
+  const generatePDF = async (
+    base64Pdf: string,
+    fileName: string,
+    clientName: string,
+    status: string,
+    typeDocument: string,
+  ) => {
     try {
       Loading.turnOn()
-      await apiAdmin.post('orderServices/generate/pdf', { base64Pdf, fileName })
+      await apiAdmin.post('orderServices/generate/pdf', {
+        base64Pdf,
+        fileName,
+        clientName,
+        status,
+        typeDocument,
+      })
     } catch (error) {
       toast.error('Houve um erro ao tentar gerar o PDF')
     } finally {
@@ -26,6 +38,9 @@ export const useGeneratePDF = () => {
     idName: string,
     typeSaveMode: TypeSaveMode,
     isPreviewPDF?: boolean,
+    clientName?: string,
+    status?: string,
+    typeDocument?: string,
     //@ts-ignore
   ) => {
     try {
@@ -70,7 +85,13 @@ export const useGeneratePDF = () => {
               )
             } else {
               base64PDF = pdf.output('datauristring')
-              generatePDF(base64PDF, filePDFName)
+              generatePDF(
+                base64PDF,
+                filePDFName,
+                clientName,
+                status,
+                typeDocument,
+              )
             }
           }
           // let element = document.createElement('a')

@@ -120,6 +120,9 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
       `pdf${data?._id}`,
       'open_new_window',
       osData ? false : true,
+      data?.client.name,
+      data?.status,
+      'ORDEM_DE_SERVICO' //ORCAMENTO OU ORDEM_DE_SERVICO
     )
     setIsOsGenerated(true)
     await updateDateOSGenerated()

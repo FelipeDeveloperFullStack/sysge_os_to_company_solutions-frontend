@@ -628,8 +628,8 @@ const CreateOrderService: React.FC = () => {
                 hasError={!!formState.errors.typeDocument?.message}
                 msgError={formState.errors.typeDocument?.message}
                 options={[
-                  { label: 'ORÇAMENTO', value: 'ORÇAMENTO' },
-                  { label: 'ORDEM DE SERVIÇO', value: 'ORDEM DE SERVIÇO' },
+                  { label: 'ORÇAMENTO', value: 'ORCAMENTO' },
+                  { label: 'ORDEM DE SERVIÇO', value: 'ORDEM_DE_SERVICO' },
                 ]}
               />
             )}
