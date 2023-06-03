@@ -96,17 +96,16 @@ export const useColumns = (props: ColumnsProps) => {
               <SyncIcon />
             )}
           </IconButton>
-          {params.row.situation?.toUpperCase().trim() === 'A PAGAR' && (
-            <>
-              <IconButton
-                aria-label="delete"
-                color="default"
-                onClick={() => onHandleDeleteRow(params)}
-              >
-                <DeleteForeverIcon />
-              </IconButton>
-            </>
-          )}
+          <>
+            <IconButton
+              aria-label="delete"
+              color="default"
+              onClick={() => onHandleDeleteRow(params)}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          </>
+
         </>
       ),
     },

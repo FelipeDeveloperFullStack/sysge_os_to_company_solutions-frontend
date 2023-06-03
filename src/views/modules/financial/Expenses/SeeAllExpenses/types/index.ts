@@ -3,6 +3,7 @@ import { Expense } from '../Table/adapter'
 export type SeeAllExpenseProps = {
   expense: string
   valueFormated: string
+  valueFormatedPiece: string
   dateIn: string
   maturity: string
   status: string

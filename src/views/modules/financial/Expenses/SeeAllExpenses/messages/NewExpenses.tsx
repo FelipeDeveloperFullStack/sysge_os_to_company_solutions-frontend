@@ -32,6 +32,8 @@ import { addDaysMaturity, statusOptions } from './statics'
 import onlyNumbers from 'src/helpers/clear/onlyNumbers'
 import { Checkbox } from 'src/components/Form/Checkbox'
 import { fromApi } from './adapter/fromApi'
+import moment from 'moment'
+import axios from 'axios'
 
 type UpdateConfirmationProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -47,7 +49,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
   const [messageError, setMessageError] = useState(null)
   const [loading, setLoading] = React.useState(false)
 
-  const { control, handleSubmit, setValue, watch } =
+  const { control, handleSubmit, setValue, watch, setError } =
     useForm<SeeAllExpenseProps>({
       resolver: yupResolver(schemaExpense),
       shouldUnregister: false,
@@ -71,32 +73,24 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
   const dateIn = watch('dateIn')
   const maturity = watch('maturity')
   const expense = watch('expense')
-  //setValue('status', statusOptions[0].label)
+  const status = watch('status')
+  const valueFormatedPiece = watch('valueFormatedPiece')
 
-  const getExpenses = async () => {
-    try {
-      const { data: dataExpense } = await apiAdmin.get('expense')
-      setOptionExpense(fromApi(dataExpense))
-    } catch ({ response }) {
-      if (response?.status === 403) {
-        setMessageError(response?.data?.message)
-      } else {
-        setMessageError(
-          'Opss! Ocorreu um erro ao tentar buscar os registros de despesas.',
-        )
-      }
-    }
+  const getDateCurrent = () => {
+    const dataAtual = moment()
+    const formato = 'DD/MM/YYYY'
+    return dataAtual.format(formato)
   }
 
   const regiterPiece = async (expense: SeeAllExpenseProps) => {
     try {
       setLoading(true)
-      const { clean: value } = formatInputPrice(expense.valueFormated)
+      const { clean: value } = formatInputPrice(expense.valueFormatedPiece)
       await apiAdmin.post(`pieces/register`, {
         description: expense.expense,
         value,
       })
-      toast.success('Registrado em Peças com sucesso.')
+      toast.success('Registrado em Peças e nas despesas com sucesso.')
       await saveExpense(expense)
     } catch ({ response }) {
       if (response?.status === 403) {
@@ -139,7 +133,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
       } else {
         await saveExpense(data)
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
   const cancel = () => {
@@ -147,12 +141,18 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
   }
 
   const onSubmitIncome = async (data: SeeAllExpenseProps) => {
+    if (isToLaunchInPiece) {
+      if (!valueFormatedPiece) {
+        setError('valueFormatedPiece', { message: 'Valor p/ Revenda obrigatório.' })
+        return
+      }
+    }
     await save(data)
   }
 
-  const onFormatterPrice = (value: string) => {
+  const onFormatterPrice = (value: string, field: any) => {
     const { formated, clean } = formatInputPrice(value)
-    setValue('valueFormated', formated)
+    setValue(field, formated)
     setValueClear(clean)
   }
 
@@ -182,11 +182,35 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
   }, [maturity])
 
   React.useEffect(() => {
+    let cancel: any
+    const getExpenses = async () => {
+      try {
+        const { data: dataExpense } = await apiAdmin.get('expense', {
+          params: {
+            expense: (expense && String(expense).toUpperCase()) || undefined,
+          },
+
+          cancelToken: new axios.CancelToken((c) => (cancel = c)),
+        })
+        if (dataExpense) setOptionExpense(fromApi(dataExpense))
+      } catch (error) {
+        console.log(error)
+        if (error?.response?.status === 403) {
+          setMessageError(error?.response?.data?.message)
+        } else {
+          setMessageError(
+            'Opss! Ocorreu um erro ao tentar buscar os registros de despesas.',
+          )
+        }
+      }
+    }
+    getExpenses()
     setMessageError('')
+    return () => cancel && cancel()
   }, [expense])
 
   React.useEffect(() => {
-    getExpenses()
+    setValue('status', 'PAGO')
   }, [])
 
   return (
@@ -216,7 +240,10 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
                   mask=""
                   options={optionExpense}
                   setOptions={setOptionExpense}
-                  setClickedValue={setClickedExpense}
+                  setClickedValue={(valueClicked) => {
+                    setError('expense', { message: '' })
+                    setClickedExpense(valueClicked)
+                  }}
                   hasError={!!fieldState.error}
                   error={fieldState.error?.message}
                   isUseButton
@@ -233,7 +260,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
           </Row>
           <Row
             display="grid"
-            columns="repeat(4, 1fr)"
+            columns="repeat(3, 1fr)"
             alignItems="end"
             gap={10}
           >
@@ -243,17 +270,31 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
               defaultValue=""
               render={({ field, fieldState }) => (
                 <InputText
-                  label={isToLaunchInPiece ? 'Valor p/ Revenda' : 'Valor'}
+                  label={'Valor da Despesa'}
                   field={field}
                   fieldState={fieldState}
-                  onKeyUp={() => onFormatterPrice(field.value)}
+                  onKeyUp={() => onFormatterPrice(field.value, 'valueFormated')}
+                />
+              )}
+            />
+            <Controller
+              name="valueFormatedPiece"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label={'Valor p/ Revenda'}
+                  field={field}
+                  fieldState={fieldState}
+                  disabled={!isToLaunchInPiece}
+                  onKeyUp={() => onFormatterPrice(field.value, 'valueFormatedPiece')}
                 />
               )}
             />
             <Controller
               name="dateIn"
               control={control}
-              defaultValue=""
+              defaultValue={getDateCurrent()}
               render={({ field, fieldState }) => (
                 <InputMask
                   label="Entrada"
@@ -266,7 +307,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
                 />
               )}
             />
-            <Controller
+            {status === 'A PAGAR' && <Controller
               name="maturity"
               control={control}
               defaultValue=""
@@ -286,7 +327,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
                   isUseButton
                 />
               )}
-            />
+            />}
             <Controller
               name="status"
               control={control}

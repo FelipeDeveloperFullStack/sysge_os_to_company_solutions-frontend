@@ -121,18 +121,18 @@ const TableView: React.FC<TableViewProps> = ({
     }
   }
 
-  const setPercentValueToPiece = async () => {
-    showMessage(InsertPercentToPiece, { selectedAllRow, onHandleRegisterPiece })
-  }
+  // const setPercentValueToPiece = async () => {
+  //   showMessage(InsertPercentToPiece, { selectedAllRow, onHandleRegisterPiece })
+  // }
 
-  const checkIfRegister = async () => {
-    const isRegister = selectedAllRow.find((item) => item.isRegister)
-    if (isRegister) {
-      showMessage(ConfirmationToRegisterInPiece, { setPercentValueToPiece })
-    } else {
-      await setPercentValueToPiece()
-    }
-  }
+  // const checkIfRegister = async () => {
+  //   const isRegister = selectedAllRow.find((item) => item.isRegister)
+  //   if (isRegister) {
+  //     showMessage(ConfirmationToRegisterInPiece, { setPercentValueToPiece })
+  //   } else {
+  //     await setPercentValueToPiece()
+  //   }
+  // }
 
   React.useEffect(() => {
     return () => {
@@ -145,63 +145,51 @@ const TableView: React.FC<TableViewProps> = ({
       <>
         <div
           style={{
-            margin: '10px 0px 10px 0px',
-            fontWeight: 'bold',
-            fontSize: '16px',
             display: 'flex',
+            alignItems: 'center',
+            fontSize: '16px',
             gap: '20px',
+            paddingTop: !!selectedAllRowIds?.length ? '' : '9px',
+            paddingBottom: !!selectedAllRowIds?.length ? '' : '9px'
           }}
         >
           {!!incomesFiltered?.length && (
             <>
-              <div style={{ fontSize: '12px', marginTop: '7px' }}>
+              <div style={{ marginTop: '7px' }}>
                 Total:{' '}
-                {formatPrice(
+                <b>{formatPrice(
                   incomesFiltered?.reduce((sum, row) => sum + row.value, 0),
-                )}
+                )}</b>
               </div>
-              <div style={{ fontSize: '12px', marginTop: '7px' }}>
-                Quantidade de registros encontrados: {incomesFiltered?.length}
+              <div style={{ marginTop: '7px' }}>
+                Quantidade de registros encontrados: <b>{incomesFiltered?.length}</b>
               </div>
             </>
           )}
+          {!!selectedAllRow.length && <div style={{ marginTop: '7px' }}>
+            Total Selecionado:{' '}
+            <b>{formatPrice(
+              selectedAllRow?.reduce((sum, row) => sum + row.value, 0),
+            )}</b>
+          </div>}
           {!!selectedAllRowIds?.length && (
             <>
-              {console.log({ status })}
               <ButtonGenerateOSContainer>
-                <Badge
+                <Button
+                  textButton={`Atualizar para ${status === 'A PAGAR' ? 'PAGO' : 'A PAGAR'
+                    } (${selectedAllRowIds?.length})`}
+                  variant={'outlined'}
+                  size="small"
+                  icon={status === 'A PAGAR' ? 'update2' : 'update'}
+                  color={status === 'A PAGAR' ? 'success' : 'warning'}
+                  onClick={onHandleUpdateStatus}
+                />
+                {/* <Badge
                   badgeContent={selectedAllRowIds?.length}
                   color={status === 'A PAGAR' ? 'success' : 'warning'}
                 >
-                  <Button
-                    textButton={`Atualizar para ${
-                      status === 'A PAGAR' ? 'PAGO' : 'A PAGAR'
-                    }`}
-                    variant={'outlined'}
-                    size="small"
-                    icon={status === 'A PAGAR' ? 'update2' : 'update'}
-                    color={status === 'A PAGAR' ? 'success' : 'warning'}
-                    onClick={onHandleUpdateStatus}
-                  />
-                </Badge>
+                </Badge> */}
               </ButtonGenerateOSContainer>
-              {/* {!!selectedAllRow.length && (
-                <ButtonGenerateOSContainer>
-                  <Badge
-                    badgeContent={selectedAllRowIds?.length}
-                    color={'primary'}
-                  >
-                    <Button
-                      textButton={'Registrar em Peças'}
-                      variant={'outlined'}
-                      size="small"
-                      icon={'add3'}
-                      color={'primary'}
-                      onClick={checkIfRegister}
-                    />
-                  </Badge>
-                </ButtonGenerateOSContainer>
-              )} */}
             </>
           )}
         </div>

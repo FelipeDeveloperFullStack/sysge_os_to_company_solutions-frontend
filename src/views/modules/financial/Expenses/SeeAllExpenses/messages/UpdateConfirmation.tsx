@@ -63,9 +63,9 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
       <p />
       <Alert severity="info">Despesa: {expense}</Alert>
       <Alert severity="info">Valor: {valueFormated}</Alert>
-      <Alert severity="warning">
+      {/* <Alert severity="warning">
         <b>Ao clicar em SIM o procedimento não poderá ser desfeito.</b>
-      </Alert>
+      </Alert> */}
       <UpdateDeleteConfirmationContainer>
         <Button
           textButton="Sim"

@@ -161,17 +161,17 @@ const Filters: React.FC<FiltersProps> = ({
         .filter((item) =>
           valuesFields.expense !== ''
             ? item.expense
-                .toUpperCase()
-                .trim()
-                .includes(valuesFields?.expense?.toUpperCase().trim())
+              .toUpperCase()
+              .trim()
+              .includes(valuesFields?.expense?.toUpperCase().trim())
             : item,
         )
         .filter((item) =>
           expense
             ? item.expense
-                .toUpperCase()
-                .trim()
-                .includes(expense?.toUpperCase().trim())
+              .toUpperCase()
+              .trim()
+              .includes(expense?.toUpperCase().trim())
             : item,
         )
         .filter((item) => (situation ? item.status === situation : item))
@@ -211,6 +211,15 @@ const Filters: React.FC<FiltersProps> = ({
       {!!incomes.length ? (
         <Paper elevation={1}>
           <Container>
+            <Row display="flex" flexDirection="column" gap={1}>
+              <Button
+                variant="outlined"
+                textButton="Incluir"
+                color="info"
+                icon="add"
+                onClick={onHandleNewExpenses}
+              />
+            </Row>
             <Row display="flex" flexDirection="column" gap={1}>
               <div>Ano:</div>
               <Row
@@ -257,7 +266,7 @@ const Filters: React.FC<FiltersProps> = ({
                     variant={
                       selectedButton === 'A PAGAR' ? 'contained' : 'outlined'
                     }
-                    textButton="Pendentes a Pagar"
+                    textButton="Pendentes"
                     color="warning"
                     onClick={() => onHandleSituation('A PAGAR')}
                   />
@@ -270,13 +279,13 @@ const Filters: React.FC<FiltersProps> = ({
                     onClick={() => onHandleSituation('PAGO')}
                   />
                 </Row>
-                <Button
+                {/* <Button
                   variant="outlined"
                   textButton="Incluir"
                   color="info"
                   icon="add"
                   onClick={onHandleNewExpenses}
-                />
+                /> */}
               </Row>
             </Row>
             <Row display="flex" flexDirection="column" gap={1}>
@@ -300,6 +309,7 @@ const Filters: React.FC<FiltersProps> = ({
             </Row>
           </Container>
         </Paper>
+
       ) : (
         <Button
           variant="outlined"
