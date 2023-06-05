@@ -39,6 +39,7 @@ const TableView: React.FC<TableViewProps> = ({
           dateOS: item.dateOS,
           total: item.total,
           status: item.status,
+          typeDocument: item.typeDocument,
           dateGeneratedOS: item.dateGeneratedOS,
         }
       })

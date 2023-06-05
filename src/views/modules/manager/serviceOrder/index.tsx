@@ -122,7 +122,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
       osData ? false : true,
       data?.client.name,
       data?.status,
-      'ORDEM_DE_SERVICO' //ORCAMENTO OU ORDEM_DE_SERVICO
+      data?.typeDocument //ORCAMENTO OU ORDEM_DE_SERVICO
     )
     setIsOsGenerated(true)
     await updateDateOSGenerated()
@@ -236,7 +236,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
           <ContainerOSNumberAndDate>
             <PaperStyled elevation={1}>
               <ContainerOSText>
-                <OSText>ORDEM DE SERVIÇO</OSText>
+                <OSText>{data?.typeDocument === 'ORCAMENTO' ? 'ORÇAMENTO' : 'ORDEM DE SERVIÇO'}</OSText>
                 <OSNumber>
                   Nº <OSNumber color="red">{data?.osNumber}</OSNumber>
                 </OSNumber>
@@ -355,6 +355,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   Unidade
                 </Text>
                 <Text
+                  display="flex"
                   isNotUsingBorderBottom
                   fontWeight="bold"
                   justifyContent="center"
@@ -390,7 +391,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                     >
                       {!!item.unit && formatPrice(item.unit)}
                     </Text>
-                    <Text marginTop="20px" height="19px">
+                    <Text marginTop="20px" height="19px" justifyContent="center" display="flex">
                       {!!item.total && formatPrice(item.total)}
                     </Text>
                   </Row>
@@ -451,6 +452,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   isNotUsingBorderBottom
                   fontWeight="bold"
                   justifyContent="center"
+                  display="flex"
                 >
                   Total
                 </Text>
@@ -483,7 +485,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                     >
                       {!!item.unit && formatPrice(item.unit)}
                     </Text>
-                    <Text marginTop="20px" height="19px">
+                    <Text marginTop="20px" height="19px" display="flex" justifyContent="center">
                       {!!item.total && formatPrice(item.total)}
                     </Text>
                   </Row>

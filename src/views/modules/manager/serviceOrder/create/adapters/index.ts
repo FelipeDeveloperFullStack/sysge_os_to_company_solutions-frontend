@@ -19,6 +19,7 @@ export const fromApiSerialNumber = (equipaments: EquipamentT[]) => {
 export const toApi = (data: OSData, osNumber: string): OSData => {
   return {
     status: data.status || null,
+    typeDocument: data.typeDocument || null,
     osNumber: osNumber,
     dateOS: data.dateOS || null,
     equipament: data.equipament || null,

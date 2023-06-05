@@ -19,6 +19,7 @@ export type ItemServices = {
 export type OSData = {
   status: string
   dateOS: string
+  typeDocument: string
   equipament: string
   brand: string
   model: string

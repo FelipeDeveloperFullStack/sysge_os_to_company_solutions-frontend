@@ -374,6 +374,7 @@ const CreateOrderService: React.FC = () => {
       client: clients.filter(
         (clientItem) => clientItem._id === clickedClientName.value,
       )[0],
+      typeDocument: data.typeDocument,
       status: 'Pendente',
       itemServices,
       laudos,
