@@ -9,7 +9,7 @@ import { useModal } from 'src/hooks/useModal'
 import RemoveConfirmation from '../../messages/RemoveConfirmation'
 import { MappedDataServiceOrders } from '../../types'
 import { useHistory } from 'react-router-dom'
-import { MANAGER_SERVICE_ORDER_VIEW } from 'src/layouts/typePath'
+import { MANAGER_SERVICE_ORDER_CREATE, MANAGER_SERVICE_ORDER_EDIT, MANAGER_SERVICE_ORDER_VIEW } from 'src/layouts/typePath'
 // import { OSData } from '../../../serviceOrder/create/type'
 import { useAdmin } from 'src/services/useAdmin'
 import { useLoading } from 'src/hooks/useLoading'
@@ -23,12 +23,30 @@ export const useColumns = () => {
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
 
+  const onHandleEdit = async (params: GridCellParams) => {
+    if (params.field === 'group-buttons') {
+      const dataDocument = params.row
+      try {
+        Loading.turnOn()
+        const { data: oSData } = await apiAdmin.get(
+          `orderServices/${dataDocument.id}`,
+        )
+        history.push(MANAGER_SERVICE_ORDER_EDIT, { oSData })
+      } catch (error) {
+        toast.error('Opss! Houve um erro ao tentar gerar a Ordem de Serviço.')
+      } finally {
+        Loading.turnOff()
+      }
+    }
+  }
+
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
       const serviceOrder = params.row as MappedDataServiceOrders
       showMessage(RemoveConfirmation, serviceOrder)
     }
   }
+
   const onHandleConfirmationChangeTypeDocument = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
       const serviceOrder = params.row as MappedDataServiceOrders
@@ -127,7 +145,7 @@ export const useColumns = () => {
           {params.row.status === "PENDENTE" && (
             <>
               <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Editar o ORÇAMENTO' : 'Editar a ORDEM DE SERVIÇO'}`}>
-                <IconButton aria-label="editar" color="info">
+                <IconButton aria-label="editar" color="info" onClick={() => onHandleEdit(params)}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>

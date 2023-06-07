@@ -60,7 +60,7 @@ const NavLeft = () => {
       if (pathName.includes(item)) {
         let pageName = ''
         if (String(item).replace('/', '') === 'ordem-servico') {
-          title = 'Gestão O.S - Inclusão'
+          title = 'Gestão O.S'
         } else if (
           String(item).replace('/', '') === 'novo' ||
           String(item).replace('/', '') === 'nova'

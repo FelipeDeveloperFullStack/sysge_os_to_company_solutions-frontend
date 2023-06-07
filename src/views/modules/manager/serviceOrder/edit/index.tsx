@@ -6,7 +6,7 @@ import axios from 'axios'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import {
   Autocomplete,
   AutocompleteOptions,
@@ -47,7 +47,7 @@ const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
 
   const { apiAdmin } = useAdmin()
-
+  const location = useLocation<OSData>().state
   const equipaments = useSelector(
     (state: IStore) => state.equipament?.equipaments,
   )
@@ -60,7 +60,6 @@ const CreateOrderService: React.FC = () => {
       shouldUnregister: false,
       resolver: yupResolver(schemaServiceOrder),
     })
-
   const [cable, setCable] = useLocalStorage('cable', '')
   const [charger, setCharger] = useLocalStorage('charger', '')
   const [breaked, setBreaked] = useLocalStorage('breaked', '')
@@ -85,9 +84,11 @@ const CreateOrderService: React.FC = () => {
     [] as AutocompleteOptions[],
   )
   const [clients, setClients] = useState<ClientT[]>([] as ClientT[])
-
   const [client, setClient] = useState<AutocompleteOptions>(
-    {} as AutocompleteOptions,
+    {
+      label: location.oSData.client.name,
+      value: ''
+    } as AutocompleteOptions,
   )
   const [discount, setDiscount] = useState('0')
   const [equipamentsNameOptions, setEquipamentsNameOptions] = useState<
@@ -104,11 +105,23 @@ const CreateOrderService: React.FC = () => {
   >([] as AutocompleteOptions[])
 
   const [equipamentName, setEquipamentName] = useState(
-    {} as AutocompleteOptions,
+    {
+      label: location.oSData.equipament,
+      value: ''
+    } as AutocompleteOptions,
   )
-  const [brand, setBrand] = useState({} as AutocompleteOptions)
-  const [model, setModel] = useState({} as AutocompleteOptions)
-  const [serialNumber, setSerialNumber] = useState({} as AutocompleteOptions)
+  const [brand, setBrand] = useState({
+    label: location.oSData.brand,
+    value: ''
+  } as AutocompleteOptions,)
+  const [model, setModel] = useState({
+    label: location.oSData.model,
+    value: ''
+  } as AutocompleteOptions)
+  const [serialNumber, setSerialNumber] = useState({
+    label: location.oSData.serialNumber,
+    value: ''
+  } as AutocompleteOptions,)
 
   const [manpower, setManpower] = useState('0.00')
   const [isDisableManPower, setIsDisableManPower] = useState(false)
@@ -122,17 +135,32 @@ const CreateOrderService: React.FC = () => {
   )
 
   const [clickedClientName, setClickedClientName] = useState(
-    {} as AutocompleteOptions,
+    {
+      label: location.oSData.client.name,
+      value: ''
+    } as AutocompleteOptions,
   )
   const [clickedEquipament, setClickedEquipament] = useState(
-    {} as AutocompleteOptions,
+    {
+      label: location.oSData.equipament,
+      value: ''
+    } as AutocompleteOptions,
   )
-  const [clickedBrand, setClickedBrand] = useState({} as AutocompleteOptions)
-  const [clickedModel, setClickedModel] = useState({} as AutocompleteOptions)
+  const [clickedBrand, setClickedBrand] = useState({
+    label: location.oSData.brand,
+    value: ''
+  } as AutocompleteOptions,)
+  const [clickedModel, setClickedModel] = useState({
+    label: location.oSData.model,
+    value: ''
+  } as AutocompleteOptions,)
   const [clickedSerialNumber, setClickedSerialNumber] = useState(
-    {} as AutocompleteOptions,
+    {
+      label: location.oSData.serialNumber,
+      value: ''
+    } as AutocompleteOptions,
   )
-  const [osNumber, setOsNumber] = useLocalStorage('osNumber', '')
+  const [osNumber, setOsNumber] = useLocalStorage('osNumber', location.oSData.osNumber)
   const [validateErrorMessageClientName, setValidateErrorMessageClientName] =
     useState('')
   const [validateErrorMessageEquipament, setValidateErrorMessageEquipament] =
@@ -269,26 +297,26 @@ const CreateOrderService: React.FC = () => {
     }
   }, [formState?.errors])
 
-  const getNextOsNumber = (data: { osNumber: string }[]): string => {
-    const highestNumber = data.reduce((prev, current) => {
-      const currentNumber = parseInt(current.osNumber)
-      return currentNumber > prev ? currentNumber : prev
-    }, 0)
-    return highestNumber ? (highestNumber + 1).toString() : '1000'
-  }
+  // const getNextOsNumber = (data: { osNumber: string }[]): string => {
+  //   const highestNumber = data.reduce((prev, current) => {
+  //     const currentNumber = parseInt(current.osNumber)
+  //     return currentNumber > prev ? currentNumber : prev
+  //   }, 0)
+  //   return highestNumber ? (highestNumber + 1).toString() : '1000'
+  // }
 
-  const getOSNumber = async () => {
-    try {
-      const { data } = await apiAdmin.get(`orderServices`)
-      setOsNumber(getNextOsNumber(data))
-    } catch (error) {
-      console.log(error)
-      exceptionHandle(error)
-    }
-  }
+  // const getOSNumber = async () => {
+  //   try {
+  //     const { data } = await apiAdmin.get(`orderServices`)
+  //     setOsNumber(getNextOsNumber(data))
+  //   } catch (error) {
+  //     console.log(error)
+  //     exceptionHandle(error)
+  //   }
+  // }
 
   useEffect(() => {
-    getOSNumber()
+    //getOSNumber()
     getEquipaments()
     resetTotal()
     setTotal('R$ 0,00')
@@ -625,13 +653,13 @@ const CreateOrderService: React.FC = () => {
             type="text"
             label="Nº OS"
             isCurrencyNumberOnly
-            value={osNumber}
+            value={location?.oSData?.osNumber}
             disabled
           />
           <Controller
             name="typeDocument"
             control={control}
-            defaultValue={''}
+            defaultValue={location?.oSData?.typeDocument}
             render={({ field, formState }) => (
               <Select
                 {...field}
@@ -639,6 +667,7 @@ const CreateOrderService: React.FC = () => {
                 label="Tipo Documento"
                 hasError={!!formState.errors.typeDocument?.message}
                 msgError={formState.errors.typeDocument?.message}
+                disabled
                 options={[
                   { label: 'ORÇAMENTO', value: 'ORCAMENTO' },
                   { label: 'ORDEM DE SERVIÇO', value: 'ORDEM_DE_SERVICO' },

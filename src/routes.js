@@ -29,6 +29,7 @@ import {
   FINANCIAL_SEE_ALL_INCOME,
   MANAGER_SERVICE_ORDER,
   MANAGER_SERVICE_ORDER_CREATE,
+  MANAGER_SERVICE_ORDER_EDIT,
   MANAGER_SERVICE_ORDER_VIEW,
 } from './layouts/typePath'
 
@@ -188,6 +189,13 @@ const routes = [
         path: MANAGER_SERVICE_ORDER_CREATE,
         component: lazy(() =>
           import('./views/modules/manager/serviceOrder/create'),
+        ),
+      },
+      {
+        exact: true,
+        path: MANAGER_SERVICE_ORDER_EDIT,
+        component: lazy(() =>
+          import('./views/modules/manager/serviceOrder/edit'),
         ),
       },
       {
