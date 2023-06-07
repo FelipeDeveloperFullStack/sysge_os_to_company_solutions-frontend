@@ -69,6 +69,7 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     month: getMonthAndYear(item.dateOS).month,
     year: getMonthAndYear(item.dateOS).year,
     formOfPayment: item.formOfPayment,
+    typeDocument: item.typeDocument,
     id: item._id,
   }))
 
@@ -82,7 +83,9 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
   })
 
   return {
-    resultFromApi,
+    resultFromApi: resultFromApi.filter(
+      (item) => item.typeDocument !== 'ORCAMENTO',
+    ),
     orderedMonth,
     orderedYear: orderedYear(resultFromApi),
   }

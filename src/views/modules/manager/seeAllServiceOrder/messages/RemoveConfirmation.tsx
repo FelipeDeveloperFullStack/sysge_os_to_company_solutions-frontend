@@ -15,6 +15,7 @@ const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
   osNumber,
   name,
   total,
+  typeDocument
 }) => {
   const { closeModal } = useModal()
   const { Loading } = useLoading()
@@ -25,7 +26,7 @@ const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
     try {
       Loading.turnOn()
       await apiAdmin.delete(`orderServices/${id}`)
-      toast.success(`Ordem de serviço de nº ${osNumber} excluída com sucesso!`)
+      toast.success(`${getTypeDocument(typeDocument)} de nº ${osNumber} excluída com sucesso!`)
       closeModal()
       dispatch({
         type: LAYOUT_MAKE_REQUEST,
@@ -36,21 +37,26 @@ const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
     } catch (error) {
       exceptionHandle(
         error,
-        `Ops, Houve um erro ao tentar excluir a ordem de serviço de nº ${osNumber}, atualize a página e tente novamente.`,
+        `Ops, Houve um erro ao tentar excluir ${getTypeDocument(typeDocument)} de nº ${osNumber}, atualize a página e tente novamente.`,
       )
     } finally {
       Loading.turnOff()
     }
   }
 
+  const getTypeDocument = (typeDocument: string) => {
+    if (typeDocument === 'ORDEM_DE_SERVICO') return 'Ordem de Serviço'
+    if (typeDocument === 'ORCAMENTO') return 'Orçamento'
+  }
+
   return (
     <Container>
       <Text alignSelf="center" fontSize="20px" bold>
-        Deseja realmente excluir a ordem de serviço?
+        Deseja realmente excluir?
       </Text>
       <Text flexDirection="column">
         <div>
-          Ordem de Serviço: <span>{osNumber}</span>
+          {getTypeDocument(typeDocument)}: <span>{osNumber}</span>
         </div>
         <div>
           Cliente: <span>{name}</span>

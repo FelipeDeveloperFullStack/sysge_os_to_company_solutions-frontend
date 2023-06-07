@@ -5,4 +5,5 @@ export type MappedDataServiceOrders = {
   dateOS: string
   total: string
   status: string
+  typeDocument: string
 }

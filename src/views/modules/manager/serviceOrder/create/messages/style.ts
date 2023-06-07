@@ -42,9 +42,8 @@ export const Modal = styled.div`
 `
 
 export const ButtonContainer = styled.div`
-  display: grid;
-  gap: 95px;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  justify-content: center;
 `
 
 export const ButtonLaunchFinancialConfirmationContainer = styled.div`

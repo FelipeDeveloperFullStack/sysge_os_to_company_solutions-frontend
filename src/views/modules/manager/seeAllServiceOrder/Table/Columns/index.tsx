@@ -15,6 +15,7 @@ import { useAdmin } from 'src/services/useAdmin'
 import { useLoading } from 'src/hooks/useLoading'
 import { toast } from 'src/components/Widgets/Toastify'
 import Tooltip from '@mui/material/Tooltip';
+import ConfirmationChangeTypeDocument from '../../messages/ConfirmationChangeTypeDocument';
 
 export const useColumns = () => {
   const { showMessage } = useModal()
@@ -26,6 +27,12 @@ export const useColumns = () => {
     if (params.field === 'group-buttons') {
       const serviceOrder = params.row as MappedDataServiceOrders
       showMessage(RemoveConfirmation, serviceOrder)
+    }
+  }
+  const onHandleConfirmationChangeTypeDocument = (params: GridCellParams) => {
+    if (params.field === 'group-buttons') {
+      const serviceOrder = params.row as MappedDataServiceOrders
+      showMessage(ConfirmationChangeTypeDocument, serviceOrder)
     }
   }
 
@@ -108,15 +115,15 @@ export const useColumns = () => {
               <PdfIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Converter para ORDEM DE SERVIÇO' : 'Converter para ORÇAMENTO'}`}>
+          {params.row.typeDocument === 'ORCAMENTO' && <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Converter para ORDEM DE SERVIÇO' : 'Converter para ORÇAMENTO'}`}>
             <IconButton
               aria-label="Mudar de tipo de documento"
               color="info"
-              onClick={() => onHandleGeneratePDF(params)}
+              onClick={() => onHandleConfirmationChangeTypeDocument(params)}
             >
               <CachedIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip>}
           {params.row.status === "PENDENTE" && (
             <>
               <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Editar o ORÇAMENTO' : 'Editar a ORDEM DE SERVIÇO'}`}>

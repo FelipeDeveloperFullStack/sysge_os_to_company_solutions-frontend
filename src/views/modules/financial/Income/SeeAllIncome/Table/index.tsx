@@ -29,6 +29,8 @@ const TableView: React.FC<TableViewProps> = ({
   const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
     [] as string[],
   )
+  const [totalOrcamentos, setTotalOrcamentos] = useState(0)
+
   const status = JSON.parse(window.localStorage.getItem('selectedButton'))
 
   const mappedIncomeFinancial = (serviceOrder: Income[]): Income[] => {
@@ -65,31 +67,50 @@ const TableView: React.FC<TableViewProps> = ({
     }
   }
 
+  const getTotalOrcamentos = async () => {
+    try {
+      Loading.turnOn()
+      const { data } = await apiAdmin.get('orderServices/total/orcamentos')
+      setTotalOrcamentos(data?.total)
+    } catch (error) {
+      toast.error('Um erro ocurreu ao tentar buscar os dados de receitas')
+    } finally {
+      Loading.turnOff()
+    }
+  }
+
+  React.useEffect(() => {
+    getTotalOrcamentos()
+  }, [])
+
   return (
     <>
       <>
         <div
           style={{
             margin: '10px 0px 10px 0px',
-            fontWeight: 'bold',
             fontSize: '16px',
             display: 'flex',
             gap: '20px',
           }}
         >
+          <div style={{ fontSize: '16px', marginTop: '7px' }}>
+            Orçamentos:{' '}
+            <b>{formatPrice(totalOrcamentos)}</b>
+          </div>
           {!!incomesFiltered?.length && (
             <>
-              <div style={{ fontSize: '12px', marginTop: '7px' }}>
+              <div style={{ fontSize: '16px', marginTop: '7px' }}>
                 Total:{' '}
-                {formatPrice(
+                <b>{formatPrice(
                   incomesFiltered?.reduce(
                     (sum, row) => sum + row.valueNumber,
                     0,
                   ),
-                )}
+                )}</b>
               </div>
-              <div style={{ fontSize: '12px', marginTop: '7px' }}>
-                Quantidade de registros encontrados: {incomesFiltered?.length}
+              <div style={{ fontSize: '16px', marginTop: '7px' }}>
+                Quantidade de registros encontrados: <b>{incomesFiltered?.length}</b>
               </div>
             </>
           )}
@@ -100,9 +121,8 @@ const TableView: React.FC<TableViewProps> = ({
                 color={status === 'PENDENTE' ? 'success' : 'warning'}
               >
                 <Button
-                  textButton={`Atualizar para ${
-                    status === 'PENDENTE' ? 'RECEBIDO' : 'PENDENTE'
-                  }`}
+                  textButton={`Atualizar para ${status === 'PENDENTE' ? 'RECEBIDO' : 'PENDENTE'
+                    }`}
                   variant={'outlined'}
                   size="small"
                   icon={status === 'PENDENTE' ? 'update2' : 'update'}

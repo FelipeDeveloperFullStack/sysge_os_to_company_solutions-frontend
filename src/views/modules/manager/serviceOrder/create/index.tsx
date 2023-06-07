@@ -17,7 +17,7 @@ import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatPrice, formatInputPrice } from 'src/helpers/formatPrice'
 import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_TITLE_PAGE, SERVICE_ORDER_CREATE } from 'src/store/actions'
+import { LAYOUT_TITLE_PAGE, SERVICE_FILTER, SERVICE_ORDER_CREATE } from 'src/store/actions'
 import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaServiceOrder } from '../schemaValidation'
@@ -41,6 +41,7 @@ import { useAddLocalStorage } from './hooks/useAddLocalStorage'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import CreateClient from 'src/views/modules/administration/clients/create'
 import CreateEquipament from 'src/views/modules/administration/equipaments/create'
+import { toast } from 'src/components/Widgets/Toastify'
 
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
@@ -328,6 +329,20 @@ const CreateOrderService: React.FC = () => {
     return formatPrice(totalValue)
   }
 
+  const saveOrcamento = async (dataOS: OSData) => {
+    try {
+      await apiAdmin.post(`orderServices`, dataOS)
+      dispatch({
+        type: SERVICE_FILTER,
+        payload: {},
+      })
+      toast.success('Orçamento cadastrado com sucesso.')
+      history.push(MANAGER_SERVICE_ORDER)
+    } catch (error) {
+      toast.error('Houve um erro ao tentar salvar o Orçamento.')
+    }
+  }
+
   const onSubmit = async (data: ServiceOrderT & OSData) => {
     const { clean: totalCleanValue } = formatInputPrice(total)
     if (!clickedClientName?.label) {
@@ -375,7 +390,7 @@ const CreateOrderService: React.FC = () => {
         (clientItem) => clientItem._id === clickedClientName.value,
       )[0],
       typeDocument: data.typeDocument,
-      status: 'Pendente',
+      status: 'PENDENTE',
       itemServices,
       laudos,
       itemPieces,
@@ -392,18 +407,14 @@ const CreateOrderService: React.FC = () => {
 
     try {
       const resultToApi = toApi(OSData, osNumber)
-      // await apiAdmin.post(`orderServices`, toApi(OSData, osNumber))
-      // dispatch({
-      //   type: SERVICE_FILTER,
-      //   payload: {},
-      // })
-      // history.push(MANAGER_SERVICE_ORDER_VIEW, { OSData })
-      // toast.success('Ordem de serviço cadastrada com sucesso.')
-      showMessage(LaunchFinancial, {
-        data: resultToApi,
-        history,
-        // resetAllField,
-      })
+      if (data.typeDocument === 'ORCAMENTO') {
+        await saveOrcamento(resultToApi)
+      } else {
+        showMessage(LaunchFinancial, {
+          data: resultToApi,
+          history,
+        })
+      }
     } catch (error) {
       console.log(error)
       exceptionHandle(error)

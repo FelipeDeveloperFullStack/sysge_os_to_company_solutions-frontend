@@ -5,7 +5,7 @@ export const schemaClient = yup
     name: yup.string().required('Nome obrigatório'),
     cpfOrCnpj: yup.string().required('CPF/CNPJ obrigatório'),
     phoneNumber: yup.string(),
-    email: yup.string().email('Email inválido').required('E-mail obrigatório'),
+    email: yup.string().email('Email inválido'),
     // address: yup.string(),
     // city: yup.string(),
     uf: yup.string().max(2, 'Máximo 2 caracteres.'),
