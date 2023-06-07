@@ -18,6 +18,8 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
 import { exceptionHandle } from 'src/helpers/exceptions'
+import { useHistory } from 'react-router-dom'
+import { ADMINISTRATION_CLIENTS, ADMINISTRATION_EQUIPAMENTS, ADMINISTRATION_PIECES, ADMINISTRATION_SERVICES, MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 // import { Link } from 'react-router-dom'
 // import AmChartEarnings from './chart/AmChartEarnings'
 // import avatar1 from '../../../assets/images/user/avatar-1.jpg'
@@ -38,6 +40,8 @@ export type Total = {
 
 const DashDefault: React.FC = () => {
   const { Loading } = useLoading()
+  const history = useHistory()
+
   const [total, setTotal] = useState<Total>({
     totalClients: 0,
     totalOrderService: 0,
@@ -224,7 +228,7 @@ const DashDefault: React.FC = () => {
                     <GroupIcon />
                   </ContainerIcon>
                 </div>
-                <div className="col">
+                <div className="col" onClick={() => history.push(ADMINISTRATION_CLIENTS)} style={{ cursor: 'pointer' }}>
                   <h3 className="f-w-300">{total.totalClients}</h3>
                   <span className="d-block text-uppercase">
                     Total de Clientes
@@ -240,7 +244,7 @@ const DashDefault: React.FC = () => {
                     <ContentPasteIcon />
                   </ContainerIcon>
                 </div>
-                <div className="col">
+                <div className="col" onClick={() => history.push(MANAGER_SERVICE_ORDER)} style={{ cursor: 'pointer' }}>
                   <h3 className="f-w-300">{total.totalOrderService}</h3>
                   <span className="d-block text-uppercase">
                     Total de Ordens de Serviços
@@ -256,7 +260,7 @@ const DashDefault: React.FC = () => {
                     <HomeRepairServiceIcon />
                   </ContainerIcon>
                 </div>
-                <div className="col">
+                <div className="col" onClick={() => history.push(ADMINISTRATION_PIECES)} style={{ cursor: 'pointer' }}>
                   <h3 className="f-w-300">{total.totalPieces}</h3>
                   <span className="d-block text-uppercase">
                     Total de Peças Cadastradas
@@ -272,7 +276,7 @@ const DashDefault: React.FC = () => {
                     <ManageAccountsIcon />
                   </ContainerIcon>
                 </div>
-                <div className="col">
+                <div className="col" onClick={() => history.push(ADMINISTRATION_SERVICES)} style={{ cursor: 'pointer' }}>
                   <h3 className="f-w-300">{total.totalServices}</h3>
                   <span className="d-block text-uppercase">
                     Total de Serviços
@@ -288,7 +292,7 @@ const DashDefault: React.FC = () => {
                     <ImportantDevicesIcon />
                   </ContainerIcon>
                 </div>
-                <div className="col">
+                <div className="col" onClick={() => history.push(ADMINISTRATION_EQUIPAMENTS)} style={{ cursor: 'pointer' }}>
                   <h3 className="f-w-300">{total.totalEquipaments}</h3>
                   <span className="d-block text-uppercase">
                     Total de Equipamentos
