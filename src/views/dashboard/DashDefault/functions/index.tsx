@@ -1,5 +1,4 @@
 import { toast } from 'src/components/Widgets/Toastify'
-import { useLoading } from 'src/hooks/useLoading'
 import { useAdmin } from 'src/services/useAdmin'
 import { Total } from '..'
 
@@ -8,12 +7,26 @@ type DashboardProps = {
 }
 
 export const useDashBoard = ({ setTotal }: DashboardProps) => {
-  const { Loading } = useLoading()
   const { apiAdmin } = useAdmin()
+
+  const getTotalExpired = async () => {
+    try {
+      const { data } = await apiAdmin.get('expense/expired')
+      setTotal((previousState) => ({
+        ...previousState,
+        totalValueExpenseInExpired: data?.total,
+        qtdeExpenseInExpired: data?.count,
+      }))
+    } catch (error) {
+      toast.error(
+        'Houve um erro ao tentar retornar as despesas de vencer na plataforma.',
+      )
+    }
+  }
 
   const getTotalExpenses = async () => {
     try {
-      Loading.turnOn()
+
       const { data } = await apiAdmin.get('expense/total')
       setTotal((previousState) => ({
         ...previousState,
@@ -24,13 +37,13 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
         'Houve um erro ao tentar retornar o total de despesas na plataforma.',
       )
     } finally {
-      Loading.turnOff()
+
     }
   }
 
   const getTotalIncomes = async () => {
     try {
-      Loading.turnOn()
+
       const { data } = await apiAdmin.get('orderServices/total/incomes')
       setTotal((previousState) => ({
         ...previousState,
@@ -41,13 +54,13 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
         'Houve um erro ao tentar retornar o total de receitas na plataforma.',
       )
     } finally {
-      Loading.turnOff()
+
     }
   }
 
   const getTotalEquipaments = async () => {
     try {
-      Loading.turnOn()
+
       const { data } = await apiAdmin.get('equipaments/total')
       setTotal((previousState) => ({
         ...previousState,
@@ -58,13 +71,13 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
         'Houve um erro ao tentar retornar o total de serviços cadastrado na plataforma.',
       )
     } finally {
-      Loading.turnOff()
+
     }
   }
 
   const getTotalServices = async () => {
     try {
-      Loading.turnOn()
+
       const { data } = await apiAdmin.get('services/total')
       setTotal((previousState) => ({
         ...previousState,
@@ -75,12 +88,12 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
         'Houve um erro ao tentar retornar o total de serviços cadastrado na plataforma.',
       )
     } finally {
-      Loading.turnOff()
+
     }
   }
   const getTotalPecas = async () => {
     try {
-      Loading.turnOn()
+
       const { data } = await apiAdmin.get('pieces/total')
       setTotal((previousState) => ({
         ...previousState,
@@ -91,13 +104,13 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
         'Houve um erro ao tentar retornar o total de peças cadastrado na plataforma.',
       )
     } finally {
-      Loading.turnOff()
+
     }
   }
 
   const getTotalClients = async () => {
     try {
-      Loading.turnOn()
+
       const { data } = await apiAdmin.get('clients/total')
       setTotal((previousState) => ({
         ...previousState,
@@ -108,13 +121,13 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
         'Houve um erro ao tentar retornar o total de clientes cadastrado na plataforma.',
       )
     } finally {
-      Loading.turnOff()
+
     }
   }
 
   const getTotalOrderServices = async () => {
     try {
-      Loading.turnOn()
+
       const { data } = await apiAdmin.get('orderServices/total')
       setTotal((previousState) => ({
         ...previousState,
@@ -125,7 +138,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
         'Houve um erro ao tentar retornar o total de ordem de serviços cadastrado na plataforma.',
       )
     } finally {
-      Loading.turnOff()
+
     }
   }
 
@@ -137,5 +150,6 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
     getTotalEquipaments,
     getTotalIncomes,
     getTotalExpenses,
+    getTotalExpired
   }
 }

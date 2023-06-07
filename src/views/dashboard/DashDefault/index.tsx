@@ -7,14 +7,17 @@ import { useModal } from 'src/hooks/useModal'
 import { useLoading } from 'src/hooks/useLoading'
 import { toast } from 'src/components/Widgets/Toastify'
 import { useDashBoard } from './functions'
+import Alert from '@mui/material/Alert';
 import { formatPrice } from 'src/helpers/formatPrice'
 import { totalmem } from 'os'
 import GroupIcon from '@mui/icons-material/Group'
+import Chip from '@mui/material/Chip';
 import { ContainerIcon } from './style'
 import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
+import { exceptionHandle } from 'src/helpers/exceptions'
 // import { Link } from 'react-router-dom'
 // import AmChartEarnings from './chart/AmChartEarnings'
 // import avatar1 from '../../../assets/images/user/avatar-1.jpg'
@@ -29,9 +32,12 @@ export type Total = {
   totalEquipaments: number
   totalIncomes: number
   totalExpenses: number
+  totalValueExpenseInExpired: number
+  qtdeExpenseInExpired: number
 }
 
 const DashDefault: React.FC = () => {
+  const { Loading } = useLoading()
   const [total, setTotal] = useState<Total>({
     totalClients: 0,
     totalOrderService: 0,
@@ -40,6 +46,8 @@ const DashDefault: React.FC = () => {
     totalEquipaments: 0,
     totalIncomes: 0,
     totalExpenses: 0,
+    qtdeExpenseInExpired: 0,
+    totalValueExpenseInExpired: 0
   } as Total)
   const {
     getTotalClients,
@@ -49,16 +57,25 @@ const DashDefault: React.FC = () => {
     getTotalEquipaments,
     getTotalIncomes,
     getTotalExpenses,
+    getTotalExpired,
   } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
-    await getTotalClients()
-    await getTotalOrderServices()
-    await getTotalPecas()
-    await getTotalServices()
-    await getTotalEquipaments()
-    await getTotalIncomes()
-    await getTotalExpenses()
+    try {
+      Loading.turnOn()
+      await getTotalClients()
+      await getTotalOrderServices()
+      await getTotalPecas()
+      await getTotalServices()
+      await getTotalEquipaments()
+      await getTotalIncomes()
+      await getTotalExpenses()
+      await getTotalExpired()
+    } catch (err) {
+      exceptionHandle(err)
+    } finally {
+      Loading.turnOff()
+    }
   }
 
   React.useEffect(() => {
@@ -67,6 +84,14 @@ const DashDefault: React.FC = () => {
 
   return (
     <React.Fragment>
+      {total?.totalValueExpenseInExpired > 0 && <Row>
+        <Col md={12} xl={12}>
+          <Alert severity="warning" style={{ display: 'flex', alignItems: 'center' }}>
+            <span><b>Atenção:</b> Você tem um total de <Chip label={formatPrice(total.totalValueExpenseInExpired)} /> de despesas a vencer</span>
+            {total?.qtdeExpenseInExpired > 0 && <span> e <b>{total.qtdeExpenseInExpired}</b> despesas a vencer daqui <Chip label="3 dias" />.</span>}
+          </Alert>
+        </Col>
+      </Row>}
       <Row>
         <Col md={6} xl={4}>
           <Card>
@@ -134,11 +159,10 @@ const DashDefault: React.FC = () => {
                 <div className="col-9">
                   <h3 className="f-w-300 d-flex align-items-center m-b-0">
                     <i
-                      className={`feather ${
-                        total.totalIncomes - total.totalExpenses < 0
-                          ? 'icon-arrow-down text-c-red'
-                          : 'icon-arrow-up text-c-green'
-                      } f-30 m-r-5`}
+                      className={`feather ${total.totalIncomes - total.totalExpenses < 0
+                        ? 'icon-arrow-down text-c-red'
+                        : 'icon-arrow-up text-c-green'
+                        } f-30 m-r-5`}
                     />{' '}
                     {formatPrice(total.totalIncomes - total.totalExpenses)}
                   </h3>
