@@ -83,7 +83,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     if (hasNumber(qtde)) {
       calcPrice(qtde)
     } else {
-      //setQtdeValue('')
+      setQtdeValue('')
     }
   }
 
@@ -95,7 +95,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   )
 
   const clearValues = () => {
-    //setQtdeValue('')
+    setQtdeValue('')
     setValueUnit('')
     setTotalValue('')
   }
@@ -199,7 +199,6 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
         hasError={!!msgError}
         msgError={msgError}
         width="60px"
-        isCurrencyNumberOnly={false}
       />
       <InputText
         type="text"
