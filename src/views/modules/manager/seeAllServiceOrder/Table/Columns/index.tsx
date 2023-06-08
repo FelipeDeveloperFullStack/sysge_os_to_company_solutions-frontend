@@ -121,7 +121,7 @@ export const useColumns = () => {
       headerName: ' ',
       sortable: false,
       disableColumnMenu: true,
-      width: 200,
+      width: 150,
       renderCell: (params: GridCellParams) => (
         <>
           <Tooltip title='Visualizar PDF' >
@@ -144,11 +144,11 @@ export const useColumns = () => {
           </Tooltip>}
           {params.row.status === "PENDENTE" && (
             <>
-              <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Editar o ORÇAMENTO' : 'Editar a ORDEM DE SERVIÇO'}`}>
+              {/* <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Editar o ORÇAMENTO' : 'Editar a ORDEM DE SERVIÇO'}`}>
                 <IconButton aria-label="editar" color="info" onClick={() => onHandleEdit(params)}>
                   <EditIcon />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip title='Excluir'>
                 <IconButton
                   aria-label="excluir"

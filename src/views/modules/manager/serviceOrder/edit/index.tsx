@@ -129,9 +129,9 @@ const CreateOrderService: React.FC = () => {
   const [totalLaudoTech, setTotalLaudoTech] = useState(0)
   const [laudos, setLaudos] = React.useState<Laudo[]>([] as Laudo[])
   const [totalPieces, setTotalPieces] = useState(0)
-  const [itemPieces, setItemPieces] = useState<ItemPieces[]>([] as ItemPieces[])
+  const [itemPieces, setItemPieces] = useState<ItemPieces[]>(location.oSData.itemPieces)
   const [itemServices, setItemServices] = useState<ItemServices[]>(
-    [] as ItemServices[],
+    location.oSData.itemServices
   )
 
   const [clickedClientName, setClickedClientName] = useState(
@@ -357,9 +357,9 @@ const CreateOrderService: React.FC = () => {
     return formatPrice(totalValue)
   }
 
-  const saveOrcamento = async (dataOS: OSData) => {
+  const updateDocument = async (dataOS: OSData) => {
     try {
-      await apiAdmin.post(`orderServices`, dataOS)
+      await apiAdmin.put(`orderServices/${dataOS._id}`, dataOS)
       dispatch({
         type: SERVICE_FILTER,
         payload: {},
@@ -414,11 +414,11 @@ const CreateOrderService: React.FC = () => {
 
     const OSData = {
       ...data,
-      client: clients.filter(
-        (clientItem) => clientItem._id === clickedClientName.value,
-      )[0],
-      typeDocument: data.typeDocument,
-      status: 'PENDENTE',
+      // client: clients.filter(
+      //   (clientItem) => clientItem._id === clickedClientName.value,
+      // )[0],
+      //typeDocument: data.typeDocument,
+      //status: 'PENDENTE',
       itemServices,
       laudos,
       itemPieces,
@@ -431,18 +431,12 @@ const CreateOrderService: React.FC = () => {
       discount,
       total,
       subTotal: calcDiscount(),
+      _id: location.oSData._id
     }
 
     try {
       const resultToApi = toApi(OSData, osNumber)
-      if (data.typeDocument === 'ORCAMENTO') {
-        await saveOrcamento(resultToApi)
-      } else {
-        showMessage(LaunchFinancial, {
-          data: resultToApi,
-          history,
-        })
-      }
+      await updateDocument(resultToApi)
     } catch (error) {
       console.log(error)
       exceptionHandle(error)
@@ -685,6 +679,7 @@ const CreateOrderService: React.FC = () => {
             hasError={!!validateErrorMessageClientName}
             error={validateErrorMessageClientName}
             isUseButton
+            disabled={true}
             iconButtonLabel={<AddCircleOutlineIcon />}
             tooltipMessageButtonLabel="Clique aqui para adicionar um novo cliente."
             onHandleClickButtonLabel={onHandleAddNewClient}

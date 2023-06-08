@@ -28,7 +28,7 @@ export type OSData = {
   charger: string
   breaked: string
   detail: string
-  client: ClientT
+  client?: ClientT
   itemServices: ItemServices[]
   laudos: Laudo[]
   itemPieces: ItemPieces[]

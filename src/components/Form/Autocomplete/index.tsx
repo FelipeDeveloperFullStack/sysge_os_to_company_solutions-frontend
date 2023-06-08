@@ -33,6 +33,7 @@ interface AutocompleteProps {
   onHandleClickButtonLabel?: () => void
   tooltipMessageButtonLabel?: string
   iconButtonLabel?: React.ReactNode
+  disabled?: boolean
 }
 
 export const Autocomplete: React.FC<AutocompleteProps> = ({
@@ -56,6 +57,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   onHandleClickButtonLabel,
   tooltipMessageButtonLabel,
   iconButtonLabel,
+  disabled,
   ...rest
 }) => {
   const [showList, setShowList] = useState(false)
@@ -131,6 +133,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
         name={name}
         onKeyUp={onKeyUp}
         onSelect={onSelect}
+        disabled={disabled}
         {...rest}
       />
       {error && <p className="error">{error}</p>}
@@ -139,7 +142,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
           // listSuggestionsHeight={listSuggestionsHeight}
           // ref={listSuggestionsRef}
           fieldError={!!error}
-          // hidden={!(options.length > 0 && showList)}
+        // hidden={!(options.length > 0 && showList)}
         >
           {options.map((option) => (
             <li key={option.value} onClick={() => onClickSuggestion(option)}>
