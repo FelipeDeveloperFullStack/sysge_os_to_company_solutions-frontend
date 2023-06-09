@@ -8,9 +8,10 @@ import { BASENAME } from './config/constant'
 import { LoadingProvider } from './hooks/useLoading'
 import { ModalProvider } from './hooks/useModal'
 import routes, { renderRoutes } from './routes'
+import 'primereact/resources/themes/lara-light-indigo/theme.css'
+import 'primereact/resources/primereact.min.css'
 
 const App = () => {
-
   setInterval(() => {
     document.querySelector('iframe')?.remove()
   }, 1000)

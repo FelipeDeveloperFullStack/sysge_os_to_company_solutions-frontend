@@ -15,12 +15,15 @@ import {
   ADMINISTRATION_EQUIPAMENTS,
   ADMINISTRATION_EQUIPAMENTS_CREATE,
   ADMINISTRATION_EQUIPAMENTS_EDIT,
+  ADMINISTRATION_MANAGER_USER_CREATE,
+  ADMINISTRATION_MANAGER_USER_EDIT,
   ADMINISTRATION_MODELS,
   ADMINISTRATION_MODELS_CREATE,
   ADMINISTRATION_MODELS_EDIT,
   ADMINISTRATION_PIECES,
   ADMINISTRATION_PIECES_CREATE,
   ADMINISTRATION_PIECES_EDIT,
+  ADMINISTRATION_SEE_ALL_PERMISSIONS,
   ADMINISTRATION_SERVICES,
   ADMINISTRATION_SERVICES_CREATE,
   ADMINISTRATION_SERVICES_EDIT,
@@ -133,6 +136,27 @@ const routes = [
         path: ADMINISTRATION_PIECES_EDIT,
         component: lazy(() =>
           import('./views/modules/administration/pieces/edit'),
+        ),
+      },
+      {
+        exact: true,
+        path: ADMINISTRATION_SEE_ALL_PERMISSIONS,
+        component: lazy(() =>
+          import('./views/modules/administration/permissions'),
+        ),
+      },
+      {
+        exact: true,
+        path: ADMINISTRATION_MANAGER_USER_CREATE,
+        component: lazy(() =>
+          import('./views/modules/administration/permissions/create'),
+        ),
+      },
+      {
+        exact: true,
+        path: ADMINISTRATION_MANAGER_USER_EDIT,
+        component: lazy(() =>
+          import('./views/modules/administration/permissions/edit'),
         ),
       },
       {

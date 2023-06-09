@@ -6,6 +6,7 @@ import GroupIcon from '@mui/icons-material/Group'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
+import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import { Icon } from './style'
 
 const getIcon = (icon) => {
@@ -17,6 +18,7 @@ const getIcon = (icon) => {
     piecesIcon: <HomeRepairServiceIcon />,
     serviceIcon: <ManageAccountsIcon />,
     equipamentIcon: <ImportantDevicesIcon />,
+    managerUsersIcon: <GroupAddIcon />,
   }
   return icons[icon]
 }

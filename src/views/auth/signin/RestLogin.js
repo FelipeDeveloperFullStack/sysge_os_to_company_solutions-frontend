@@ -42,10 +42,16 @@ const RestLogin = ({ className, ...rest }) => {
           const statusCode = error?.response?.data?.statusCode
           if (statusCode !== 500) {
             if (statusCode === 401) {
-              setErrors({
-                submit:
-                  'Usuário e/ou senha incorretos ou esse usuário não existe ou não está autorizado a entrar no sistema.',
-              })
+              if (error?.response?.data?.message === 'Acesso bloqueado!') {
+                setErrors({
+                  submit: 'Acesso bloqueado.',
+                })
+              } else {
+                setErrors({
+                  submit:
+                    'Usuário e/ou senha incorretos ou esse usuário não existe.',
+                })
+              }
             } else {
               setErrors({ submit: error?.response?.data?.message })
             }

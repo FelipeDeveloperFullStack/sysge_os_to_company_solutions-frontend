@@ -1,44 +1,44 @@
-import React from 'react';
-import { Card, Row, Col } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
+import React from 'react'
+import { Card, Row, Col } from 'react-bootstrap'
+import { NavLink } from 'react-router-dom'
 
-import RestRegister from './RestRegister';
-import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb';
+import RestRegister from './RestRegister'
+import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb'
 
 const SignUp1 = () => {
-    return (
-        <React.Fragment>
-            <Breadcrumb />
-            <div className="auth-wrapper">
-                <div className="auth-content">
-                    <div className="auth-bg">
-                        <span className="r" />
-                        <span className="r s" />
-                        <span className="r s" />
-                        <span className="r" />
-                    </div>
-                    <Card className="borderless">
-                        <Row className="align-items-center">
-                            <Col>
-                                <Card.Body className="text-center">
-                                    <h4 className="mb-4">WhatsManager</h4>
+  return (
+    <React.Fragment>
+      <Breadcrumb />
+      <div className="auth-wrapper">
+        <div className="auth-content">
+          <div className="auth-bg">
+            <span className="r" />
+            <span className="r s" />
+            <span className="r s" />
+            <span className="r" />
+          </div>
+          <Card className="borderless">
+            <Row className="align-items-center">
+              <Col>
+                <Card.Body className="text-center">
+                  <h4 className="mb-4">CADASTRO</h4>
 
-                                    <div className="mb-4">
-                                        <i className="feather icon-user-plus auth-icon" />
-                                    </div>
+                  <div className="mb-4">
+                    <i className="feather icon-user-plus auth-icon" />
+                  </div>
 
-                                    <RestRegister />
+                  <RestRegister />
 
-                                    <p className="mb-2">
-                                        Já tem uma conta?{' '}
-                                        <NavLink to="/auth/signin" className="f-w-400">
-                                            Entrar
-                                        </NavLink>
-                                    </p>
+                  <p className="mb-2">
+                    Já tem uma conta?{' '}
+                    <NavLink to="/auth/signin" className="f-w-400">
+                      Entrar
+                    </NavLink>
+                  </p>
 
-                                    {/* <br /> */}
+                  {/* <br /> */}
 
-                                    {/* <p className="mb-0 text-muted">
+                  {/* <p className="mb-0 text-muted">
                                         &copy;{' '}
                                         <a target="_blank" href="https://codedthemes.com/" rel="noreferrer">
                                             CodedThemes
@@ -49,14 +49,14 @@ const SignUp1 = () => {
                                         </a>
                                         .
                                     </p> */}
-                                </Card.Body>
-                            </Col>
-                        </Row>
-                    </Card>
-                </div>
-            </div>
-        </React.Fragment>
-    );
-};
+                </Card.Body>
+              </Col>
+            </Row>
+          </Card>
+        </div>
+      </div>
+    </React.Fragment>
+  )
+}
 
-export default SignUp1;
+export default SignUp1

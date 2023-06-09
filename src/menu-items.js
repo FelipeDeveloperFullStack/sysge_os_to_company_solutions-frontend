@@ -2,6 +2,7 @@ import {
   ADMINISTRATION_CLIENTS,
   ADMINISTRATION_EQUIPAMENTS,
   ADMINISTRATION_PIECES,
+  ADMINISTRATION_SEE_ALL_PERMISSIONS,
   ADMINISTRATION_SERVICES,
   FINANCIAL_SEE_ALL_EXPENSES,
   FINANCIAL_SEE_ALL_INCOME,
@@ -102,6 +103,14 @@ const menuItems = {
           url: ADMINISTRATION_EQUIPAMENTS,
           // icon: 'feather icon-monitor',
           icon: 'equipamentIcon',
+        },
+        {
+          id: 'permissions',
+          title: 'Gestão de Usuários',
+          type: 'item',
+          url: ADMINISTRATION_SEE_ALL_PERMISSIONS,
+          // icon: 'feather icon-monitor',
+          icon: 'managerUsersIcon',
         },
         // {
         //   id: 'charts',
