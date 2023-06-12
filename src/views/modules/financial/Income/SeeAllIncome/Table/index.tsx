@@ -26,6 +26,9 @@ const TableView: React.FC<TableViewProps> = ({
   const { Loading } = useLoading()
   const { showSimple } = useModal()
 
+  const [selectedAllRow, setSelectedAllRow] = useState<Income[]>(
+    [] as Income[],
+  )
   const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
     [] as string[],
   )
@@ -88,10 +91,12 @@ const TableView: React.FC<TableViewProps> = ({
       <>
         <div
           style={{
-            margin: '10px 0px 10px 0px',
-            fontSize: '16px',
             display: 'flex',
+            alignItems: 'center',
+            fontSize: '16px',
             gap: '20px',
+            paddingTop: !!selectedAllRowIds?.length ? '' : '9px',
+            paddingBottom: !!selectedAllRowIds?.length ? '' : '9px'
           }}
         >
           <div style={{ fontSize: '16px', marginTop: '7px' }}>
@@ -114,22 +119,23 @@ const TableView: React.FC<TableViewProps> = ({
               </div>
             </>
           )}
+          {!!selectedAllRow.length && <div style={{ marginTop: '7px' }}>
+            Total Selecionado:{' '}
+            <b>{formatPrice(
+              selectedAllRow?.reduce((sum, row) => sum + row.valueNumber, 0),
+            )}</b>
+          </div>}
           {!!selectedAllRowIds?.length && (
             <ButtonGenerateOSContainer>
-              <Badge
-                badgeContent={selectedAllRowIds?.length}
+              <Button
+                textButton={`Atualizar para ${status === 'PENDENTE' ? 'RECEBIDO' : 'PENDENTE'
+                  } (${selectedAllRowIds?.length})`}
+                variant={'outlined'}
+                size="small"
+                icon={status === 'PENDENTE' ? 'update2' : 'update'}
                 color={status === 'PENDENTE' ? 'success' : 'warning'}
-              >
-                <Button
-                  textButton={`Atualizar para ${status === 'PENDENTE' ? 'RECEBIDO' : 'PENDENTE'
-                    }`}
-                  variant={'outlined'}
-                  size="small"
-                  icon={status === 'PENDENTE' ? 'update2' : 'update'}
-                  color={status === 'PENDENTE' ? 'success' : 'warning'}
-                  onClick={onHandleUpdateStatus}
-                />
-              </Badge>
+                onClick={onHandleUpdateStatus}
+              />
             </ButtonGenerateOSContainer>
           )}
         </div>
@@ -140,6 +146,7 @@ const TableView: React.FC<TableViewProps> = ({
         pageSize={10}
         checkboxSelection
         setSelectedAllRowIds={setSelectedAllRowIds}
+        setCellClick={setSelectedAllRow}
       />
     </>
   )

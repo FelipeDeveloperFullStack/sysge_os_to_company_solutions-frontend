@@ -38,6 +38,14 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
       await apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
       setMakeRequest(Math.random())
       toast.success('Receita financeira atualizada com sucesso.')
+      await apiAdmin.get(`orderServices/move-file-by-status`, {
+        params: {
+          clientName,
+          status: situation,
+          typeDocument: '',
+          filename: ''
+        }
+      })
     } catch (error) {
       toast.error(
         'Opss! Ocorreu um erro ao tentar atualiza o status do registro financeiro.',
