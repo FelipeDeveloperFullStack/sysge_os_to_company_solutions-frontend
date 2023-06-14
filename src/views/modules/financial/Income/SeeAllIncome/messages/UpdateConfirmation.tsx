@@ -35,7 +35,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   const confirmation = async () => {
     try {
       Loading.turnOn()
-      await apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
+      apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
       setMakeRequest(Math.random())
       toast.success('Receita financeira atualizada com sucesso.')
       await apiAdmin.get(`orderServices/move-file-by-status`, {

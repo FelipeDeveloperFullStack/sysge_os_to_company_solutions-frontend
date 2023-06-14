@@ -289,7 +289,6 @@ const Filters: React.FC<FiltersProps> = ({
               </Row>
             </Row>
             <Row display="flex" flexDirection="column" gap={1}>
-              <div>Despesa:</div>
               <Form onSubmit={handleSubmit(onSubmitIncome)} autoComplete="off">
                 <Row display="grid" columns="1fr" alignItems="end" gap={10}>
                   <Controller
@@ -298,7 +297,7 @@ const Filters: React.FC<FiltersProps> = ({
                     defaultValue=""
                     render={({ field, fieldState }) => (
                       <InputText
-                        label=""
+                        label="Despesa:"
                         field={field}
                         fieldState={fieldState}
                       />
