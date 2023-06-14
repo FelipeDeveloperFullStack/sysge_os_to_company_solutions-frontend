@@ -305,12 +305,6 @@ const routes = [
       },
       {
         exact: true,
-        path: '/maps/google-map',
-        component: lazy(() => import('./views/maps/GoogleMaps')),
-      },
-
-      {
-        exact: true,
         path: '/sample-page',
         component: lazy(() => import('./views/extra/SamplePage')),
       },
