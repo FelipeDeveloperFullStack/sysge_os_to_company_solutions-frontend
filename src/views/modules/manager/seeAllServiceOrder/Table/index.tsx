@@ -70,7 +70,7 @@ const TableView: React.FC<TableViewProps> = ({
     if (osDataAdded) {
       const oSData = JSON.parse(window.localStorage.getItem('oSData'))
       if (osDataAdded?.length === oSData?.length) {
-        //setIsOpenModalInformation(false)
+        setIsOpenModalInformation(false)
         closeModal()
         removeLocalStorage()
         updateTableList()

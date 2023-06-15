@@ -32,7 +32,7 @@ export const ModalInformation: React.FC<DialogModal> = ({
         maxWidth={maxWidth}
         open={open}
         sx={{
-          zIndex: 9999999999999999999999
+          zIndex: 999999999999999
         }}
       // onClose={handleClose}
       >
