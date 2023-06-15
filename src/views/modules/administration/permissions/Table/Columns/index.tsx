@@ -34,7 +34,7 @@ export const useColumns = () => {
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome', width: 300 },
-    { field: 'email', headerName: 'E-mail', width: 300 },
+    // { field: 'email', headerName: 'E-mail', width: 300 },
     {
       field: 'cpf',
       headerName: 'CPF',
@@ -90,7 +90,7 @@ export const useColumns = () => {
               <EditIcon />
             </IconButton>
           </Tooltip>
-          {user.user?.username?.trim() !== params.row?.email.trim() && <>
+          {(user.user?.cpf !== params.row?.cpf) && <>
             <Tooltip title={params.row.status === 'BLOQUEADO' ? 'Ativar' : 'Bloquear'}>
               <IconButton
                 aria-label="update"

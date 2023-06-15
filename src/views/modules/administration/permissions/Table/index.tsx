@@ -10,19 +10,17 @@ type TableViewProps = {
 }
 
 const TableView: React.FC<TableViewProps> = ({ users }) => {
-  const equipamentsStore = useSelector(
-    (state: IStore) => state.equipament?.equipaments,
-  )
 
   const columns = useColumns()
 
   const mapped = (serviceOrder: User[]): User[] => {
-    return serviceOrder.map((item: User) => {
+    const result = serviceOrder.map((item: User) => {
       return {
         id: item._id,
         ...item,
       }
     })
+    return result
   }
 
   return (

@@ -9,6 +9,8 @@ import { API_SERVER } from '../../../config/constant'
 import { useAuth } from '../../../hooks/useAuth'
 import { useLoading } from '../../../hooks/useLoading'
 import useScriptRef from '../../../hooks/useScriptRef'
+import InputMask from 'react-input-mask'
+import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
 
 const RestLogin = ({ className, ...rest }) => {
   const dispatcher = useDispatch()
@@ -26,7 +28,7 @@ const RestLogin = ({ className, ...rest }) => {
       axios
         .post(API_SERVER + 'users/auth/login', {
           password: values.password,
-          username: values.email,
+          username: clearSpecialCharacters(values.cpf),
         })
         .then(function (response) {
           const dataUser = jwt(response.data.access_token)
@@ -78,15 +80,12 @@ const RestLogin = ({ className, ...rest }) => {
     <React.Fragment>
       <Formik
         initialValues={{
-          email: '',
+          cpf: '',
           password: '',
           submit: null,
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string()
-            .email('E-mail inválido!')
-            .max(255)
-            .required('Email obrigatório!'),
+          cpf: Yup.string().required('CPF obrigatório!'),
           password: Yup.string().max(255).required('Senha obrigatória!'),
         })}
         onSubmit={handleSubmit}
@@ -107,7 +106,7 @@ const RestLogin = ({ className, ...rest }) => {
             {...rest}
           >
             <div className="form-group mb-3">
-              <input
+              {/* <input
                 className="form-control"
                 error={touched.email && errors.email}
                 label="Email"
@@ -117,9 +116,30 @@ const RestLogin = ({ className, ...rest }) => {
                 onChange={handleChange}
                 type="email"
                 value={values.email}
-              />
-              {touched.email && errors.email && (
-                <small className="text-danger form-text">{errors.email}</small>
+              /> */}
+              <InputMask
+                mask="999.999.999-99"
+                value={values.cpf}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              >
+                {(inputProps) => (
+                  <input
+                    {...inputProps}
+                    className="form-control"
+                    error={touched.cpf && errors.cpf}
+                    label="CPF"
+                    placeholder="CPF"
+                    name="cpf"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.cpf}
+                  />
+                )}
+              </InputMask>
+              {touched.cpf && errors.cpf && (
+                <small className="text-danger form-text">{errors.cpf}</small>
               )}
             </div>
             <div className="form-group mb-4">
@@ -147,7 +167,7 @@ const RestLogin = ({ className, ...rest }) => {
               </Col>
             )}
 
-            <div className="custom-control custom-checkbox  text-left mb-4 mt-2">
+            {/* <div className="custom-control custom-checkbox  text-left mb-4 mt-2">
               <input
                 type="checkbox"
                 className="custom-control-input"
@@ -156,7 +176,7 @@ const RestLogin = ({ className, ...rest }) => {
               <label className="custom-control-label" htmlFor="customCheck1">
                 Permanecer conectado.
               </label>
-            </div>
+            </div> */}
 
             <Row>
               <Col mt={2}>

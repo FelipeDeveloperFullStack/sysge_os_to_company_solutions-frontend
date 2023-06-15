@@ -196,6 +196,7 @@ const EditUserWithPermission: React.FC = () => {
                   label={'Senha Criptografada:'}
                   field={field}
                   fieldState={fieldState}
+                  toUpperCase={false}
                 />
               )}
             />

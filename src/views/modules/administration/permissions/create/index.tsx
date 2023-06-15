@@ -23,6 +23,7 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { ButtonContainer, Container, Form } from './style'
 import { Permissions } from '../components/Permissions'
+import InputMask from 'src/components/Form/InputMask'
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -171,9 +172,12 @@ const CreateUserWithPermission: React.FC = () => {
               control={control}
               defaultValue=""
               render={({ field, fieldState }) => (
-                <InputText
+                <InputMask
+                  mask='999.999.999-99'
                   label={'CPF:'}
                   field={field}
+                  value={field.value}
+                  setValue={(data) => setValue('cpf', data)}
                   fieldState={fieldState}
                 />
               )}
@@ -187,6 +191,7 @@ const CreateUserWithPermission: React.FC = () => {
                   label={'Senha:'}
                   field={field}
                   fieldState={fieldState}
+                  toUpperCase={false}
                 />
               )}
             />
