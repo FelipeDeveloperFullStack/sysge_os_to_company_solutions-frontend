@@ -31,7 +31,10 @@ export const ModalInformation: React.FC<DialogModal> = ({
         fullWidth={fullWidth}
         maxWidth={maxWidth}
         open={open}
-        // onClose={handleClose}
+        sx={{
+          zIndex: 9999999999999999999999
+        }}
+      // onClose={handleClose}
       >
         {/* <DialogTitle>Optional sizes</DialogTitle> */}
         <DialogContent>
