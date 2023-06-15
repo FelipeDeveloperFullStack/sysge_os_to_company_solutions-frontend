@@ -16,12 +16,16 @@ export const Container = styled.div<ContainerProps>`
     margin-bottom: 0px;
   }
 
-  > label {
-    margin-bottom: 6px;
+  label {
+    /* margin-bottom: 6px;
     color: #909090;
     font-size: 14px;
     line-height: 16px;
-    font-weight: 400;
+    font-weight: 400; */
+
+    left: -10px;
+    top: -14px;
+    font-size: 19px;
   }
 
   .form-select:focus {

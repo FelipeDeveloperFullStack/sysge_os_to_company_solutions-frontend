@@ -62,7 +62,11 @@ const InputText: React.FC<InputTextProps> = ({
         error={!!error}
         helperText={error ? error.message : null}
         focused
-
+        inputProps={{
+          style: {
+            borderColor: "#eeeeee",
+          },
+        }}
         {...rest}
       />
     </Container>

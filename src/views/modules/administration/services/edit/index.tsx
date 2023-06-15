@@ -87,7 +87,7 @@ const CreateService: React.FC = () => {
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-        <Row columns="5fr 1fr">
+        <Row columns="4fr 1fr">
           <Controller
             name="description"
             control={control}
@@ -110,7 +110,7 @@ const CreateService: React.FC = () => {
             )}
           />
         </Row>
-        <Row columns="4fr 1fr" marginTop="10px">
+        <Row columns="4fr 1fr" marginTop="10px" alignItems='flex-end'>
           <Controller
             name="laudoService"
             control={control}
@@ -127,7 +127,7 @@ const CreateService: React.FC = () => {
           <Button
             textButton="Adicionar Laudo"
             variant="outlined"
-            size="small"
+            size="large"
             icon="add2"
             onClick={addLaudo}
           />
