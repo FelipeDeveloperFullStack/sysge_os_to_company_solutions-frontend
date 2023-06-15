@@ -13,7 +13,7 @@ interface ContainerProps {
 export const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
-
+  margin-bottom: 5px;
   transition: all 0.3s;
 
   > label {

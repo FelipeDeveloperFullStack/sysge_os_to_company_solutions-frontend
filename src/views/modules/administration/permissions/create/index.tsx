@@ -152,7 +152,7 @@ const CreateUserWithPermission: React.FC = () => {
               )}
             />
           </Row>
-          <Row columns="repeat(4, 1fr)" marginTop="10px">
+          <Row columns="repeat(4, 1fr)" marginTop="10px" alignItems='flex-end'>
             <Controller
               name="email"
               control={control}

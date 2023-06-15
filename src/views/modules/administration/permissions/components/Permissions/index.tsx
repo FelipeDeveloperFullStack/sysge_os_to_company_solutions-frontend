@@ -58,14 +58,14 @@ export const Permissions: React.FC<PermissionsProps> = ({ onSubmit, setPermissio
           target={target}
           onChange={onChange}
           itemTemplate={itemTemplate}
-          breakpoint="1400px"
+          breakpoint="300px"
           filter
           filterBy="name"
           sourceHeader="Permissões disponíveis"
           targetHeader="Selecionados"
-          sourceStyle={{ height: '30rem', width: '900px' }}
+          sourceStyle={{ height: '30rem' }}
           showSourceControls={false}
-          targetStyle={{ height: '30rem', width: '900px' }} />
+          targetStyle={{ height: '30rem' }} />
       </Row>
       <Row justifyContent="center" alignItems="center">
         <ButtonContainer>

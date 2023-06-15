@@ -16,6 +16,10 @@ export const Container = styled.div<ContainerProps>`
     margin-bottom: 0px;
   }
 
+  > div:first-child {
+    margin-top: 20px;
+  }
+
   label {
     /* margin-bottom: 6px;
     color: #909090;
