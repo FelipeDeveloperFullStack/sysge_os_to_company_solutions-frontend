@@ -39,6 +39,7 @@ const menuItems = {
           url: MANAGER_SERVICE_ORDER,
           // icon: 'feather icon-file',
           icon: 'orderServiceIcon',
+          permission: 'ORDEM_SERVICO_VISUALIZAR',
         },
       ],
     },
@@ -55,6 +56,7 @@ const menuItems = {
           url: FINANCIAL_SEE_ALL_INCOME,
           //icon: 'feather icon-thumbs-up',
           icon: 'incomesIcon',
+          permission: 'RECEITAS_VISUALIZAR',
         },
         {
           id: 'income',
@@ -63,6 +65,7 @@ const menuItems = {
           url: FINANCIAL_SEE_ALL_EXPENSES,
           // icon: 'feather icon-thumbs-down',
           icon: 'expensesIcon',
+          permission: 'DESPESAS_VISUALIZAR',
         },
       ],
     },
@@ -79,6 +82,7 @@ const menuItems = {
           url: ADMINISTRATION_CLIENTS,
           // icon: 'feather icon-users',
           icon: 'clientsIcon',
+          permission: 'CLIENTES_VISUALIZAR',
         },
         {
           id: 'piece',
@@ -87,6 +91,7 @@ const menuItems = {
           url: ADMINISTRATION_PIECES,
           // icon: 'feather icon-settings',
           icon: 'piecesIcon',
+          permission: 'PECAS_VISUALIZAR',
         },
         {
           id: 'service',
@@ -95,6 +100,7 @@ const menuItems = {
           url: ADMINISTRATION_SERVICES,
           // icon: 'feather icon-file-text',
           icon: 'serviceIcon',
+          permission: 'SERVICOS_VISUALIZAR',
         },
         {
           id: 'equipament',
@@ -103,6 +109,7 @@ const menuItems = {
           url: ADMINISTRATION_EQUIPAMENTS,
           // icon: 'feather icon-monitor',
           icon: 'equipamentIcon',
+          permission: 'EQUIPAMENTOS_VISUALIZAR',
         },
         {
           id: 'permissions',
@@ -111,6 +118,7 @@ const menuItems = {
           url: ADMINISTRATION_SEE_ALL_PERMISSIONS,
           // icon: 'feather icon-monitor',
           icon: 'managerUsersIcon',
+          permission: 'GESTAO_USUARIOS_VISUALIZAR',
         },
         // {
         //   id: 'charts',

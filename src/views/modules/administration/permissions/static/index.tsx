@@ -6,12 +6,28 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
+import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 
 export const permissionsUser = [
   {
     name: 'DASHBOARD',
     key: 'DASHBOARD',
     icon: <DashboardIcon />
+  },
+  {
+    name: 'ORDEM DE SERVIÇO (VISUALIZAR)',
+    key: 'ORDEM_SERVICO_VISUALIZAR',
+    icon: <ContentPasteIcon />,
+  },
+  {
+    name: 'ORDEM DE SERVIÇO (EDITAR)',
+    key: 'ORDEM_SERVICO_EDITAR',
+    icon: <ContentPasteIcon />,
+  },
+  {
+    name: 'ORDEM DE SERVIÇO (EXCLUIR)',
+    key: 'ORDEM_SERVICO_EXCLUIR',
+    icon: <ContentPasteIcon />,
   },
   {
     name: 'RECEITAS (VISUALIZAR)',
