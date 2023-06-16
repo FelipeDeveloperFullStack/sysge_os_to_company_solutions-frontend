@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React from 'react'
@@ -24,6 +25,7 @@ import Tab from '@mui/material/Tab';
 import { ButtonContainer, Container, Form } from './style'
 import { Permissions } from '../components/Permissions'
 import InputMask from 'src/components/Form/InputMask'
+import { permissionsUser } from '../static'
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -70,12 +72,13 @@ const CreateUserWithPermission: React.FC = () => {
     setValueTab(newValue);
   };
 
-  const { control, handleSubmit, setValue, getValues } = useForm<User>({
+  const { control, handleSubmit, setValue, getValues, watch } = useForm<User>({
     shouldUnregister: false,
     resolver: yupResolver(schemaUser),
   })
 
   const history = useHistory()
+  const typeUser = watch('typeUser')
 
   const onHandleClose = () => {
     history.push(ADMINISTRATION_SEE_ALL_PERMISSIONS)
@@ -83,9 +86,11 @@ const CreateUserWithPermission: React.FC = () => {
 
   const onSubmit = async () => {
 
-    if (!permissionValues.length) {
-      toast.error('Permissões obrigatórias!')
-      return
+    if (typeUser === 'USER') {
+      if (!permissionValues.length) {
+        toast.error('Permissões obrigatórias!')
+        return
+      }
     }
 
     const data: User = {
@@ -96,7 +101,7 @@ const CreateUserWithPermission: React.FC = () => {
       typeUser: getValues('typeUser'),
       id: undefined,
       status: 'ATIVO',
-      permissions: permissionValues
+      permissions: typeUser === 'ADMIN' ? permissionsUser : permissionValues
     }
 
     try {
@@ -129,13 +134,14 @@ const CreateUserWithPermission: React.FC = () => {
 
   React.useEffect(() => {
     scroll(0, 0)
+    setValue('typeUser', 'USER')
   }, [])
 
   return (
     <Container>
       <Tabs value={valueTab} onChange={handleChange}>
         <Tab label="Dados Cadastrais" {...a11yProps(0)} />
-        <Tab label="Permissões" {...a11yProps(1)} />
+        {typeUser === 'USER' && <Tab label="Permissões" {...a11yProps(1)} />}
       </Tabs>
       <TabPanel value={valueTab} index={0}>
         <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -216,7 +222,7 @@ const CreateUserWithPermission: React.FC = () => {
               )}
             />
           </Row>
-          <ButtonContainer>
+          {typeUser === 'USER' && <ButtonContainer>
             <Button
               textButton="Adicionar Permissões"
               variant="contained"
@@ -224,7 +230,27 @@ const CreateUserWithPermission: React.FC = () => {
               icon="add"
               onClick={() => handleChange(null, 1)}
             />
-          </ButtonContainer>
+          </ButtonContainer>}
+          {typeUser === 'ADMIN' &&
+            <Row justifyContent="center" alignItems="center">
+              <ButtonContainer>
+                <Button
+                  textButton="Salvar"
+                  variant="contained"
+                  size="large"
+                  icon="add3"
+                  onClick={onSubmit}
+                />
+                <Button
+                  textButton="Cancelar"
+                  variant="outlined"
+                  size="large"
+                  icon="back"
+                  onClick={onHandleClose}
+                />
+              </ButtonContainer>
+            </Row>
+          }
         </Form>
       </TabPanel>
       <TabPanel value={valueTab} index={1}>

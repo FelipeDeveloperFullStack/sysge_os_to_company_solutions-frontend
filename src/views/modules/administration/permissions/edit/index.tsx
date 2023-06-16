@@ -24,6 +24,8 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import { ButtonContainer, Container, Form } from './style'
 import { Permissions } from '../components/Permissions'
+import InputMask from 'src/components/Form/InputMask'
+import { permissionsUser } from "../static";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -71,12 +73,13 @@ const EditUserWithPermission: React.FC = () => {
     setValueTab(newValue);
   };
 
-  const { control, handleSubmit, setValue, getValues } = useForm<User>({
+  const { control, handleSubmit, setValue, getValues, watch } = useForm<User>({
     shouldUnregister: false,
     resolver: yupResolver(schemaUser),
   })
 
   const history = useHistory()
+  const typeUser = watch('typeUser')
 
   const onHandleClose = () => {
     history.push(ADMINISTRATION_SEE_ALL_PERMISSIONS)
@@ -84,9 +87,11 @@ const EditUserWithPermission: React.FC = () => {
 
   const onSubmit = async () => {
 
-    if (!permissionValues.length) {
-      toast.error('Permissões obrigatórias!')
-      return
+    if (typeUser === 'USER') {
+      if (!permissionValues.length) {
+        toast.error('Permissões obrigatórias!')
+        return
+      }
     }
 
     const data: User = {
@@ -97,7 +102,7 @@ const EditUserWithPermission: React.FC = () => {
       typeUser: getValues('typeUser'),
       id: undefined,
       status: 'ATIVO',
-      permissions: permissionValues || location?.permissions
+      permissions: typeUser === 'ADMIN' ? permissionsUser : (permissionValues || location?.permissions)
     }
 
     try {
@@ -119,14 +124,14 @@ const EditUserWithPermission: React.FC = () => {
   }
 
 
-  function generateSequence(): string {
-    let sequence = "";
-    for (let i = 0; i < 4; i++) {
-      const digit = Math.floor(Math.random() * 10);
-      sequence += digit.toString();
-    }
-    return sequence;
-  }
+  // function generateSequence(): string {
+  //   let sequence = "";
+  //   for (let i = 0; i < 4; i++) {
+  //     const digit = Math.floor(Math.random() * 10);
+  //     sequence += digit.toString();
+  //   }
+  //   return sequence;
+  // }
 
   React.useEffect(() => {
     scroll(0, 0)
@@ -143,7 +148,7 @@ const EditUserWithPermission: React.FC = () => {
     <Container>
       <Tabs value={valueTab} onChange={handleChange}>
         <Tab label="Dados Cadastrais" {...a11yProps(0)} />
-        <Tab label="Permissões" {...a11yProps(1)} />
+        {typeUser === 'USER' && <Tab label="Permissões" {...a11yProps(1)} />}
       </Tabs>
       <TabPanel value={valueTab} index={0}>
         <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -180,10 +185,11 @@ const EditUserWithPermission: React.FC = () => {
               control={control}
               defaultValue=""
               render={({ field, fieldState }) => (
-                <InputText
+                <InputMask
+                  mask='999.999.999-99'
                   label={'CPF:'}
-                  field={field}
-                  fieldState={fieldState}
+                  value={field.value}
+                  setValue={(data) => setValue('cpf', data)}
                 />
               )}
             />
@@ -221,7 +227,7 @@ const EditUserWithPermission: React.FC = () => {
               )}
             />
           </Row>
-          <ButtonContainer>
+          {typeUser === 'USER' && <ButtonContainer>
             <Button
               textButton="Adicionar Permissões"
               variant="contained"
@@ -229,7 +235,27 @@ const EditUserWithPermission: React.FC = () => {
               icon="add"
               onClick={() => handleChange(null, 1)}
             />
-          </ButtonContainer>
+          </ButtonContainer>}
+          {typeUser === 'ADMIN' &&
+            <Row justifyContent="center" alignItems="center">
+              <ButtonContainer>
+                <Button
+                  textButton="Salvar"
+                  variant="contained"
+                  size="large"
+                  icon="add3"
+                  onClick={onSubmit}
+                />
+                <Button
+                  textButton="Cancelar"
+                  variant="outlined"
+                  size="large"
+                  icon="back"
+                  onClick={onHandleClose}
+                />
+              </ButtonContainer>
+            </Row>
+          }
         </Form>
       </TabPanel>
       <TabPanel value={valueTab} index={1}>

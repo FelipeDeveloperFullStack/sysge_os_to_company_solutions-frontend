@@ -4,7 +4,7 @@ import { User } from '../../type'
 export const toApi = (data: User): User => {
   return {
     name: data.name,
-    email: data.email,
+    email: data.email || '',
     cpf: clearSpecialCharacters(data.cpf),
     typeUser: data.typeUser,
     id: data?.id || undefined,
