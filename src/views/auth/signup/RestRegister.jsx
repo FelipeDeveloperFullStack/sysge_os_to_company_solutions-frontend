@@ -9,6 +9,8 @@ import useScriptRef from '../../../hooks/useScriptRef'
 import { API_SERVER } from '../../../config/constant'
 import onlyNumbers from '../../../helpers/clear/onlyNumbers'
 import { permissionsUser } from 'src/views/modules/administration/permissions/static'
+import validateCpf from 'src/helpers/validateCpf'
+import { toast } from 'src/components/Widgets/Toastify'
 
 const RestRegister = ({ className, ...rest }) => {
   let history = useHistory()
@@ -29,6 +31,10 @@ const RestRegister = ({ className, ...rest }) => {
     } else {
       try {
         //Loading.turnOn()
+        if (!validateCpf(values.cpf)) {
+          toast.error('CPF inválido, tente novamente.')
+          return
+        }
         axios
           .post(API_SERVER + 'users/create', {
             name: values.username,

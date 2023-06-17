@@ -220,7 +220,7 @@ const Filters: React.FC<FiltersProps> = ({
                 display="flex"
                 justifyContent="flex-start"
                 alignItems="center"
-                gap={10}
+                gap={2}
               >
                 {years.map((year, index) => (
                   <Button
@@ -237,7 +237,7 @@ const Filters: React.FC<FiltersProps> = ({
                 display="flex"
                 justifyContent="flex-start"
                 alignItems="center"
-                gap={10}
+                gap={2}
               >
                 {months.map((month) => (
                   <Button
@@ -255,7 +255,7 @@ const Filters: React.FC<FiltersProps> = ({
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Row display="flex" flexDirection="row" gap={5}>
+                <Row display="flex" flexDirection="row" gap={2}>
                   <Button
                     variant={
                       selectedButton === 'A PAGAR' ? 'contained' : 'outlined'
