@@ -132,7 +132,6 @@ const SeeAllServiceOrder = (props: Props) => {
     } catch (error) {
       exceptionHandle(
         error,
-
         'Opss! Houve um erro ao tentar gerar a Ordem de Serviço.',
       )
     } finally {

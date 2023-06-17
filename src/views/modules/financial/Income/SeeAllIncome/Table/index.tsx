@@ -11,6 +11,13 @@ import { useModal } from 'src/hooks/useModal'
 import { ButtonGenerateOSContainer } from './Styles'
 import Badge from '@mui/material/Badge'
 import { Button } from 'src/components'
+import useLocalStorage from 'use-local-storage'
+import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
+import { exceptionHandle } from 'src/helpers/exceptions'
+import { ModalPDF } from 'src/views/modules/manager/seeAllServiceOrder/messages/ModalPDF'
+import { ModalInformation } from 'src/views/modules/manager/seeAllServiceOrder/messages/ModalInformation'
+import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { useDispatch } from 'react-redux'
 
 type TableViewProps = {
   incomesFiltered: Income[]
@@ -21,11 +28,12 @@ const TableView: React.FC<TableViewProps> = ({
   incomesFiltered,
   setMakeRequest,
 }) => {
+  const dispatch = useDispatch()
   const columns = useColumns({ setMakeRequest })
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
-  const { showSimple } = useModal()
-
+  const { showSimple, showMessage, closeModal } = useModal()
+  const osDataAdded = JSON.parse(window.localStorage.getItem('osDataAdded'))
   const [selectedAllRow, setSelectedAllRow] = useState<Income[]>(
     [] as Income[],
   )
@@ -33,8 +41,12 @@ const TableView: React.FC<TableViewProps> = ({
     [] as string[],
   )
   const [totalOrcamentos, setTotalOrcamentos] = useState(0)
-
+  const [isOpenModalInformation, setIsOpenModalInformation] = useState(false)
   const status = JSON.parse(window.localStorage.getItem('selectedButton'))
+  const [oSData, setOSData] = useLocalStorage<OSData[]>(
+    'oSData',
+    [] as OSData[],
+  )
 
   const mappedIncomeFinancial = (serviceOrder: Income[]): Income[] => {
     return serviceOrder
@@ -68,6 +80,7 @@ const TableView: React.FC<TableViewProps> = ({
         )
       }
     }
+    await onHandleGenerateOS()
   }
 
   const getTotalOrcamentos = async () => {
@@ -82,9 +95,79 @@ const TableView: React.FC<TableViewProps> = ({
     }
   }
 
+  const onHandleGeneratePDF = async (id: string) => {
+    try {
+      Loading.turnOn()
+      const { data } = await apiAdmin.get(`orderServices/${id}`)
+      //setOSData((previousState) => [...previousState, data])
+      return data
+    } catch (error) {
+      exceptionHandle(
+        error,
+        'Opss! Houve um erro.',
+      )
+    } finally {
+      Loading.turnOff()
+    }
+  }
+
+  const onHandleGenerateOS = async () => {
+    setOSData([])
+    let index = 0
+    const list = []
+    for (index; index < selectedAllRowIds.length;) {
+      const item = selectedAllRowIds[index]
+      const result = await onHandleGeneratePDF(item)
+      list.push(result)
+      //const data = JSON.parse(window.localStorage.getItem('oSData'))
+      showMessage(ModalPDF, { oSData: list })
+      setIsOpenModalInformation(true)
+      index++
+      if (index === selectedAllRowIds.length - 1) { }
+    }
+  }
+
+  const removeLocalStorage = () => {
+    window.localStorage.removeItem('oSData')
+    window.localStorage.removeItem('osDataAdded')
+  }
+
+  const updateTableList = () => {
+    dispatch({
+      type: LAYOUT_MAKE_REQUEST,
+      payload: {
+        makeRequest: Math.random(),
+      },
+    })
+  }
+
   React.useEffect(() => {
     getTotalOrcamentos()
+    return () => {
+      removeLocalStorage()
+    }
   }, [])
+
+  React.useEffect(() => {
+    if (!incomesFiltered.length) {
+      setSelectedAllRow([])
+    }
+  }, [incomesFiltered])
+
+  React.useEffect(() => {
+    if (osDataAdded) {
+      const oSData = JSON.parse(window.localStorage.getItem('oSData'))
+      if (osDataAdded?.length === oSData?.length) {
+        setIsOpenModalInformation(false)
+        closeModal()
+        removeLocalStorage()
+        updateTableList()
+        setSelectedAllRowIds([])
+        setSelectedAllRow([])
+      }
+    }
+  }, [osDataAdded])
+
 
   return (
     <>
@@ -122,7 +205,7 @@ const TableView: React.FC<TableViewProps> = ({
           {!!selectedAllRow.length && <div style={{ marginTop: '7px' }}>
             Total Selecionado:{' '}
             <b>{formatPrice(
-              selectedAllRow?.reduce((sum, row) => sum + row.valueNumber, 0),
+              selectedAllRow.filter((item) => item.situation === status)?.reduce((sum, row) => sum + row.valueNumber, 0),
             )}</b>
           </div>}
           {!!selectedAllRowIds?.length && (
@@ -148,6 +231,14 @@ const TableView: React.FC<TableViewProps> = ({
         setSelectedAllRowIds={setSelectedAllRowIds}
         setCellClick={setSelectedAllRow}
       />
+      {!!isOpenModalInformation && (
+        <ModalInformation
+          open={isOpenModalInformation}
+          setOpen={setIsOpenModalInformation}
+          text='Aguarde enquanto o sistema está processando e movendo os arquivos
+          PDF na pasta do Google Drive.'
+        />
+      )}
     </>
   )
 }

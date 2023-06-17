@@ -93,6 +93,8 @@ const TableView: React.FC<TableViewProps> = ({
         <ModalInformation
           open={isOpenModalInformation}
           setOpen={setIsOpenModalInformation}
+          text='Aguarde enquanto o sistema está processando e gerando os arquivos
+          PDF na pasta do Google Drive.'
         />
       )}
     </>

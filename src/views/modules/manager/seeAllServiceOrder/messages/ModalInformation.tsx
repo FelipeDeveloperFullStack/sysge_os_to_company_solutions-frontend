@@ -9,6 +9,7 @@ type DialogModal = {
   open: boolean
   maxWidth?: DialogProps['maxWidth']
   fullWidth?: boolean
+  text?: string
 }
 
 export const ModalInformation: React.FC<DialogModal> = ({
@@ -16,6 +17,7 @@ export const ModalInformation: React.FC<DialogModal> = ({
   open = false,
   maxWidth = 'xl',
   fullWidth = true,
+  text
 }) => {
   // const handleClickOpen = () => {
   //   setOpen(true)
@@ -51,8 +53,7 @@ export const ModalInformation: React.FC<DialogModal> = ({
               width: 'fit-content',
             }}
           >
-            Aguarde enquanto o sistema está processando e gerando os arquivos
-            PDF das Ordens de Serviços.
+            {text}
             <LinearProgress />
           </Box>
         </DialogContent>

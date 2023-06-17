@@ -140,6 +140,12 @@ const TableView: React.FC<TableViewProps> = ({
     }
   }, [])
 
+  React.useEffect(() => {
+    if (!incomesFiltered.length) {
+      setSelectedAllRow([])
+    }
+  }, [incomesFiltered])
+
   return (
     <>
       <>
