@@ -39,7 +39,7 @@ const RestRegister = ({ className, ...rest }) => {
           .post(API_SERVER + 'users/create', {
             name: values.username,
             // email: values.email,
-            cpf: Number(onlyNumbers(values.cpf)),
+            cpf: String(onlyNumbers(values.cpf)),
             password: values.password,
             permissions: permissionsUser,
           })
