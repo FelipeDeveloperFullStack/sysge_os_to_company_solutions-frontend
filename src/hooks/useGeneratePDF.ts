@@ -16,10 +16,12 @@ export const useGeneratePDF = () => {
     clientName: string,
     status: string,
     typeDocument: string,
+    id: string,
   ) => {
     try {
       Loading.turnOn()
       await apiAdmin.post('orderServices/generate/pdf', {
+        id,
         base64Pdf,
         fileName,
         clientName,
@@ -27,7 +29,7 @@ export const useGeneratePDF = () => {
         typeDocument,
       })
     } catch (error) {
-      toast.error('Houve um erro ao tentar gerar o PDF')
+      toast.error('Ops! Houve um erro ao tentar gerar o PDF, tente novamente.')
     } finally {
       Loading.turnOff()
     }
@@ -41,6 +43,7 @@ export const useGeneratePDF = () => {
     clientName?: string,
     status?: string,
     typeDocument?: string,
+    id?: string,
     //@ts-ignore
   ) => {
     try {
@@ -91,6 +94,7 @@ export const useGeneratePDF = () => {
                 clientName,
                 status,
                 typeDocument,
+                id,
               )
             }
           }

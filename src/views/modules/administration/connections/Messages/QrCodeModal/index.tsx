@@ -4,10 +4,6 @@ import { Notification } from 'src/components'
 import { useAuth } from 'src/hooks/useAuth'
 import { useModal } from 'src/hooks/useModal'
 import { socket } from 'src/services/Socket'
-import {
-  CONNECTION_SERVICE_GETCONNECTION_AUTHENTICATED,
-  CONNECTION_SERVICE_GETCONNECTION_CLIENT_READY,
-} from 'src/services/Socket/EventTypes'
 import { Container } from './styles'
 
 interface QrCodeModalprops {
@@ -19,19 +15,19 @@ const QrCodeModalContent: React.FC<QrCodeModalprops> = ({ qrCode }) => {
   const { user } = useAuth()
 
   useEffect(() => {
-    socket.on(`${CONNECTION_SERVICE_GETCONNECTION_AUTHENTICATED}-${user.user.cpf}`, (data) => {
-      if (data?.status === 'authenticated') {
-        closeModal()
-      }
-    })
-    socket.on(`${CONNECTION_SERVICE_GETCONNECTION_CLIENT_READY}-${user.user.cpf}`, (data) => {
-      if (data?.status === 'ready') {
-        closeModal()
-      }
-      if (data?.status === 'desconnected') {
-        closeModal()
-      }
-    })
+    // socket.on(`${CONNECTION_SERVICE_GETCONNECTION_AUTHENTICATED}-${user.user.cpf}`, (data) => {
+    //   if (data?.status === 'authenticated') {
+    //     closeModal()
+    //   }
+    // })
+    // socket.on(`${CONNECTION_SERVICE_GETCONNECTION_CLIENT_READY}-${user.user.cpf}`, (data) => {
+    //   if (data?.status === 'ready') {
+    //     closeModal()
+    //   }
+    //   if (data?.status === 'desconnected') {
+    //     closeModal()
+    //   }
+    // })
   }, [])
 
   return (

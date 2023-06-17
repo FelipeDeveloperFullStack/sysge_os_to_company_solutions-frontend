@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
+import { socket } from 'src/services/Socket'
+import { EVENT_UPDATE_OS_ORCAMENTO } from 'src/services/Socket/EventTypes'
 import { useAdmin } from 'src/services/useAdmin'
 import {
   EQUIPAMENT_SEE_ALL,
@@ -153,6 +155,13 @@ const SeeAllServiceOrder = (props: Props) => {
     }
   }
 
+  const functions = () => {
+    getOrderServices()
+    getServices()
+    getPieces()
+    getEquipaments()
+  }
+
   useEffect(() => {
     getServices()
     getPieces()
@@ -161,10 +170,14 @@ const SeeAllServiceOrder = (props: Props) => {
   }, [])
 
   useEffect(() => {
-    getOrderServices()
-    getServices()
-    getPieces()
-    getEquipaments()
+    functions()
+    socket.on(EVENT_UPDATE_OS_ORCAMENTO, (data: string) => {
+      /**
+       * @description
+       * Esse Websocket irá ser executado quando houver uma atualização de algum registro da Ordem de Serviço/Orçamento
+       */
+      functions()
+    })
   }, [makeRequest, serviceOrderFiltered])
 
   useEffect(() => {

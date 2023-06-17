@@ -118,15 +118,13 @@ const Filters: React.FC<FiltersProps> = ({
             />
             {!!selectedAllRowIds?.length && (
               <ButtonGenerateOSContainer>
-                <Badge badgeContent={selectedAllRowIds?.length} color="primary">
-                  <Button
-                    textButton={`Gerar`}
-                    variant="contained"
-                    onClick={onHandleGenerateOS}
-                    size="medium"
-                    icon="doc"
-                  />
-                </Badge>
+                <Button
+                  textButton={`Gerar (${selectedAllRowIds?.length})`}
+                  variant="contained"
+                  onClick={onHandleGenerateOS}
+                  size="medium"
+                  icon="doc"
+                />
               </ButtonGenerateOSContainer>
             )}
           </ButtonContainer>

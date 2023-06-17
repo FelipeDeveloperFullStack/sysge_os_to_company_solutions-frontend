@@ -103,7 +103,7 @@ export const useColumns = (props: ColumnsProps) => {
           <>
             <IconButton
               aria-label="delete"
-              color="default"
+              color="error"
               onClick={() => onHandleDeleteRow(params)}
               disabled={!hasPermission(DESPESAS_EXCLUIR)}
             >

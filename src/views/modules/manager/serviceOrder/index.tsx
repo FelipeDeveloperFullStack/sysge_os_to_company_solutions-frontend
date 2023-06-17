@@ -96,17 +96,17 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
     return format(now, 'dd/MM/yyyy HH:mm')
   }
 
-  const updateDateOSGenerated = async () => {
-    try {
-      await apiAdmin.put(`orderServices/${data?._id}`, {
-        dateGeneratedOS: getCurrentDateAndHour(),
-      })
-    } catch (error) {
-      toast.error(
-        'Um erro ocorreu ao tentar atualizar a data de atualização da OS gerada.',
-      )
-    }
-  }
+  // const updateDateOSGenerated = async () => {
+  //   try {
+  //     await apiAdmin.put(`orderServices/${data?._id}`, {
+  //       dateGeneratedOS: getCurrentDateAndHour(),
+  //     })
+  //   } catch (error) {
+  //     toast.error(
+  //       'Um erro ocorreu ao tentar atualizar a data de atualização da OS gerada.',
+  //     )
+  //   }
+  // }
 
   // React.useEffect(() => {
   //   if (!osData) {
@@ -122,10 +122,11 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
       osData ? false : true,
       data?.client.name,
       data?.status,
-      data?.typeDocument //ORCAMENTO OU ORDEM_DE_SERVICO
+      data?.typeDocument, //ORCAMENTO OU ORDEM_DE_SERVICO
+      data?._id
     )
     setIsOsGenerated(true)
-    await updateDateOSGenerated()
+    // await updateDateOSGenerated()
   }
 
   const resultNewArray = (data: any[]) => {

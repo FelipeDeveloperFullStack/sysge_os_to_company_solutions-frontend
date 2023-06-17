@@ -156,7 +156,7 @@ export const useColumns = () => {
               <Tooltip title='Excluir'>
                 <IconButton
                   aria-label="excluir"
-                  color="default"
+                  color="error"
                   onClick={() => onHandleDeleteRow(params)}
                   disabled={!hasPermission(ORDEM_SERVICO_EXCLUIR)}
                 >

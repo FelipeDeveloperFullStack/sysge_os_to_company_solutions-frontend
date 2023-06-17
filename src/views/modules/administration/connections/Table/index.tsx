@@ -20,13 +20,6 @@ import { useAdmin } from '../../../../../services/useAdmin'
 import apiWhatsApp from '../../../../../services/apiWhatsApp'
 import { ThrowException } from '../../../../../services/Exceptions'
 import { socket } from '../../../../../services/Socket'
-import {
-  CONNECTION_SERVICE_GETCONNECTION_CLIENT_QR,
-  CONNECTION_SERVICE_GETCONNECTION_CLIENT_READY,
-  CONNECTION_WHATSAPP_SERVICE_CREATE,
-  EVENTS_SERVICE_CONNECT,
-  CONNECTION_SERVICE_GETCONNECTION_CLIENT_AUTO_CLOSE_CALLED,
-} from '../../../../../services/Socket/EventTypes'
 import { fromApi } from '../Adapters'
 import QrCodeModalContent from '../Messages/QrCodeModal'
 import { ConnectionDataI, TableViewProps } from '../Types'
@@ -76,9 +69,9 @@ const TableView: React.FC<TableViewProps> = ({ setIsMessageError }) => {
   }
 
   React.useEffect(() => {
-    socket.on(CONNECTION_WHATSAPP_SERVICE_CREATE, (data) => {
-      if (data?.status === 'created') getConnections()
-    })
+    // socket.on(CONNECTION_WHATSAPP_SERVICE_CREATE, (data) => {
+    //   if (data?.status === 'created') getConnections()
+    // })
     getConnections()
   }, [])
 
@@ -87,57 +80,48 @@ const TableView: React.FC<TableViewProps> = ({ setIsMessageError }) => {
     //   console.log({ EVENTS_SERVICE_CONNECT: data })
     //   if (data?.status === 'waitingConnection') setLoadingButton(true)
     // })
-    socket.on(
-      `${CONNECTION_SERVICE_GETCONNECTION_CLIENT_QR}-${user.user.cpf}`,
-      (data) => {
-        // if (data?.status === 'qrCodeGenerated') setLoadingButton(false)
-        if (data?.qrCode) {
-          setLoadingButton(false)
-          showMessage(QrCodeModalContent, { qrCode: data?.qrCode }, true)
-        }
-      },
-    )
+    // socket.on(
+    //   `${CONNECTION_SERVICE_GETCONNECTION_CLIENT_QR}-${user.user.cpf}`,
+    //   (data) => {
+    //     // if (data?.status === 'qrCodeGenerated') setLoadingButton(false)
+    //     if (data?.qrCode) {
+    //       setLoadingButton(false)
+    //       showMessage(QrCodeModalContent, { qrCode: data?.qrCode }, true)
+    //     }
+    //   },
+    // )
 
-    socket.on(
-      `${CONNECTION_SERVICE_GETCONNECTION_CLIENT_AUTO_CLOSE_CALLED}-${user.user.cpf}`,
-      (data) => {
-        if (data?.status === 'autoCloseCalled') {
-          setIsMessageError(true)
-        }
-      },
-    )
+    // socket.on(
+    //   `${CONNECTION_SERVICE_GETCONNECTION_CLIENT_READY}-${user.user.cpf}`,
+    //   (data) => {
+    //     if (data?.status === 'ready') {
+    //       dispatch({
+    //         type: WHATSAPP_CONNECTION,
+    //         payload: {
+    //           userNumber: data?.info.number,
+    //           nameUserSession: '',
+    //           sessionState: 'CONNECTED',
+    //           session: data?.sessionState,
+    //         },
+    //       })
+    //     }
+    //     if (data?.status === 'desconnected') {
+    //       dispatch({
+    //         type: WHATSAPP_CONNECTION,
+    //         payload: {
+    //           userNumber: null,
+    //           nameUserSession: '',
+    //           sessionState: 'DESCONNECTED',
+    //           session: data?.sessionState,
+    //         },
+    //       })
+    //     }
+    //   },
+    // )
 
-    socket.on(
-      `${CONNECTION_SERVICE_GETCONNECTION_CLIENT_READY}-${user.user.cpf}`,
-      (data) => {
-        if (data?.status === 'ready') {
-          dispatch({
-            type: WHATSAPP_CONNECTION,
-            payload: {
-              userNumber: data?.info.number,
-              nameUserSession: '',
-              sessionState: 'CONNECTED',
-              session: data?.sessionState,
-            },
-          })
-        }
-        if (data?.status === 'desconnected') {
-          dispatch({
-            type: WHATSAPP_CONNECTION,
-            payload: {
-              userNumber: null,
-              nameUserSession: '',
-              sessionState: 'DESCONNECTED',
-              session: data?.sessionState,
-            },
-          })
-        }
-      },
-    )
-
-    return () => {
-      socket.off(EVENTS_SERVICE_CONNECT)
-    }
+    // return () => {
+    //   socket.off(EVENTS_SERVICE_CONNECT)
+    // }
   }, [])
 
   // const disconnect = () => {
