@@ -3,19 +3,21 @@ import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { usePermission } from 'src/hooks/usePermission'
 import { ADMINISTRATION_EQUIPAMENTS_CREATE } from 'src/layouts/typePath'
 import { EQUIPAMENT_FILTER } from 'src/store/actions'
 import { EquipamentT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import Button from '../../../../../components/Form/Button'
 import InputText from '../../../../../components/Form/InputText/index_old'
+import { EQUIPAMENTOS_INCLUIR } from '../../permissions/static/keysPermissions'
 import { ButtonContainer, Container } from './styles'
 
 const Filters: React.FC = () => {
   const { control, handleSubmit, reset } = useForm<EquipamentT>()
 
   const history = useHistory()
-
+  const { hasPermission } = usePermission()
   const dispatch = useDispatch()
 
   const onSubmitFilter = (data: EquipamentT) => {
@@ -101,6 +103,7 @@ const Filters: React.FC = () => {
               size="medium"
               icon="add"
               onClick={() => history.push(ADMINISTRATION_EQUIPAMENTS_CREATE)}
+              disabled={!hasPermission(EQUIPAMENTOS_INCLUIR)}
             />
             <div>
               <Button

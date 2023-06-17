@@ -15,6 +15,8 @@ import { format, getYear, parse } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { NewExpenses } from '../messages/NewExpenses'
 import { useModal } from 'src/hooks/useModal'
+import { DESPESAS_INCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import { usePermission } from 'src/hooks/usePermission'
 
 type SeeAllIncomeProps = {
   expense: string
@@ -33,6 +35,7 @@ const Filters: React.FC<FiltersProps> = ({
 }) => {
   const { control, handleSubmit, getValues, watch } =
     useForm<SeeAllIncomeProps>()
+  const { hasPermission } = usePermission()
   const { apiAdmin } = useAdmin()
   const { showMessage } = useModal()
   const [months, setMonths] = useState([])
@@ -212,15 +215,6 @@ const Filters: React.FC<FiltersProps> = ({
         <Paper elevation={1}>
           <Container>
             <Row display="flex" flexDirection="column" gap={1}>
-              <Button
-                variant="outlined"
-                textButton="Incluir"
-                color="info"
-                icon="add"
-                onClick={onHandleNewExpenses}
-              />
-            </Row>
-            <Row display="flex" flexDirection="column" gap={1}>
               <div>Ano:</div>
               <Row
                 display="flex"
@@ -306,17 +300,30 @@ const Filters: React.FC<FiltersProps> = ({
                 </Row>
               </Form>
             </Row>
+            <Row columns='1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr' gap={1}>
+              <Button
+                variant="outlined"
+                textButton="Incluir"
+                color="info"
+                icon="add"
+                onClick={onHandleNewExpenses}
+                disabled={!hasPermission(DESPESAS_INCLUIR)}
+              />
+            </Row>
           </Container>
         </Paper>
 
       ) : (
-        <Button
-          variant="outlined"
-          textButton="Incluir"
-          color="info"
-          icon="add"
-          onClick={onHandleNewExpenses}
-        />
+        <Row columns='1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr' gap={1}>
+          <Button
+            variant="outlined"
+            textButton="Incluir"
+            color="info"
+            icon="add"
+            onClick={onHandleNewExpenses}
+            disabled={!hasPermission(DESPESAS_INCLUIR)}
+          />
+        </Row>
       )}
     </>
   )

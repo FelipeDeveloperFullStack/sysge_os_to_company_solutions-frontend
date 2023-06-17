@@ -4,17 +4,19 @@ import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
+import { usePermission } from 'src/hooks/usePermission'
 import { ADMINISTRATION_CLIENTS_CREATE } from 'src/layouts/typePath'
 import { CLIENT_FILTER } from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import Button from '../../../../../components/Form/Button'
 import InputText from '../../../../../components/Form/InputText/index_old'
+import { CLIENTES_INCLUIR } from '../../permissions/static/keysPermissions'
 import { ButtonContainer, Container } from './styles'
 
 const Filters: React.FC = () => {
   const { control, handleSubmit, reset, watch } = useForm<ClientT>()
-
+  const { hasPermission } = usePermission()
   const history = useHistory()
 
   const dispatch = useDispatch()
@@ -72,6 +74,7 @@ const Filters: React.FC = () => {
               size="medium"
               icon="add"
               onClick={() => history.push(ADMINISTRATION_CLIENTS_CREATE)}
+              disabled={!hasPermission(CLIENTES_INCLUIR)}
             />
             <div>
               <Button

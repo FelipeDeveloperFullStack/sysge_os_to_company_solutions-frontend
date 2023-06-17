@@ -139,6 +139,16 @@ const EditUserWithPermission: React.FC = () => {
   //   return sequence;
   // }
 
+  const mappedPermissions = () => {
+    const permissions = location?.permissions
+    return permissions.map((permission) => {
+      return {
+        name: permission.name,
+        key: permission.key
+      }
+    })
+  }
+
   React.useEffect(() => {
     scroll(0, 0)
     const { name, email, cpf, password, typeUser } = location
@@ -264,7 +274,7 @@ const EditUserWithPermission: React.FC = () => {
         </Form>
       </TabPanel>
       <TabPanel value={valueTab} index={1}>
-        <Permissions onSubmit={onSubmit} setPermissionsValues={setPermissionsValues} targetPermission={location?.permissions} />
+        <Permissions onSubmit={onSubmit} setPermissionsValues={setPermissionsValues} targetPermission={mappedPermissions()} />
       </TabPanel>
     </Container>
   )

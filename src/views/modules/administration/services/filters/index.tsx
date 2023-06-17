@@ -3,12 +3,14 @@ import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { usePermission } from 'src/hooks/usePermission'
 import { ADMINISTRATION_SERVICES_CREATE } from 'src/layouts/typePath'
 import { SERVICE_FILTER } from 'src/store/actions'
 import { ServiceT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import Button from '../../../../../components/Form/Button'
 import InputText from '../../../../../components/Form/InputText/index_old'
+import { SERVICOS_INCLUIR } from '../../permissions/static/keysPermissions'
 import { ButtonContainer, Container } from './styles'
 
 const Filters: React.FC = () => {
@@ -17,6 +19,7 @@ const Filters: React.FC = () => {
   const history = useHistory()
 
   const dispatch = useDispatch()
+  const { hasPermission } = usePermission()
 
   const onSubmitFilter = (data: ServiceT) => {
     data = {
@@ -58,6 +61,7 @@ const Filters: React.FC = () => {
               size="medium"
               icon="add"
               onClick={() => history.push(ADMINISTRATION_SERVICES_CREATE)}
+              disabled={!hasPermission(SERVICOS_INCLUIR)}
             />
             <div>
               <Button

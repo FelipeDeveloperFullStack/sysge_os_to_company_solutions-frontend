@@ -23,10 +23,13 @@ import RemoveConfirmation from '../../messages/RemoveConfirmation'
 import { ClientT } from 'src/store/Types'
 import { ADMINISTRATION_CLIENTS_EDIT } from 'src/layouts/typePath'
 import { useHistory } from 'react-router-dom'
+import { CLIENTES_EDITAR, CLIENTES_EXCLUIR } from '../../../permissions/static/keysPermissions'
+import { usePermission } from 'src/hooks/usePermission'
 
 export const useColumns = () => {
   const { showMessage } = useModal()
   const history = useHistory()
+  const { hasPermission } = usePermission()
 
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
@@ -87,6 +90,7 @@ export const useColumns = () => {
             aria-label="edit"
             color="info"
             onClick={() => onHandleUpdateRow(params)}
+            disabled={!hasPermission(CLIENTES_EDITAR)}
           >
             <EditIcon />
           </IconButton>
@@ -95,6 +99,7 @@ export const useColumns = () => {
               aria-label="delete"
               color="error"
               onClick={() => onHandleDeleteRow(params)}
+              disabled={!hasPermission(CLIENTES_EXCLUIR)}
             >
               <DeleteForeverIcon />
             </IconButton>

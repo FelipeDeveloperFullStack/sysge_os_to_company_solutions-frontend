@@ -8,10 +8,13 @@ import { PieceT } from 'src/store/Types'
 import { ADMINISTRATION_PIECES_EDIT } from 'src/layouts/typePath'
 import { useHistory } from 'react-router-dom'
 import { formatPrice } from 'src/helpers/formatPrice'
+import { PECAS_EDITAR, PECAS_EXCLUIR } from '../../../permissions/static/keysPermissions'
+import { usePermission } from 'src/hooks/usePermission'
 
 export const useColumns = () => {
   const { showMessage } = useModal()
   const history = useHistory()
+  const { hasPermission } = usePermission()
 
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
@@ -49,6 +52,7 @@ export const useColumns = () => {
             aria-label="edit"
             color="info"
             onClick={() => onHandleUpdateRow(params)}
+            disabled={!hasPermission(PECAS_EDITAR)}
           >
             <EditIcon />
           </IconButton>
@@ -57,6 +61,7 @@ export const useColumns = () => {
               aria-label="delete"
               color="error"
               onClick={() => onHandleDeleteRow(params)}
+              disabled={!hasPermission(PECAS_EXCLUIR)}
             >
               <DeleteForeverIcon />
             </IconButton>

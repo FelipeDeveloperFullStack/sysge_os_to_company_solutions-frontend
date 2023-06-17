@@ -14,6 +14,8 @@ import { Button } from 'src/components'
 import useLocalStorage from 'use-local-storage'
 import ConfirmationToRegisterInPiece from '../messages/ConfirmationToSave'
 import { InsertPercentToPiece } from '../messages/InsertPercentToPiece'
+import { DESPESAS_EDITAR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import { usePermission } from 'src/hooks/usePermission'
 
 type TableViewProps = {
   incomesFiltered: Expense[]
@@ -28,6 +30,7 @@ const TableView: React.FC<TableViewProps> = ({
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
   const { showSimple, showMessage } = useModal()
+  const { hasPermission } = usePermission()
 
   const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
     [] as string[],
@@ -189,6 +192,7 @@ const TableView: React.FC<TableViewProps> = ({
                   icon={status === 'A PAGAR' ? 'update2' : 'update'}
                   color={status === 'A PAGAR' ? 'success' : 'warning'}
                   onClick={onHandleUpdateStatus}
+                  disabled={!hasPermission(DESPESAS_EDITAR)}
                 />
                 {/* <Badge
                   badgeContent={selectedAllRowIds?.length}

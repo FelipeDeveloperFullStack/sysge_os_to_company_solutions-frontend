@@ -18,6 +18,8 @@ import { ModalPDF } from 'src/views/modules/manager/seeAllServiceOrder/messages/
 import { ModalInformation } from 'src/views/modules/manager/seeAllServiceOrder/messages/ModalInformation'
 import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { useDispatch } from 'react-redux'
+import { RECEITAS_EDITAR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import { usePermission } from 'src/hooks/usePermission'
 
 type TableViewProps = {
   incomesFiltered: Income[]
@@ -32,6 +34,7 @@ const TableView: React.FC<TableViewProps> = ({
   const columns = useColumns({ setMakeRequest })
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
+  const { hasPermission } = usePermission()
   const { showSimple, showMessage, closeModal } = useModal()
   const osDataAdded = JSON.parse(window.localStorage.getItem('osDataAdded'))
   const [selectedAllRow, setSelectedAllRow] = useState<Income[]>(
@@ -218,6 +221,7 @@ const TableView: React.FC<TableViewProps> = ({
                 icon={status === 'PENDENTE' ? 'update2' : 'update'}
                 color={status === 'PENDENTE' ? 'success' : 'warning'}
                 onClick={onHandleUpdateStatus}
+                disabled={!hasPermission(RECEITAS_EDITAR)}
               />
             </ButtonGenerateOSContainer>
           )}

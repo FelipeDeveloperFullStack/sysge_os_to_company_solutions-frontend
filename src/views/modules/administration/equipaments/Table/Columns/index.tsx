@@ -7,9 +7,12 @@ import RemoveConfirmation from '../../messages/RemoveConfirmation'
 import { EquipamentT } from 'src/store/Types'
 import { ADMINISTRATION_EQUIPAMENTS_EDIT } from 'src/layouts/typePath'
 import { useHistory } from 'react-router-dom'
+import { EQUIPAMENTOS_EDITAR, EQUIPAMENTOS_EXCLUIR } from '../../../permissions/static/keysPermissions'
+import { usePermission } from 'src/hooks/usePermission'
 
 export const useColumns = () => {
   const { showMessage } = useModal()
+  const { hasPermission } = usePermission()
   const history = useHistory()
 
   const onHandleDeleteRow = (params: GridCellParams) => {
@@ -50,6 +53,7 @@ export const useColumns = () => {
             aria-label="edit"
             color="info"
             onClick={() => onHandleUpdateSituationRow(params)}
+            disabled={!hasPermission(EQUIPAMENTOS_EDITAR)}
           >
             <EditIcon />
           </IconButton>
@@ -58,6 +62,7 @@ export const useColumns = () => {
               aria-label="delete"
               color="error"
               onClick={() => onHandleDeleteRow(params)}
+              disabled={!hasPermission(EQUIPAMENTOS_EXCLUIR)}
             >
               <DeleteForeverIcon />
             </IconButton>

@@ -5,10 +5,12 @@ import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import hasNumber from 'src/helpers/hasNumber'
+import { usePermission } from 'src/hooks/usePermission'
 import { MANAGER_SERVICE_ORDER_CREATE } from 'src/layouts/typePath'
 import { MODEL_FILTER } from 'src/store/actions'
 import { ModelT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import { ORDEM_SERVICO_INCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import Button from '../../../../../components/Form/Button'
 import InputText from '../../../../../components/Form/InputText/index_old'
 import { OSData } from '../../serviceOrder/create/type'
@@ -32,6 +34,7 @@ const Filters: React.FC<FiltersProps> = ({
   const history = useHistory()
   const dispatch = useDispatch()
   const clientNameOrOsNumber = watch('description')
+  const { hasPermission } = usePermission()
 
   const onSubmitFilter = (data: ModelT) => {
     data = {
@@ -111,6 +114,7 @@ const Filters: React.FC<FiltersProps> = ({
               size="medium"
               icon="add"
               onClick={() => history.push(MANAGER_SERVICE_ORDER_CREATE)}
+              disabled={!hasPermission(ORDEM_SERVICO_INCLUIR)}
             />
             {!!selectedAllRowIds?.length && (
               <ButtonGenerateOSContainer>

@@ -8,6 +8,7 @@ import axios from 'axios'
 import useScriptRef from '../../../hooks/useScriptRef'
 import { API_SERVER } from '../../../config/constant'
 import onlyNumbers from '../../../helpers/clear/onlyNumbers'
+import { permissionsUser } from 'src/views/modules/administration/permissions/static'
 
 const RestRegister = ({ className, ...rest }) => {
   let history = useHistory()
@@ -34,6 +35,7 @@ const RestRegister = ({ className, ...rest }) => {
             // email: values.email,
             cpf: Number(onlyNumbers(values.cpf)),
             password: values.password,
+            permissions: permissionsUser,
           })
           .then(function (response) {
             history.push('/auth/signin')

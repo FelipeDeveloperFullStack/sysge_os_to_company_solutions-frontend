@@ -76,7 +76,7 @@ const defineIcon = (icon: iconType) => {
 const _Button: React.FunctionComponent<buttonProps> = (props, { ...rest }) => {
   return (
     <React.Fragment>
-      <Box sx={{ m: 1, position: 'relative' }}>
+      <Box sx={{ position: 'relative' }}>
         <Button
           variant={props.variant}
           color={props.color}
@@ -85,6 +85,7 @@ const _Button: React.FunctionComponent<buttonProps> = (props, { ...rest }) => {
           startIcon={defineIcon(props.icon)}
           size={props.size}
           type={props.type}
+          style={{ width: '100%' }}
           {...rest}
         >
           {props.textButton}

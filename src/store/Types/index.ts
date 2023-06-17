@@ -144,5 +144,12 @@ export interface IAccount {
     sub: string
     iat: number
     exp: number
+    permission: Permission[]
+    typeUser: string
   }
+}
+
+type Permission = {
+  name: string
+  key: string
 }

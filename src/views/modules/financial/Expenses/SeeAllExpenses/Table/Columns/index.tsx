@@ -8,6 +8,8 @@ import { useModal } from 'src/hooks/useModal'
 import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
 import { Expense } from '../adapter'
 import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
+import { DESPESAS_EDITAR, DESPESAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import { usePermission } from 'src/hooks/usePermission'
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -15,6 +17,7 @@ type ColumnsProps = {
 
 export const useColumns = (props: ColumnsProps) => {
   const { showMessage } = useModal()
+  const { hasPermission } = usePermission()
 
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
@@ -89,6 +92,7 @@ export const useColumns = (props: ColumnsProps) => {
             aria-label="update"
             color="info"
             onClick={() => onHandleUpdateSituationRow(params)}
+            disabled={!hasPermission(DESPESAS_EDITAR)}
           >
             {params.row.situation?.toUpperCase().trim() === 'A PAGAR' ? (
               <PublishedWithChangesIcon />
@@ -101,6 +105,7 @@ export const useColumns = (props: ColumnsProps) => {
               aria-label="delete"
               color="default"
               onClick={() => onHandleDeleteRow(params)}
+              disabled={!hasPermission(DESPESAS_EXCLUIR)}
             >
               <DeleteForeverIcon />
             </IconButton>

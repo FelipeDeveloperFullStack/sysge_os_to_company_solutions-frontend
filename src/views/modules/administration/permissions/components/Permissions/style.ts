@@ -4,7 +4,7 @@ export const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 15px;
-  //gap: 5px;
+  gap: 5px;
 `
 export const Container = styled.form`
   background: #fff;

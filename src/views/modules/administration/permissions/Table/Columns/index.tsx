@@ -5,18 +5,20 @@ import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import { useModal } from 'src/hooks/useModal'
 import UpdateInactiveConfirmation from '../../messages/RemoveConfirmation'
-import { EquipamentT } from 'src/store/Types'
-import { ADMINISTRATION_EQUIPAMENTS_EDIT, ADMINISTRATION_MANAGER_USER_EDIT } from 'src/layouts/typePath'
+import { ADMINISTRATION_MANAGER_USER_EDIT } from 'src/layouts/typePath'
 import { useHistory } from 'react-router-dom'
 import { User } from '../../type'
 import { formatCpf } from 'src/helpers/formatCpf'
 import { useAuth } from 'src/hooks/useAuth';
 import { Chip, Tooltip } from '@mui/material';
+import { GESTAO_USUARIOS_BLOQUEAR, GESTAO_USUARIOS_EDITAR } from '../../static/keysPermissions';
+import { usePermission } from 'src/hooks/usePermission';
 
 export const useColumns = () => {
   const { showMessage } = useModal()
   const { user } = useAuth()
   const history = useHistory()
+  const { hasPermission } = usePermission()
 
   const onHandleUpdateRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
@@ -86,6 +88,7 @@ export const useColumns = () => {
               aria-label="edit"
               color="info"
               onClick={() => onHandleUpdateSituationRow(params)}
+              disabled={!hasPermission(GESTAO_USUARIOS_EDITAR)}
             >
               <EditIcon />
             </IconButton>
@@ -96,6 +99,7 @@ export const useColumns = () => {
                 aria-label="update"
                 color="error"
                 onClick={() => onHandleUpdateRow(params)}
+                disabled={!hasPermission(GESTAO_USUARIOS_BLOQUEAR)}
               >
                 {params.row.status === 'BLOQUEADO' ? <LockIcon /> : <LockOpenIcon />}
               </IconButton>

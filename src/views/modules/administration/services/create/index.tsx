@@ -134,7 +134,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         {!!isNewServiceByOS && <div>Novo serviço</div>}
-        <Row columns="4fr 1fr">
+        <Row columns="3fr 1fr">
           <Controller
             name="description"
             control={control}
@@ -157,7 +157,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
             )}
           />
         </Row>
-        <Row columns="4fr 1fr" marginTop="10px" alignItems='flex-end'>
+        <Row columns="3fr 1fr" marginTop="10px" alignItems='flex-end'>
           <Controller
             name="laudoService"
             control={control}

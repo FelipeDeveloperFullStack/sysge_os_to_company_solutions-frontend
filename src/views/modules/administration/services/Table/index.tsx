@@ -12,12 +12,14 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { formatPrice } from 'src/helpers/formatPrice'
 import { useModal } from 'src/hooks/useModal'
+import { usePermission } from 'src/hooks/usePermission'
 import { ADMINISTRATION_SERVICES_EDIT } from 'src/layouts/typePath'
 import { IStore, PieceT, ServiceT } from 'src/store/Types'
 import {
   IconButtonStyled,
   TableCellColumnStyled,
 } from '../../connections/Table/Styles'
+import { SERVICOS_EDITAR, SERVICOS_EXCLUIR } from '../../permissions/static/keysPermissions'
 import RemoveConfirmation from '../messages/RemoveConfirmation'
 import { TableCellPrice } from '../styles'
 import { columns } from './Columns'
@@ -26,6 +28,7 @@ const TableView: React.FC = () => {
   const servicesStore = useSelector((state: IStore) => state.service.services)
   const history = useHistory()
   const { showMessage } = useModal()
+  const { hasPermission } = usePermission()
 
   const removeClient = (client: ServiceT) => {
     showMessage(RemoveConfirmation, client)
@@ -92,17 +95,17 @@ const TableView: React.FC = () => {
                   )
                 })}
                 <TableCell>
-                  <IconButtonStyled>
+                  <IconButtonStyled disabled={!hasPermission(SERVICOS_EDITAR)}>
                     <EditIcon
-                      color="primary"
+                      color={!hasPermission(SERVICOS_EDITAR) ? 'inherit' : 'primary'}
                       onClick={() =>
                         history.push(ADMINISTRATION_SERVICES_EDIT, row)
                       }
                     />
                   </IconButtonStyled>
-                  <IconButtonStyled>
+                  <IconButtonStyled disabled={!hasPermission(SERVICOS_EXCLUIR)}>
                     <DeleteForeverIcon
-                      color="error"
+                      color={!hasPermission(SERVICOS_EXCLUIR) ? 'inherit' : 'error'}
                       onClick={() => removeClient(row)}
                     />
                   </IconButtonStyled>

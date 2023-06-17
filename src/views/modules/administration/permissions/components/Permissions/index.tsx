@@ -16,7 +16,6 @@ type PermissionsProps = {
 }
 
 export const Permissions: React.FC<PermissionsProps> = ({ onSubmit, setPermissionsValues, targetPermission }) => {
-
   const history = useHistory()
 
   const [source, setSource] = useState<PermissionUser[]>([] as PermissionUser[]);
@@ -43,8 +42,8 @@ export const Permissions: React.FC<PermissionsProps> = ({ onSubmit, setPermissio
     return (
       <section>
         <div style={{ display: 'flex', gap: '5px' }}>
-          {item.icon}
-          <span >{item.name}</span>
+          {item?.icon}
+          <span >{item?.name}</span>
         </div>
       </section>
     );

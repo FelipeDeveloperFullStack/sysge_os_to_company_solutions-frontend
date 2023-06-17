@@ -16,12 +16,15 @@ import { useLoading } from 'src/hooks/useLoading'
 import { toast } from 'src/components/Widgets/Toastify'
 import Tooltip from '@mui/material/Tooltip';
 import ConfirmationChangeTypeDocument from '../../messages/ConfirmationChangeTypeDocument';
+import { usePermission } from 'src/hooks/usePermission';
+import { ORDEM_SERVICO_EDITAR, ORDEM_SERVICO_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions';
 
 export const useColumns = () => {
   const { showMessage } = useModal()
   const history = useHistory()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
+  const { hasPermission } = usePermission()
 
   const onHandleEdit = async (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
@@ -138,6 +141,7 @@ export const useColumns = () => {
               aria-label="Mudar de tipo de documento"
               color="info"
               onClick={() => onHandleConfirmationChangeTypeDocument(params)}
+              disabled={!hasPermission(ORDEM_SERVICO_EDITAR)}
             >
               <CachedIcon />
             </IconButton>
@@ -154,6 +158,7 @@ export const useColumns = () => {
                   aria-label="excluir"
                   color="default"
                   onClick={() => onHandleDeleteRow(params)}
+                  disabled={!hasPermission(ORDEM_SERVICO_EXCLUIR)}
                 >
                   <DeleteForeverIcon />
                 </IconButton>
