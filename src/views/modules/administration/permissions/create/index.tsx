@@ -26,6 +26,8 @@ import { ButtonContainer, Container, Form } from './style'
 import { Permissions } from '../components/Permissions'
 import InputMask from 'src/components/Form/InputMask'
 import { permissionsUser } from '../static'
+import { validateCPF } from 'src/helpers/validateFields/validateCPF'
+import validateCpf from 'src/helpers/validateCpf'
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -91,6 +93,11 @@ const CreateUserWithPermission: React.FC = () => {
         toast.error('Permissões obrigatórias!')
         return
       }
+    }
+
+    if (!validateCpf(getValues('cpf'))) {
+      toast.error('CPF inválido! Verifique e digite novamente.')
+      return
     }
 
     const data: User = {

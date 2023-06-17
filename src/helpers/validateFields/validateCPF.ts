@@ -10,7 +10,7 @@ export const validateCPF = (cpf: string, alreadyExist = false): string => {
   }
 
   if (alreadyExist) {
-    return 'Este CPF já está cadastrado na plataforma Rita, por favor verifique os dados e preencha novamente'
+    return 'Este CPF já está cadastrado na plataforma, por favor verifique os dados e preencha novamente'
   }
 
   return ''
