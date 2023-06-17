@@ -3270,6 +3270,7 @@ body {
   .datta-scroll.navbar-content {
     height: calc(100% - #{$header-height});
     min-height: 100vh;
+    margin-top: 24px;
   }
 }
 /* ====== [ menu static end ] ======== */

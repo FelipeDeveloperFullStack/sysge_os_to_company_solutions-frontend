@@ -142,7 +142,6 @@ const EditUserWithPermission: React.FC = () => {
   React.useEffect(() => {
     scroll(0, 0)
     const { name, email, cpf, password, typeUser } = location
-    console.log({ name, email, cpf, password, typeUser })
     setValue('name', name)
     setValue('email', email)
     setValue('cpf', String(cpf))
@@ -205,7 +204,7 @@ const EditUserWithPermission: React.FC = () => {
               defaultValue={''}
               render={({ field, fieldState }) => (
                 <InputText
-                  label={'Senha Criptografada:'}
+                  label={'Senha:'}
                   field={field}
                   fieldState={fieldState}
                   toUpperCase={false}
