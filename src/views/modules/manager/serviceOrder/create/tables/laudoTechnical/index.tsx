@@ -72,7 +72,7 @@ const TableView: React.FC<TableViewProps> = ({
             ...laudos,
             {
               checked: true,
-              description: String(services.laudos[0]).toUpperCase(),
+              description: String(services.laudos[0]),
               service: clickedValue.label,
             },
           ])

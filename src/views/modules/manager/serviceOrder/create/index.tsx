@@ -274,7 +274,7 @@ const CreateOrderService: React.FC = () => {
       const currentNumber = parseInt(current.osNumber)
       return currentNumber > prev ? currentNumber : prev
     }, 0)
-    return highestNumber ? (highestNumber + 1).toString() : '1000'
+    return highestNumber ? (highestNumber + 1).toString() : '883'
   }
 
   const getOSNumber = async () => {

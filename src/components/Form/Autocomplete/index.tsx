@@ -137,7 +137,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
         {...rest}
       />
       {error && <p className="error">{error}</p>}
-      {options.length > 0 && showList && (
+      {options?.length > 0 && showList && (
         <ListSuggestions
           // listSuggestionsHeight={listSuggestionsHeight}
           // ref={listSuggestionsRef}

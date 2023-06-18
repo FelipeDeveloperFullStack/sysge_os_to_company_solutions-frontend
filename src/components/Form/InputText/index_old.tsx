@@ -7,6 +7,7 @@ interface InputTextProps {
   field: any
   toUpperCase?: boolean
   variant?: variantType
+  capitalizeWords?: boolean
   [x: string]: any
   // setValue?: (value: string) => void
   // hasError?: boolean
@@ -31,6 +32,7 @@ const InputText: React.FC<InputTextProps> = ({
   fieldState: { error },
   variant,
   toUpperCase = true,
+  capitalizeWords = false,
   // setValue,
   // onChange,
   // hasError = false,
@@ -45,6 +47,24 @@ const InputText: React.FC<InputTextProps> = ({
   // name,
   ...rest
 }) => {
+
+  const transformValue = (input: string) => {
+    if (toUpperCase) {
+      input = input.toUpperCase()
+    }
+
+    if (capitalizeWords) {
+      const words = input.split(' ')
+      const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      input = capitalizedWords.join(' ')
+    }
+
+    return input
+  }
+
+  const transformedValue = transformValue(value)
+
+
   return (
     <Container
       variation={'variation'}
@@ -56,7 +76,7 @@ const InputText: React.FC<InputTextProps> = ({
         variant={variant || 'outlined'}
         margin="dense"
         isHasValue={value?.trim()}
-        value={toUpperCase ? String(value).toUpperCase() : value}
+        value={transformedValue}
         fullWidth
         onChange={onChange}
         error={!!error}

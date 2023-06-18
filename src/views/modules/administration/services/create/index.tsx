@@ -169,6 +169,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
                   field={field}
                   fieldState={fieldState}
                   toUpperCase={false}
+                  capitalizeWords
                 />
               </>
             )}

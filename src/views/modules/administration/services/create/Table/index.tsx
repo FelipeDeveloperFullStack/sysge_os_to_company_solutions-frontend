@@ -48,7 +48,7 @@ const TableView: React.FC<TableViewProps> = ({ laudos, setLaudos }) => {
                       <div>
                         <ul>
                           <li>
-                            <b>{String(row).toUpperCase()}</b>
+                            <b>{String(row)}</b>
                           </li>
                         </ul>
                       </div>

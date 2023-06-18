@@ -3,7 +3,7 @@ import * as yup from 'yup'
 export const schemaClient = yup
   .object({
     name: yup.string().required('Nome obrigatório'),
-    cpfOrCnpj: yup.string().required('CPF/CNPJ obrigatório'),
+    // cpfOrCnpj: yup.string().required('CPF/CNPJ obrigatório'),
     phoneNumber: yup.string(),
     email: yup.string().email('Email inválido'),
     // address: yup.string(),
