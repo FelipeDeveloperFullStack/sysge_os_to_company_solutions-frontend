@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-pascal-case */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -23,6 +24,11 @@ import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaClient } from '../schemaValidation'
 import { ButtonContainer, Container, Form } from './style'
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from '@mui/icons-material/Lock';
+import Tooltip from '@mui/material/Tooltip';
 
 const EditClient: React.FC = () => {
   const dispatch = useDispatch()
@@ -31,6 +37,7 @@ const EditClient: React.FC = () => {
   const location = useLocation()
   const history = useHistory()
   const [clientId, setClientId] = useState('')
+  const [enableButtons, setEnableButton] = useState(true)
 
   const {
     control,
@@ -107,6 +114,11 @@ const EditClient: React.FC = () => {
       phoneNumber,
       id,
       phoneNumberFixo,
+      idFolderClientName,
+      idFolderOrcamento,
+      idFolderOsUnificadas,
+      idFolderOsPendentes,
+      idFolderOsPagas
     } = location.state
     setValue('address', address)
     setValue('city', city)
@@ -117,6 +129,11 @@ const EditClient: React.FC = () => {
     setValue('email', email)
     setValue('phoneNumber', phoneNumber)
     setValue('phoneNumberFixo', phoneNumberFixo)
+    setValue('idFolderClientName', idFolderClientName)
+    setValue('idFolderOrcamento', idFolderOrcamento)
+    setValue('idFolderOsUnificadas', idFolderOsUnificadas)
+    setValue('idFolderOsPendentes', idFolderOsPendentes)
+    setValue('idFolderOsPagas', idFolderOsPagas)
     setClientId(id)
     scroll(0, 0)
   }, [])
@@ -227,6 +244,84 @@ const EditClient: React.FC = () => {
             )}
           />
         </Row>
+        <Row marginTop="15px" display='flex' gap={1}>
+          <div><b>Atenção:</b> Realizar a alteração desses IDs abaixo somente quando a pasta não existir mais. Para habilitar os campos abaixo, clique aqui:
+            <Tooltip title={enableButtons ? 'Habilitar Campos' : 'Desabilitar Campos'}>
+              <IconButton onClick={() => setEnableButton(!enableButtons)}><LockIcon /></IconButton>
+            </Tooltip></div>
+        </Row>
+        <Row columns="repeat(5, 1fr)" marginTop="15px">
+          <Controller
+            name="idFolderClientName"
+            control={control}
+            defaultValue=""
+            render={({ field, fieldState }) => (
+              <InputText
+                label="ID Pasta do Cliente"
+                field={field}
+                fieldState={fieldState}
+                toUpperCase={false}
+                disabled={enableButtons}
+              />
+            )}
+          />
+          <Controller
+            name="idFolderOrcamento"
+            control={control}
+            defaultValue=""
+            render={({ field, fieldState }) => (
+              <InputText
+                label="ID Pasta Orçamento"
+                field={field}
+                fieldState={fieldState}
+                toUpperCase={false}
+                disabled={enableButtons}
+              />
+            )}
+          />
+          <Controller
+            name="idFolderOsPagas"
+            control={control}
+            defaultValue=""
+            render={({ field, fieldState }) => (
+              <InputText
+                label="ID Pasta Os Pagas"
+                field={field}
+                fieldState={fieldState}
+                toUpperCase={false}
+                disabled={enableButtons}
+              />
+            )}
+          />
+          <Controller
+            name="idFolderOsPendentes"
+            control={control}
+            defaultValue=""
+            render={({ field, fieldState }) => (
+              <InputText
+                label="ID Pasta Os Pendentes"
+                field={field}
+                fieldState={fieldState}
+                toUpperCase={false}
+                disabled={enableButtons}
+              />
+            )}
+          />
+          <Controller
+            name="idFolderOsUnificadas"
+            control={control}
+            defaultValue=""
+            render={({ field, fieldState }) => (
+              <InputText
+                label="ID Pasta Os Unificadas"
+                field={field}
+                fieldState={fieldState}
+                toUpperCase={false}
+                disabled={enableButtons}
+              />
+            )}
+          />
+        </Row>
         <ButtonContainer>
           <Button
             textButton="Salvar"
@@ -243,8 +338,8 @@ const EditClient: React.FC = () => {
             onClick={() => history.push(ADMINISTRATION_CLIENTS)}
           />
         </ButtonContainer>
-      </Form>
-    </Container>
+      </Form >
+    </Container >
   )
 }
 

@@ -48,6 +48,11 @@ export type LayoutT = {
 }
 
 export type ClientT = {
+  idFolderOsPagas?: string
+  idFolderOsPendentes?: string
+  idFolderOsUnificadas?: string
+  idFolderOrcamento?: string
+  idFolderClientName?: string
   name?: string
   cpfOrCnpj?: string
   email?: string
