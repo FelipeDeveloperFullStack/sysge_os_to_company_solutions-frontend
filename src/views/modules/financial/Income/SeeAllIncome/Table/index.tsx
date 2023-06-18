@@ -102,7 +102,7 @@ const TableView: React.FC<TableViewProps> = ({
     try {
       Loading.turnOn()
       const { data } = await apiAdmin.get(`orderServices/${id}`)
-      //setOSData((previousState) => [...previousState, data])
+      setOSData((previousState) => [...previousState, data]) /** Não remover essa linha, se não vai quebrar */
       return data
     } catch (error) {
       exceptionHandle(
@@ -118,15 +118,15 @@ const TableView: React.FC<TableViewProps> = ({
     setOSData([])
     let index = 0
     const list = []
-    for (index; index < selectedAllRowIds.length;) {
+    for (index; index < selectedAllRowIds.length; index++) {
       const item = selectedAllRowIds[index]
       const result = await onHandleGeneratePDF(item)
       list.push(result)
-      //const data = JSON.parse(window.localStorage.getItem('oSData'))
-      showMessage(ModalPDF, { oSData: list })
-      setIsOpenModalInformation(true)
-      index++
-      if (index === selectedAllRowIds.length - 1) { }
+      if (index === selectedAllRowIds.length - 1) {
+        //const data = JSON.parse(window.localStorage.getItem('oSData'))
+        showMessage(ModalPDF, { oSData: list })
+        setIsOpenModalInformation(true)
+      }
     }
   }
 
@@ -211,7 +211,7 @@ const TableView: React.FC<TableViewProps> = ({
               selectedAllRow.filter((item) => item.situation === status)?.reduce((sum, row) => sum + row.valueNumber, 0),
             )}</b>
           </div>}
-          {!!selectedAllRowIds?.length && (
+          {selectedAllRowIds?.length > 0 && (
             <ButtonGenerateOSContainer>
               <Button
                 textButton={`Atualizar para ${status === 'PENDENTE' ? 'RECEBIDO' : 'PENDENTE'
