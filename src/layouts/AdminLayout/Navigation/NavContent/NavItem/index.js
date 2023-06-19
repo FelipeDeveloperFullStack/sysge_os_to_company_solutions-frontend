@@ -1,13 +1,31 @@
 import React, { useContext } from 'react'
 import { ListGroup } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
-
 import NavIcon from '../NavIcon'
 import NavBadge from '../NavBadge'
 
 import { ConfigContext } from '../../../../../contexts/ConfigContext'
 import * as actionType from '../../../../../store/actions'
 import useWindowSize from '../../../../../hooks/useWindowSize'
+/** Material UI */
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip'
+import { styled } from '@mui/material/styles'
+
+const LightTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    // backgroundColor: theme.palette.common.white,
+    backgroundColor: '#3f4d67',
+    // color: 'rgba(0, 0, 0, 0.87)',
+    color: '#FFF',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+    position: 'relative',
+    right: '100px',
+    bottom: '20px',
+  },
+}))
 
 const NavItem = ({ layout, item }) => {
   const windowSize = useWindowSize()
@@ -43,7 +61,7 @@ const NavItem = ({ layout, item }) => {
       >
         <NavIcon items={item} />
         {itemTitle}
-        <NavBadge items={item} />
+        {/* <NavBadge items={item} /> */}
       </NavLink>
     )
   }
@@ -73,7 +91,9 @@ const NavItem = ({ layout, item }) => {
     } else {
       mainContent = (
         <ListGroup.Item as="li" bsPrefix=" " className={item.classes}>
-          {subContent}
+          <LightTooltip placement="right" title={itemTitle}>
+            {subContent}
+          </LightTooltip>
         </ListGroup.Item>
       )
     }
