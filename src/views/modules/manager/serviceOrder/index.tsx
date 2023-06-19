@@ -123,7 +123,8 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
       data?.client.name,
       data?.status,
       data?.typeDocument, //ORCAMENTO OU ORDEM_DE_SERVICO
-      data?._id
+      data?._id,
+      data?.client?.id,
     )
     setIsOsGenerated(true)
     // await updateDateOSGenerated()
@@ -263,7 +264,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
             </Row>
             <Row marginLeft="15px" columns="5fr 1fr" marginBottom="5px">
               <Text>
-                <b>End:</b> {data?.client.address}
+                <b>Endereço:</b> {data?.client.address}
               </Text>
               <Text marginRight="15px">
                 <b>CEP:</b> {data?.client.cep}

@@ -35,6 +35,7 @@ const CreateService: React.FC = () => {
   const history = useHistory()
   const location = useLocation()
   const [valueClear, setValueClear] = useState(0)
+  const [loading, setLoading] = useState(false)
   const [laudos, setLaudos] = useState<string[]>([])
 
   useEffect(() => {
@@ -65,6 +66,7 @@ const CreateService: React.FC = () => {
     //   return
     // }
     try {
+      setLoading(true)
       const { clean } = formatInputPrice(data.value)
       await apiAdmin.put(`services/${idService}`, toApi(data, clean, laudos))
       dispatch({
@@ -75,6 +77,8 @@ const CreateService: React.FC = () => {
       toast.success('Serviço atualizado com sucesso.')
     } catch (error) {
       exceptionHandle(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -143,6 +147,7 @@ const CreateService: React.FC = () => {
             size="large"
             icon="add"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

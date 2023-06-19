@@ -17,6 +17,7 @@ export const useGeneratePDF = () => {
     status: string,
     typeDocument: string,
     id: string,
+    idClient: string,
   ) => {
     try {
       Loading.turnOn()
@@ -27,6 +28,7 @@ export const useGeneratePDF = () => {
         clientName,
         status,
         typeDocument,
+        idClient,
       })
     } catch (error) {
       toast.error('Ops! Houve um erro ao tentar gerar o PDF, tente novamente.')
@@ -44,6 +46,7 @@ export const useGeneratePDF = () => {
     status?: string,
     typeDocument?: string,
     id?: string,
+    idClient?: string,
     //@ts-ignore
   ) => {
     try {
@@ -95,6 +98,7 @@ export const useGeneratePDF = () => {
                 status,
                 typeDocument,
                 id,
+                idClient,
               )
             }
           }

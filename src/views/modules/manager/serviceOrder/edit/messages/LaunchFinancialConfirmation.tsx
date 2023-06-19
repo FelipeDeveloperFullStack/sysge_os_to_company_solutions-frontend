@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'src/components'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
@@ -18,10 +18,12 @@ export const LaunchFinancialConfirmation: React.FC<
 > = ({ history }) => {
   const { closeModal } = useModal()
   const { Loading } = useLoading()
+  const [loading, setLoading] = useState(false)
 
   const newOS = () => {
     // resetAllField()
     // closeModal()
+    setLoading(true)
     Loading.turnOn()
     window.location.reload()
   }
@@ -41,6 +43,7 @@ export const LaunchFinancialConfirmation: React.FC<
           size="large"
           icon="add2"
           onClick={newOS}
+          loading={loading}
         />
         <Button
           textButton="Não"

@@ -9,7 +9,7 @@ import { useModal } from 'src/hooks/useModal'
 import RemoveConfirmation from '../../messages/RemoveConfirmation'
 import { MappedDataServiceOrders } from '../../types'
 import { useHistory } from 'react-router-dom'
-import { MANAGER_SERVICE_ORDER_CREATE, MANAGER_SERVICE_ORDER_EDIT, MANAGER_SERVICE_ORDER_VIEW } from 'src/layouts/typePath'
+import { MANAGER_SERVICE_ORDER_EDIT, MANAGER_SERVICE_ORDER_VIEW } from 'src/layouts/typePath'
 // import { OSData } from '../../../serviceOrder/create/type'
 import { useAdmin } from 'src/services/useAdmin'
 import { useLoading } from 'src/hooks/useLoading'
@@ -118,6 +118,21 @@ export const useColumns = () => {
       field: 'dateGeneratedOS',
       headerName: 'OS Gerada',
       width: 150,
+      renderCell: (params: GridCellParams) => {
+        const dateGeneratedOS = params.value as string
+        if (dateGeneratedOS !== 'HOUVE UM ERRO') {
+          return (
+            <div>{dateGeneratedOS}</div>
+          )
+        } else {
+          return (
+            <Chip
+              label={dateGeneratedOS}
+              color={dateGeneratedOS === 'HOUVE UM ERRO' ? 'error' : 'secondary'}
+            />
+          )
+        }
+      },
     },
     {
       field: 'group-buttons',
@@ -153,18 +168,18 @@ export const useColumns = () => {
                   <EditIcon />
                 </IconButton>
               </Tooltip> */}
-              <Tooltip title='Excluir'>
-                <IconButton
-                  aria-label="excluir"
-                  color="error"
-                  onClick={() => onHandleDeleteRow(params)}
-                  disabled={!hasPermission(ORDEM_SERVICO_EXCLUIR)}
-                >
-                  <DeleteForeverIcon />
-                </IconButton>
-              </Tooltip>
             </>
           )}
+          <Tooltip title='Excluir'>
+            <IconButton
+              aria-label="excluir"
+              color="error"
+              onClick={() => onHandleDeleteRow(params)}
+              disabled={!hasPermission(ORDEM_SERVICO_EXCLUIR)}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },

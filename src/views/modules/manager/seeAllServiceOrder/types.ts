@@ -6,4 +6,6 @@ export type MappedDataServiceOrders = {
   total: string
   status: string
   typeDocument: string
+  idFileCreatedGoogleDrive?: string
+  clientId?: string
 }

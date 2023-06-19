@@ -14,6 +14,7 @@ export type Income = {
   dateOS: string
   month: string
   year: string
+  idFileCreatedGoogleDrive?: string
   id: string
 }
 
@@ -70,6 +71,7 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     year: getMonthAndYear(item.dateOS).year,
     formOfPayment: item.formOfPayment,
     typeDocument: item.typeDocument,
+    idFileCreatedGoogleDrive: item.idFileCreatedGoogleDrive,
     id: item._id,
   }))
 

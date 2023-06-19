@@ -160,6 +160,7 @@ const CreateOrderService: React.FC = () => {
       value: ''
     } as AutocompleteOptions,
   )
+  const [loading, setLoading] = useState(false)
   const [osNumber, setOsNumber] = useLocalStorage('osNumber', location.oSData.osNumber)
   const [validateErrorMessageClientName, setValidateErrorMessageClientName] =
     useState('')
@@ -435,11 +436,14 @@ const CreateOrderService: React.FC = () => {
     }
 
     try {
+      setLoading(true)
       const resultToApi = toApi(OSData, osNumber)
       await updateDocument(resultToApi)
     } catch (error) {
       console.log(error)
       exceptionHandle(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -871,6 +875,7 @@ const CreateOrderService: React.FC = () => {
             size="large"
             icon="add3"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -35,6 +35,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   const { apiAdmin } = useAdmin()
   const { getAddressByCEP } = useServiceCEP()
   const { Loading } = useLoading()
+  const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit, setValue, setError } = useForm<ClientT>({
     shouldUnregister: false,
@@ -45,6 +46,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
 
   const onSubmit = async (data: ClientT) => {
     try {
+      setLoading(true)
       Loading.turnOn()
       await apiAdmin.post(`clients`, data)
       dispatch({
@@ -66,6 +68,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
     } catch (error) {
       exceptionHandle(error)
     } finally {
+      setLoading(false)
       Loading.turnOff()
     }
   }
@@ -229,6 +232,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
             size="large"
             icon="add"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

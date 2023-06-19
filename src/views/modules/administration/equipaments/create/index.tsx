@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import React from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -35,6 +35,7 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
   const { apiAdmin } = useAdmin()
   const { closeModal } = useModal()
   const { Loading } = useLoading()
+  const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit } = useForm<EquipamentT>({
     shouldUnregister: false,
@@ -67,6 +68,7 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
 
   const onSubmit = async (data: EquipamentT) => {
     try {
+      setLoading(true)
       Loading.turnOn()
       await apiAdmin.post(`equipaments`, toApi(data))
       dispatch({
@@ -89,6 +91,7 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
     } catch (error) {
       exceptionHandle(error)
     } finally {
+      setLoading(false)
       Loading.turnOff()
     }
   }
@@ -168,6 +171,7 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
             size="large"
             icon="add"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
@@ -15,17 +15,20 @@ const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
   osNumber,
   name,
   total,
-  typeDocument
+  typeDocument,
+  idFileCreatedGoogleDrive,
 }) => {
   const { closeModal } = useModal()
   const { Loading } = useLoading()
   const { apiAdmin } = useAdmin()
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
 
   const deleteModel = async () => {
     try {
       Loading.turnOn()
-      await apiAdmin.delete(`orderServices/${id}`)
+      setLoading(true)
+      await apiAdmin.delete(`orderServices/${id}/${idFileCreatedGoogleDrive}`)
       toast.success(`${getTypeDocument(typeDocument)} de nº ${osNumber} excluída com sucesso!`)
       closeModal()
       dispatch({
@@ -41,6 +44,7 @@ const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
       )
     } finally {
       Loading.turnOff()
+      setLoading(false)
     }
   }
 
@@ -76,6 +80,7 @@ const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
           color="error"
           icon="delete"
           onClick={() => deleteModel()}
+          loading={loading}
         />
         <Button
           textButton="Não"

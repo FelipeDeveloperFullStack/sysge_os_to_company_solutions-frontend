@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'src/components'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
@@ -29,6 +29,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
+  const [loading, setLoading] = useState(false)
 
   const changeSituation = () => {
     return situation === 'A PAGAR' ? 'PAGO' : 'A PAGAR'
@@ -37,6 +38,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   const confirmation = async () => {
     try {
       Loading.turnOn()
+      setLoading(true)
       await apiAdmin.put(`expense/${id}`, { status: changeSituation() })
       setMakeRequest(Math.random())
       toast.success('Despesa financeira atualizada com sucesso.')
@@ -47,6 +49,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
     } finally {
       Loading.turnOff()
       closeModal()
+      setLoading(false)
     }
   }
 
@@ -73,6 +76,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
           size="large"
           icon="add2"
           onClick={confirmation}
+          loading={loading}
         />
         <Button
           textButton="Não"

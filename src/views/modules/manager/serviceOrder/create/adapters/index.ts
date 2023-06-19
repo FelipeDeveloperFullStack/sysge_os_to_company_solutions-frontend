@@ -40,7 +40,7 @@ export const toApi = (data: OSData, osNumber: string): OSData => {
       phoneNumber: data.client.phoneNumber || null,
       phoneNumberFixo: data.client.phoneNumberFixo || null,
       cep: data.client.cep || null,
-      id: data._id,
+      id: data.client._id,
     },
     itemServices: data.itemServices || null,
     laudos: data.laudos || null,

@@ -38,6 +38,7 @@ const EditClient: React.FC = () => {
   const history = useHistory()
   const [clientId, setClientId] = useState('')
   const [enableButtons, setEnableButton] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const {
     control,
@@ -52,6 +53,7 @@ const EditClient: React.FC = () => {
 
   const onSubmit = async (data: ClientT) => {
     try {
+      setLoading(true)
       await apiAdmin.put(`clients/${clientId}`, data)
       dispatch({
         type: CLIENT_FILTER,
@@ -61,6 +63,8 @@ const EditClient: React.FC = () => {
       toast.success(`Cliente ${data.name} atualizado com sucesso.`)
     } catch (error) {
       exceptionHandle(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -329,6 +333,7 @@ const EditClient: React.FC = () => {
             size="large"
             icon="add"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

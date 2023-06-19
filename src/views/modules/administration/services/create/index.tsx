@@ -36,6 +36,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
   const dispatch = useDispatch()
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
+  const [loading, setLoading] = useState(false)
   const { Loading } = useLoading()
 
   const { control, handleSubmit, setValue, getValues, setError } =
@@ -75,6 +76,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
     // }
     try {
       Loading.turnOn()
+      setLoading(true)
       await apiAdmin.post(`services`, toApi(data, valueClear, laudos))
       dispatch({
         type: SERVICE_FILTER,
@@ -97,6 +99,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
       exceptionHandle(error)
     } finally {
       Loading.turnOff()
+      setLoading(false)
     }
   }
 
@@ -192,6 +195,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
             size="large"
             icon="add"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

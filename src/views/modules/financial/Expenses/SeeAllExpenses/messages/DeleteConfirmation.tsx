@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'src/components'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
@@ -29,10 +29,12 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
+  const [loading, setLoading] = useState(false)
 
   const confirmation = async () => {
     try {
       Loading.turnOn()
+      setLoading(true)
       await apiAdmin.delete(`expense/${id}`)
       setMakeRequest(Math.random())
       toast.success('Despesa financeira excluída com sucesso.')
@@ -43,6 +45,7 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
     } finally {
       Loading.turnOff()
       closeModal()
+      setLoading(false)
     }
   }
 
@@ -70,6 +73,7 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
           size="large"
           icon="add2"
           onClick={confirmation}
+          loading={loading}
         />
         <Button
           textButton="Não"

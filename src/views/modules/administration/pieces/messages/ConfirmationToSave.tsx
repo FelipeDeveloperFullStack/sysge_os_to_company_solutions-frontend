@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from 'src/components/Form/Button'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_PIECES } from 'src/layouts/typePath'
@@ -11,8 +11,10 @@ type ConfirmationToSaveProps = {
 
 const ConfirmationToSave: React.FC<ConfirmationToSaveProps> = (props) => {
   const { closeModal } = useModal()
+  const [loading, setLoading] = useState(false)
 
   const onStayOnThePage = () => {
+    setLoading(true)
     props.clearAllFields()
     closeModal()
   }
@@ -31,6 +33,7 @@ const ConfirmationToSave: React.FC<ConfirmationToSaveProps> = (props) => {
           color="error"
           icon="delete"
           onClick={onStayOnThePage}
+          loading={loading}
         />
         <Button
           textButton="Não"

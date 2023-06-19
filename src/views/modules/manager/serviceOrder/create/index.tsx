@@ -144,6 +144,7 @@ const CreateOrderService: React.FC = () => {
     setValidateErrorMessageSerialNumber,
   ] = useState('')
   const [messageErrorTotal, setMessageErrorTotal] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const getDateCurrent = () => {
     const dataAtual = moment()
@@ -406,6 +407,7 @@ const CreateOrderService: React.FC = () => {
     }
 
     try {
+      setLoading(true)
       const resultToApi = toApi(OSData, osNumber)
       if (data.typeDocument === 'ORCAMENTO') {
         await saveOrcamento(resultToApi)
@@ -418,6 +420,8 @@ const CreateOrderService: React.FC = () => {
     } catch (error) {
       console.log(error)
       exceptionHandle(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -847,6 +851,7 @@ const CreateOrderService: React.FC = () => {
             size="large"
             icon="add3"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

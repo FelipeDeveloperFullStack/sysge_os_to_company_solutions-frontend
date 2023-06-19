@@ -41,6 +41,8 @@ const TableView: React.FC<TableViewProps> = ({
           status: item.status,
           typeDocument: item.typeDocument,
           dateGeneratedOS: item.dateGeneratedOS,
+          idFileCreatedGoogleDrive: item.idFileCreatedGoogleDrive,
+          clientId: item.client.id
         }
       })
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))

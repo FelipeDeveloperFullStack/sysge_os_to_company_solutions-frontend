@@ -44,6 +44,7 @@ export const Modal = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  gap: 6px;
 `
 
 export const ButtonLaunchFinancialConfirmationContainer = styled.div`

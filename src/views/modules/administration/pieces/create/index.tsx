@@ -36,6 +36,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const { Loading } = useLoading()
   const { closeModal, showMessage } = useModal()
   const [valueClear, setValueClear] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit, setValue } = useForm<PieceT>({
     shouldUnregister: false,
@@ -77,6 +78,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const onSubmit = async (data: PieceT) => {
     try {
       Loading.turnOn()
+      setLoading(true)
       await apiAdmin.post(`pieces`, toApi(data, valueClear))
       dispatch({
         type: PIECE_FILTER,
@@ -101,6 +103,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
       exceptionHandle(error)
     } finally {
       Loading.turnOff()
+      setLoading(false)
     }
   }
 
@@ -150,6 +153,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
             size="large"
             icon="add"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

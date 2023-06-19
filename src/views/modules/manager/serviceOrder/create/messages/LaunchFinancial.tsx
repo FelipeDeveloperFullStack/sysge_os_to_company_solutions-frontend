@@ -26,7 +26,7 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
   const { apiAdmin } = useAdmin()
   const dispatch = useDispatch()
   const { closeModal, showMessage } = useModal()
-
+  const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('PENDENTE')
   const statusOptions: OptionsProps[] = [
     { label: 'Pendente', value: 'PENDENTE' },
@@ -51,6 +51,7 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
     }
 
     try {
+      setLoading(true)
       await apiAdmin.post(`orderServices`, dataOS)
       dispatch({
         type: SERVICE_FILTER,
@@ -60,6 +61,8 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
       showMessage(LaunchFinancialConfirmation, { history, resetAllField })
     } catch (error) {
       toast.error('Houve um erro ao tentar salvar a Ordem de Serviço.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -101,6 +104,7 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
           size="large"
           icon="add2"
           onClick={saveOS}
+          loading={loading}
         />
         <Button
           textButton="Fechar"

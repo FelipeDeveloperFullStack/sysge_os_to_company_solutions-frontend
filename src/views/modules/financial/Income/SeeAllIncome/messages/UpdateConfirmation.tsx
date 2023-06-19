@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'src/components'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
@@ -26,6 +26,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
 }) => {
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
+  const [loading, setLoading] = useState(false)
   const { Loading } = useLoading()
 
   const changeSituation = () => {
@@ -35,17 +36,10 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   const confirmation = async () => {
     try {
       Loading.turnOn()
+      setLoading(true)
       apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
       setMakeRequest(Math.random())
       toast.success('Receita financeira atualizada com sucesso.')
-      // await apiAdmin.get(`orderServices/move-file-by-status`, {
-      //   params: {
-      //     clientName,
-      //     status: situation,
-      //     typeDocument: '',
-      //     filename: ''
-      //   }
-      // })
     } catch (error) {
       toast.error(
         'Opss! Ocorreu um erro ao tentar atualiza o status do registro financeiro.',
@@ -53,6 +47,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
     } finally {
       Loading.turnOff()
       closeModal()
+      setLoading(false)
     }
   }
 
@@ -78,6 +73,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
           size="large"
           icon="add2"
           onClick={confirmation}
+          loading={loading}
         />
         <Button
           textButton="Não"

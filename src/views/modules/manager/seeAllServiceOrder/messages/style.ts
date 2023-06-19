@@ -13,7 +13,7 @@ export const Container = styled.section`
 `
 export const ButtonGroup = styled.section`
   display: flex;
-  /* gap: 6px; */
+  gap: 6px;
   justify-content: center;
 `
 export const Text = styled.section<{

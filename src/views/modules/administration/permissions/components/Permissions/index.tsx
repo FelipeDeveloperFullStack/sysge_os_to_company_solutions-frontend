@@ -17,7 +17,6 @@ type PermissionsProps = {
 
 export const Permissions: React.FC<PermissionsProps> = ({ onSubmit, setPermissionsValues, targetPermission }) => {
   const history = useHistory()
-
   const [source, setSource] = useState<PermissionUser[]>([] as PermissionUser[]);
   const [target, setTarget] = useState<PermissionUser[]>(targetPermission || [] as PermissionUser[]);
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
@@ -15,10 +15,12 @@ const RemoveConfirmation: React.FC<PieceT> = ({ _id, description }) => {
   const { Loading } = useLoading()
   const { apiAdmin } = useAdmin()
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
 
   const deleteClient = async () => {
     try {
       Loading.turnOn()
+      setLoading(true)
       await apiAdmin.delete(`services/${_id}`)
       toast.success(`Serviço ${description} excluído com sucesso!`)
       closeModal()
@@ -34,6 +36,7 @@ const RemoveConfirmation: React.FC<PieceT> = ({ _id, description }) => {
         `Ops, Houve um erro ao tentar excluir o serviço ${description}, atualize a página e tente novamente.`,
       )
     } finally {
+      setLoading(false)
       Loading.turnOff()
     }
   }
@@ -49,6 +52,7 @@ const RemoveConfirmation: React.FC<PieceT> = ({ _id, description }) => {
           color="error"
           icon="delete"
           onClick={() => deleteClient()}
+          loading={loading}
         />
         <Button
           textButton="Fechar"

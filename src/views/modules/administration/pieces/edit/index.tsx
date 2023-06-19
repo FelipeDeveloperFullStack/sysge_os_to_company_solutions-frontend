@@ -24,6 +24,7 @@ const CreateClient: React.FC = () => {
   const { apiAdmin } = useAdmin()
   const location = useLocation()
   const [idPieces, setIdPieces] = useState()
+  const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit, setValue } = useForm<PieceT>({
     shouldUnregister: false,
@@ -48,6 +49,7 @@ const CreateClient: React.FC = () => {
 
   const onSubmit = async (data: PieceT) => {
     try {
+      setLoading(true)
       const { clean } = formatInputPrice(data?.value)
       await apiAdmin.put(`pieces/${idPieces}`, toApi(data, clean))
       dispatch({
@@ -58,6 +60,8 @@ const CreateClient: React.FC = () => {
       history.push(ADMINISTRATION_PIECES)
     } catch (error) {
       exceptionHandle(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -94,6 +98,7 @@ const CreateClient: React.FC = () => {
             size="large"
             icon="add"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"

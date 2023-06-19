@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'src/components'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
@@ -15,6 +15,7 @@ type DeleteConfirmationProps = {
   clientName: string
   id: string
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
+  idFileCreatedGoogleDrive?: string
 }
 
 export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
@@ -23,15 +24,18 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   osNumber,
   valueFormated,
   setMakeRequest,
+  idFileCreatedGoogleDrive,
 }) => {
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
+  const [loading, setLoading] = useState(false)
 
   const confirmation = async () => {
     try {
       Loading.turnOn()
-      await apiAdmin.delete(`orderServices/${id}`)
+      setLoading(true)
+      await apiAdmin.delete(`orderServices/${id}/${idFileCreatedGoogleDrive}`)
       setMakeRequest(Math.random())
       toast.success('Receita financeira excluída com sucesso.')
     } catch (error) {
@@ -41,6 +45,7 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
     } finally {
       Loading.turnOff()
       closeModal()
+      setLoading(false)
     }
   }
 
@@ -64,6 +69,7 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
           size="large"
           icon="add2"
           onClick={confirmation}
+          loading={loading}
         />
         <Button
           textButton="Não"

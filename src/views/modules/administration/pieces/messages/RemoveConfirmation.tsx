@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
@@ -14,10 +14,12 @@ const RemoveConfirmation: React.FC<PieceT> = ({ id, description }) => {
   const { Loading } = useLoading()
   const { apiAdmin } = useAdmin()
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
 
   const deleteClient = async () => {
     try {
       Loading.turnOn()
+      setLoading(true)
       await apiAdmin.delete(`pieces/${id}`)
       toast.success(`Peça ${description} excluído com sucesso!`)
       closeModal()
@@ -33,6 +35,7 @@ const RemoveConfirmation: React.FC<PieceT> = ({ id, description }) => {
       )
     } finally {
       Loading.turnOff()
+      setLoading(false)
     }
   }
 
@@ -46,6 +49,7 @@ const RemoveConfirmation: React.FC<PieceT> = ({ id, description }) => {
           variant="outlined"
           color="error"
           icon="delete"
+          loading={loading}
           onClick={() => deleteClient()}
         />
         <Button

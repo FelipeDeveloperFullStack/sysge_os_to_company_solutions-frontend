@@ -21,13 +21,14 @@ export const useColumns = (props: ColumnsProps) => {
 
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
-      const { clientName, id, osNumber, valueFormated } = params.row as Income
+      const { clientName, id, osNumber, valueFormated, idFileCreatedGoogleDrive } = params.row as Income
       showMessage(DeleteConfirmation, {
         osNumber,
         id,
         valueFormated,
         clientName,
         setMakeRequest: props.setMakeRequest,
+        idFileCreatedGoogleDrive,
       })
     }
   }
@@ -79,7 +80,7 @@ export const useColumns = (props: ColumnsProps) => {
       disableColumnMenu: true,
       renderCell: (params: GridCellParams) => (
         <>
-          <IconButton
+          {/* <IconButton
             aria-label="update"
             color="info"
             onClick={() => onHandleUpdateSituationRow(params)}
@@ -90,19 +91,17 @@ export const useColumns = (props: ColumnsProps) => {
             ) : (
               <SyncIcon />
             )}
-          </IconButton>
-          {params.row.situation === 'PENDENTE' && (
-            <>
-              <IconButton
-                aria-label="delete"
-                color="error"
-                onClick={() => onHandleDeleteRow(params)}
-                disabled={!hasPermission(RECEITAS_EXCLUIR)}
-              >
-                <DeleteForeverIcon />
-              </IconButton>
-            </>
-          )}
+          </IconButton> */}
+          <>
+            <IconButton
+              aria-label="delete"
+              color="error"
+              onClick={() => onHandleDeleteRow(params)}
+              disabled={!hasPermission(RECEITAS_EXCLUIR)}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          </>
         </>
       ),
     },

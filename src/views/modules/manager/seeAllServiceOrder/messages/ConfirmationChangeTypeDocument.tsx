@@ -17,19 +17,31 @@ const ConfirmationChangeTypeDocument: React.FC<MappedDataServiceOrders> = ({
   name,
   typeDocument,
   total,
+  clientId,
+  idFileCreatedGoogleDrive
 }) => {
   const { closeModal } = useModal()
   const { Loading } = useLoading()
   const { apiAdmin } = useAdmin()
   const dispatch = useDispatch()
   const [status, setStatus] = useState('PENDENTE')
+  const [loading, setLoading] = useState(false)
 
   const updateTypeDocument = async () => {
     try {
+      setLoading(true)
       Loading.turnOn()
       await apiAdmin.put(`orderServices/${id}`, {
         typeDocument: getInverseTypeDocumentToApi(typeDocument),
         status
+      })
+      await apiAdmin.get(`orderServices/move-file-by-status`, {
+        params: {
+          idFileCreatedGoogleDrive,
+          clientId,
+          typeDocument: getInverseTypeDocumentToApi(typeDocument),
+          status,
+        }
       })
       toast.success(`${getTypeDocument(typeDocument)} de nº ${osNumber} convertida para ${getInverseTypeDocument(typeDocument)} com sucesso!`)
       closeModal()
@@ -46,6 +58,7 @@ const ConfirmationChangeTypeDocument: React.FC<MappedDataServiceOrders> = ({
       )
     } finally {
       Loading.turnOff()
+      setLoading(false)
     }
   }
 
@@ -94,6 +107,7 @@ const ConfirmationChangeTypeDocument: React.FC<MappedDataServiceOrders> = ({
           color="primary"
           icon="update"
           onClick={() => updateTypeDocument()}
+          loading={loading}
         />
         <Button
           textButton="Não"

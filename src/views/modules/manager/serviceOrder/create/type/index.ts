@@ -39,5 +39,6 @@ export type OSData = {
   osNumber: string
   formOfPayment?: string
   dateGeneratedOS?: string
+  idFileCreatedGoogleDrive?: string
   _id?: string
 }

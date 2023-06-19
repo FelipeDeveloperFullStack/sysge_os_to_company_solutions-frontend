@@ -20,7 +20,7 @@ import { ButtonContainer, Container, Form } from './style'
 
 const CreateBrand: React.FC = () => {
   const dispatch = useDispatch()
-
+  const [loading, setLoading] = useState(false)
   const { apiAdmin } = useAdmin()
   const [idbrand, setIdBrand] = useState('')
 
@@ -44,6 +44,7 @@ const CreateBrand: React.FC = () => {
 
   const onSubmit = async (data: EquipamentT) => {
     try {
+      setLoading(true)
       await apiAdmin.put(`equipaments/${idbrand}`, toApi(data))
       dispatch({
         type: EQUIPAMENT_FILTER,
@@ -53,6 +54,8 @@ const CreateBrand: React.FC = () => {
       toast.success('Equipamento atualizada com sucesso.')
     } catch (error) {
       exceptionHandle(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -118,6 +121,7 @@ const CreateBrand: React.FC = () => {
             size="large"
             icon="add"
             type="submit"
+            loading={loading}
           />
           <Button
             textButton="Voltar"
