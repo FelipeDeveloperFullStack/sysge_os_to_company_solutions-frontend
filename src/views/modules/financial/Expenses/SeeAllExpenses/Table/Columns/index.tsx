@@ -10,6 +10,7 @@ import { Expense } from '../adapter'
 import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
 import { DESPESAS_EDITAR, DESPESAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
+import { isBefore, parse } from 'date-fns'
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -46,7 +47,7 @@ export const useColumns = (props: ColumnsProps) => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'expense', headerName: 'Despesa', width: 370 },
+    { field: 'expense', headerName: 'Despesa', width: 300 },
     {
       field: 'valueFormated',
       headerName: 'Valor',
@@ -54,7 +55,7 @@ export const useColumns = (props: ColumnsProps) => {
     {
       field: 'status',
       headerName: 'Status',
-      width: 125,
+      width: 100,
       renderCell: (params: GridCellParams) => {
         const situation = params.value as string
         return (
@@ -68,7 +69,7 @@ export const useColumns = (props: ColumnsProps) => {
     {
       field: 'isRegister',
       headerName: 'Peças',
-      width: 170,
+      width: 160,
       renderCell: (params: GridCellParams) => {
         const isRegister = params.value as boolean
         return (
@@ -80,7 +81,43 @@ export const useColumns = (props: ColumnsProps) => {
       },
     },
     { field: 'dateIn', headerName: 'Entrada' },
-    { field: 'maturity', headerName: 'Vencimento' },
+    {
+      field: 'maturity', headerName: 'Vencimento', width: 165,
+      renderCell: (params: GridCellParams) => {
+        const maturity = params.value as string
+        const row = params.row
+        const today = new Date()
+        const maturityDate = parse(
+          maturity || '',
+          'dd/MM/yyyy',
+          new Date(),
+        )
+        if (isBefore(maturityDate, today)) {
+          if (row.situation?.toUpperCase().trim() === 'A PAGAR') {
+            return (
+              <Chip
+                label={maturity}
+                color={'error'}
+              />
+            )
+          } else {
+            return (
+              <Chip
+                label={maturity}
+                color={'default'}
+              />
+            )
+          }
+        } else {
+          return (
+            <Chip
+              label={maturity || 'NÃO INFORMADO'}
+              color={'default'}
+            />
+          )
+        }
+      },
+    },
     {
       field: 'group-buttons',
       headerName: ' ',

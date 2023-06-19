@@ -36,6 +36,7 @@ export type Total = {
   totalExpenses: number
   totalValueExpenseInExpired: number
   qtdeExpenseInExpired: number
+  expiredTotal: number
 }
 
 const DashDefault: React.FC = () => {
@@ -51,7 +52,8 @@ const DashDefault: React.FC = () => {
     totalIncomes: 0,
     totalExpenses: 0,
     qtdeExpenseInExpired: 0,
-    totalValueExpenseInExpired: 0
+    totalValueExpenseInExpired: 0,
+    expiredTotal: 0
   } as Total)
   const {
     getTotalClients,
@@ -88,11 +90,20 @@ const DashDefault: React.FC = () => {
 
   return (
     <React.Fragment>
-      {total?.totalValueExpenseInExpired > 0 && <Row>
+      {total?.totalValueExpenseInExpired > 0 &&
+        <Row>
+          <Col md={12} xl={12}>
+            <Alert severity="warning" style={{ display: 'flex', alignItems: 'center' }}>
+              <span><b>Atenção:</b> Você tem um total de <Chip label={formatPrice(total.totalValueExpenseInExpired)} /> de despesas a vencer</span>
+              {total?.qtdeExpenseInExpired > 0 && <span> e <b>{total.qtdeExpenseInExpired}</b> despesas a vencer daqui <Chip label="3 dias" />.</span>}
+            </Alert>
+          </Col>
+        </Row>
+      }
+      {total.expiredTotal > 0 && <Row>
         <Col md={12} xl={12}>
-          <Alert severity="warning" style={{ display: 'flex', alignItems: 'center' }}>
-            <span><b>Atenção:</b> Você tem um total de <Chip label={formatPrice(total.totalValueExpenseInExpired)} /> de despesas a vencer</span>
-            {total?.qtdeExpenseInExpired > 0 && <span> e <b>{total.qtdeExpenseInExpired}</b> despesas a vencer daqui <Chip label="3 dias" />.</span>}
+          <Alert severity="error" style={{ display: 'flex', alignItems: 'center' }}>
+            <span><b>Atenção:</b> Você tem um total de <Chip label={formatPrice(total.expiredTotal)} /> de despesas <Chip label={'Vencidas'} /></span>
           </Alert>
         </Col>
       </Row>}

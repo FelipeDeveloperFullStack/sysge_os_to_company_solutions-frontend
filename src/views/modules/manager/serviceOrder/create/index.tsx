@@ -7,6 +7,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { Checkbox, FormGroup, FormControlLabel } from '@mui/material'
 import {
   Autocomplete,
   AutocompleteOptions,
@@ -85,7 +86,7 @@ const CreateOrderService: React.FC = () => {
     [] as AutocompleteOptions[],
   )
   const [clients, setClients] = useState<ClientT[]>([] as ClientT[])
-
+  const [checkBoxEnableEquipaments, setCheckBoxEnableEquipaments] = useState(true)
   const [client, setClient] = useState<AutocompleteOptions>(
     {} as AutocompleteOptions,
   )
@@ -351,22 +352,22 @@ const CreateOrderService: React.FC = () => {
       scroll(0, 0)
       return
     }
-    if (!clickedEquipament?.label) {
+    if (!clickedEquipament?.label && checkBoxEnableEquipaments) {
       setValidateErrorMessageEquipament('Selecione o equipamento')
       scroll(0, 0)
       return
     }
-    if (!clickedBrand?.label) {
+    if (!clickedBrand?.label && checkBoxEnableEquipaments) {
       setValidateErrorMessageBrand('Selecione a marca')
       scroll(0, 0)
       return
     }
-    if (!clickedModel?.label) {
+    if (!clickedModel?.label && checkBoxEnableEquipaments) {
       setValidateErrorMessageModel('Selecione o modelo')
       scroll(0, 0)
       return
     }
-    if (!clickedSerialNumber?.label) {
+    if (!clickedSerialNumber?.label && checkBoxEnableEquipaments) {
       setValidateErrorMessageSerialNumber('Selecione o número de série')
       scroll(0, 0)
       return
@@ -396,10 +397,10 @@ const CreateOrderService: React.FC = () => {
       laudos,
       itemPieces,
       manpower: manpower === '' ? 'R$ 0,00' : manpower,
-      equipament: equipamentName.label,
-      brand: brand.label,
-      model: model.label,
-      serialNumber: serialNumber.label,
+      equipament: checkBoxEnableEquipaments ? equipamentName.label : undefined,
+      brand: checkBoxEnableEquipaments ? brand.label : undefined,
+      model: checkBoxEnableEquipaments ? model.label : undefined,
+      serialNumber: checkBoxEnableEquipaments ? serialNumber.label : undefined,
       osNumber,
       discount,
       total,
@@ -617,9 +618,26 @@ const CreateOrderService: React.FC = () => {
     )
   }
 
+  const handleChangeCheckBoxEnableEquipaments = (event: any) => {
+    setCheckBoxEnableEquipaments(event.target.checked)
+  }
+
   const back = () => {
     history.push(MANAGER_SERVICE_ORDER)
   }
+
+  React.useEffect(() => {
+    if (!checkBoxEnableEquipaments) {
+      setEquipamentName({ label: '', value: '' })
+      setBrand({ label: '', value: '' })
+      setModel({ label: '', value: '' })
+      setSerialNumber({ label: '', value: '' })
+      setClickedEquipament({ label: '', value: '' })
+      setClickedBrand({ label: '', value: '' })
+      setClickedModel({ label: '', value: '' })
+      setClickedSerialNumber({ label: '', value: '' })
+    }
+  }, [checkBoxEnableEquipaments])
 
   return (
     <Container>
@@ -678,6 +696,17 @@ const CreateOrderService: React.FC = () => {
             )}
           />
         </Row>
+        <Row marginTop="10px">
+          <FormGroup>
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={checkBoxEnableEquipaments}
+              onChange={(event) => handleChangeCheckBoxEnableEquipaments(event)}
+              label={'Mostrar Informações do Equipamento'}
+              value={checkBoxEnableEquipaments}
+            />
+          </FormGroup>
+        </Row>
         <Row columns="repeat(4, 1fr)" marginTop="10px" gap={10}>
           <Autocomplete
             label="Equipamento"
@@ -692,6 +721,7 @@ const CreateOrderService: React.FC = () => {
             iconButtonLabel={<AddCircleOutlineIcon />}
             tooltipMessageButtonLabel="Clique aqui para adicionar um novo Equipamento."
             onHandleClickButtonLabel={onHandleAddNewEquipament}
+            disabled={!checkBoxEnableEquipaments}
           />
           <Autocomplete
             label="Marca"
@@ -702,6 +732,7 @@ const CreateOrderService: React.FC = () => {
             setClickedValue={setClickedBrand}
             hasError={!!validateErrorMessageBrand}
             error={validateErrorMessageBrand}
+            disabled={!checkBoxEnableEquipaments}
           />
           <Autocomplete
             label="Modelo"
@@ -712,6 +743,7 @@ const CreateOrderService: React.FC = () => {
             setClickedValue={setClickedModel}
             hasError={!!validateErrorMessageModel}
             error={validateErrorMessageModel}
+            disabled={!checkBoxEnableEquipaments}
           />
           <Autocomplete
             label="Nº Série"
@@ -722,6 +754,7 @@ const CreateOrderService: React.FC = () => {
             setClickedValue={setClickedSerialNumber}
             hasError={!!validateErrorMessageSerialNumber}
             error={validateErrorMessageSerialNumber}
+            disabled={!checkBoxEnableEquipaments}
           />
         </Row>
         <Row columns="repeat(4, 1fr)" marginTop="10px" gap={10}>

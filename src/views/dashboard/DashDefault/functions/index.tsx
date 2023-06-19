@@ -16,6 +16,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
         ...previousState,
         totalValueExpenseInExpired: data?.total,
         qtdeExpenseInExpired: data?.count,
+        expiredTotal: data?.expiredTotal,
       }))
     } catch (error) {
       toast.error(
