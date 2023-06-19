@@ -117,7 +117,7 @@ export const useColumns = () => {
     {
       field: 'dateGeneratedOS',
       headerName: 'OS Gerada',
-      width: 150,
+      width: 165,
       renderCell: (params: GridCellParams) => {
         const dateGeneratedOS = params.value as string
         if (dateGeneratedOS !== 'HOUVE UM ERRO') {

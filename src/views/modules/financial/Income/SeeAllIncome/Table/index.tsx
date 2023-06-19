@@ -78,9 +78,9 @@ const TableView: React.FC<TableViewProps> = ({
       if (index === selectedAllRowIds.length - 1) {
         Loading.turnOff()
         setMakeRequest(Math.random())
-        showSimple.success(
-          `${selectedAllRowIds.length} registros atualizados com sucesso.`,
-        )
+        // showSimple.success(
+        //   `${selectedAllRowIds.length} registros atualizados com sucesso.`,
+        // )
       }
     }
     await onHandleGenerateOS()

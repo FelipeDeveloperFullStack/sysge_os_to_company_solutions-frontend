@@ -37,6 +37,7 @@ const ConfirmationChangeTypeDocument: React.FC<MappedDataServiceOrders> = ({
       })
       await apiAdmin.get(`orderServices/move-file-by-status`, {
         params: {
+          id,
           idFileCreatedGoogleDrive,
           clientId,
           typeDocument: getInverseTypeDocumentToApi(typeDocument),

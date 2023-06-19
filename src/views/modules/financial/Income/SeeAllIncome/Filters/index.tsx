@@ -14,6 +14,8 @@ import { Container, Form } from './style'
 import { format, getYear, parse } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import hasNumber from 'src/helpers/hasNumber'
+import { socket } from 'src/services/Socket'
+import { EVENT_UPDATE_OS_ORCAMENTO } from 'src/services/Socket/EventTypes'
 
 type SeeAllIncomeProps = {
   nameOrOsNumber: string
@@ -42,6 +44,7 @@ const Filters: React.FC<FiltersProps> = ({
     'PENDENTE',
   )
   const nameOrOsNumber = watch('nameOrOsNumber')
+  const [isUsingLoading, setIsUsingLoading] = useState(true)
 
   const onSubmitIncome = (nameOrOsNumber: SeeAllIncomeProps) => {
     // const result = dateFilter(`${monthSelected}/${yearSelected}`, incomes)
@@ -64,17 +67,29 @@ const Filters: React.FC<FiltersProps> = ({
 
   const getDataOrderServices = async () => {
     try {
-      Loading.turnOn()
+      if (isUsingLoading) {
+        Loading.turnOn()
+      }
       const { data } = await apiAdmin.get('orderServices')
       const { resultFromApi, orderedMonth, orderedYear } = fromApi(data)
       setMonths(orderedMonth)
       setYears(orderedYear)
       setIncomes(resultFromApi)
       checkIfbuttonHasSelected(resultFromApi)
+      setSelectedButton(selectedButton)
+      const result = dateFilter(
+        `${monthSelected}/${yearSelected}`,
+        resultFromApi,
+        selectedButton,
+      )
+      setIncomesFiltered(result)
     } catch (error) {
       toast.error('Um erro ocurreu ao tentar buscar os dados de receitas')
     } finally {
-      Loading.turnOff()
+      if (isUsingLoading) {
+        Loading.turnOff()
+      }
+      setIsUsingLoading(true)
     }
   }
 
@@ -193,6 +208,14 @@ const Filters: React.FC<FiltersProps> = ({
 
   useEffect(() => {
     getDataOrderServices()
+    socket.on(EVENT_UPDATE_OS_ORCAMENTO, (data: string) => {
+      setIsUsingLoading(false)
+      /**
+       * @description
+       * Esse Websocket irá ser executado quando houver uma atualização de algum registro da Ordem de Serviço/Orçamento
+       */
+      getDataOrderServices()
+    })
   }, [makeRequest])
 
   useEffect(() => {

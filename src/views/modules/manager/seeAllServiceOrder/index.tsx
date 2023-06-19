@@ -107,6 +107,7 @@ const SeeAllServiceOrder = (props: Props) => {
   }
   const getOrderServices = async () => {
     try {
+      Loading.turnOn()
       const response = await apiAdmin.get(`orderServices`, {
         params: {
           clientName: undefined,
@@ -123,6 +124,8 @@ const SeeAllServiceOrder = (props: Props) => {
 
         'Ops! Houve um erro ao tentar buscar os equipamentos, atualize a página e tente novamente.',
       )
+    } finally {
+      Loading.turnOff()
     }
   }
 

@@ -42,6 +42,7 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
       toast.error(
         'Opss! Ocorreu um erro ao tentar excluir o registro financeiro.',
       )
+      setMakeRequest(Math.random())
     } finally {
       Loading.turnOff()
       closeModal()
