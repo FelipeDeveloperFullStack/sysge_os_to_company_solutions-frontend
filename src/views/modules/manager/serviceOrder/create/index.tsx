@@ -80,6 +80,10 @@ const CreateOrderService: React.FC = () => {
     setValue('charger', charger)
     setValue('breaked', breaked)
     setValue('detail', detail)
+    return () => {
+      window.localStorage.removeItem('client')
+      window.localStorage.removeItem('clickedClientName')
+    }
   }, [])
 
   const [optionClient, setOptionClient] = useState<AutocompleteOptions[]>(
@@ -87,7 +91,7 @@ const CreateOrderService: React.FC = () => {
   )
   const [clients, setClients] = useState<ClientT[]>([] as ClientT[])
   const [checkBoxEnableEquipaments, setCheckBoxEnableEquipaments] = useState(true)
-  const [client, setClient] = useState<AutocompleteOptions>(
+  const [client, setClient] = useLocalStorage<AutocompleteOptions>('client',
     {} as AutocompleteOptions,
   )
   const [discount, setDiscount] = useState('0')
@@ -122,7 +126,7 @@ const CreateOrderService: React.FC = () => {
     [] as ItemServices[],
   )
 
-  const [clickedClientName, setClickedClientName] = useState(
+  const [clickedClientName, setClickedClientName] = useLocalStorage('clickedClientName',
     {} as AutocompleteOptions,
   )
   const [clickedEquipament, setClickedEquipament] = useState(

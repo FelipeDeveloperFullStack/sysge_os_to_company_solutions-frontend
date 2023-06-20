@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Button } from 'src/components'
+import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
-import { LaunchFinancialConfirmationNewClient } from './LaunchFinancialConfirmationNewClient'
 import {
   ButtonLaunchFinancialConfirmationContainer,
   LaunchFinancialConfirmationContainer,
@@ -13,15 +13,17 @@ type LaunchFinancialConfirmationProps = {
   resetAllField: () => void
 }
 
-export const LaunchFinancialConfirmation: React.FC<
+export const LaunchFinancialConfirmationNewClient: React.FC<
   LaunchFinancialConfirmationProps
 > = ({ history }) => {
-  const { closeModal, showMessage } = useModal()
+  const { closeModal } = useModal()
+  const { Loading } = useLoading()
   const [loading, setLoading] = useState(false)
 
-  const confirmation = () => {
-    showMessage(LaunchFinancialConfirmationNewClient, { history }, true)
+  const newOS = () => {
     setLoading(true)
+    Loading.turnOn()
+    window.location.reload()
   }
 
   const redirectListOS = () => {
@@ -33,14 +35,14 @@ export const LaunchFinancialConfirmation: React.FC<
 
   return (
     <LaunchFinancialConfirmationContainer>
-      <div>Deseja Iniciar Uma Nova OS?</div>
+      <div>Deseja continuar com o mesmo cliente da O.S anterior?</div>
       <ButtonLaunchFinancialConfirmationContainer>
         <Button
           textButton="Sim"
           variant="outlined"
           size="large"
           icon="add2"
-          onClick={confirmation}
+          onClick={newOS}
           loading={loading}
         />
         <Button

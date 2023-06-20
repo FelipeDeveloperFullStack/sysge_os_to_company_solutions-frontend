@@ -25,6 +25,7 @@ import { schemaService } from '../schemaValidation'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
 import TableView from './Table'
+import { Alert } from '@mui/material'
 
 type CreateServiceProps = {
   isNewServiceByOS?: boolean
@@ -38,8 +39,9 @@ const CreateService: React.FC<CreateServiceProps> = ({
   const { apiAdmin } = useAdmin()
   const [loading, setLoading] = useState(false)
   const { Loading } = useLoading()
+  const [errorMessage, setErrorMessage] = useState('')
 
-  const { control, handleSubmit, setValue, getValues, setError } =
+  const { control, handleSubmit, setValue, getValues, setError, watch } =
     useForm<ServiceT>({
       shouldUnregister: false,
       resolver: yupResolver(schemaService),
@@ -47,8 +49,8 @@ const CreateService: React.FC<CreateServiceProps> = ({
 
   const [valueClear, setValueClear] = useState(0)
   const [laudos, setLaudos] = useState<string[]>([])
-
   const history = useHistory()
+  const description = watch('description')
 
   const getServices = async () => {
     try {
@@ -97,6 +99,9 @@ const CreateService: React.FC<CreateServiceProps> = ({
       }
     } catch (error) {
       exceptionHandle(error)
+      if (isNewServiceByOS) {
+        setErrorMessage(error?.response?.data.message)
+      }
     } finally {
       Loading.turnOff()
       setLoading(false)
@@ -133,8 +138,15 @@ const CreateService: React.FC<CreateServiceProps> = ({
     scroll(0, 0)
   }, [])
 
+  React.useEffect(() => {
+    if (description) {
+      setErrorMessage('')
+    }
+  }, [description])
+
   return (
     <Container>
+      {!!errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         {!!isNewServiceByOS && <div>Novo serviço</div>}
         <Row columns="3fr 1fr">

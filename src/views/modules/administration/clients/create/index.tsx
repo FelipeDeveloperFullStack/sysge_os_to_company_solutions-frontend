@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Alert } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -35,14 +36,15 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   const { apiAdmin } = useAdmin()
   const { getAddressByCEP } = useServiceCEP()
   const { Loading } = useLoading()
+  const [errorMessage, setErrorMessage] = useState('')
   const [loading, setLoading] = useState(false)
-
-  const { control, handleSubmit, setValue, setError } = useForm<ClientT>({
+  const { control, handleSubmit, setValue, setError, watch } = useForm<ClientT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaClient),
   })
 
   const history = useHistory()
+  const description = watch('name')
 
   const onSubmit = async (data: ClientT) => {
     try {
@@ -67,6 +69,9 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
       }
     } catch (error) {
       exceptionHandle(error)
+      if (isNewServiceByOS) {
+        setErrorMessage(error?.response?.data.message)
+      }
     } finally {
       setLoading(false)
       Loading.turnOff()
@@ -123,8 +128,15 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
     scroll(0, 0)
   }, [])
 
+  React.useEffect(() => {
+    if (description) {
+      setErrorMessage('')
+    }
+  }, [description])
+
   return (
     <Container>
+      {!!errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         {!!isNewServiceByOS && <div>Novo cliente</div>}
         <Row columns="1fr">

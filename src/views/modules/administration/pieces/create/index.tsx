@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Alert } from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -37,13 +38,15 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const { closeModal, showMessage } = useModal()
   const [valueClear, setValueClear] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
-  const { control, handleSubmit, setValue } = useForm<PieceT>({
+  const { control, handleSubmit, setValue, watch } = useForm<PieceT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaPiece),
   })
 
   const history = useHistory()
+  const description = watch('description')
 
   const onFormatterPrice = (value: string) => {
     const { formated, clean } = formatInputPrice(value)
@@ -101,6 +104,9 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
       }
     } catch (error) {
       exceptionHandle(error)
+      if (isNewServiceByOS) {
+        setErrorMessage(error?.response?.data.message)
+      }
     } finally {
       Loading.turnOff()
       setLoading(false)
@@ -119,8 +125,15 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
     scroll(0, 0)
   }, [])
 
+  React.useEffect(() => {
+    if (description) {
+      setErrorMessage('')
+    }
+  }, [description])
+
   return (
     <Container>
+      {!!errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         {!!isNewServiceByOS && <div>Nova peça</div>}
         <Row columns="5fr 1fr">
