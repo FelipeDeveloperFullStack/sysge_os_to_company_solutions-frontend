@@ -9,6 +9,7 @@ import { useAdmin } from 'src/services/useAdmin'
 import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { MappedDataServiceOrders } from '../types'
 import { ButtonGroup, Container, Text } from './style'
+import { OptionsProps } from 'src/components/Form/Select'
 import { Select } from 'src/components/Widgets/Select'
 
 const ConfirmationChangeTypeDocument: React.FC<MappedDataServiceOrders> = ({
@@ -25,7 +26,17 @@ const ConfirmationChangeTypeDocument: React.FC<MappedDataServiceOrders> = ({
   const { apiAdmin } = useAdmin()
   const dispatch = useDispatch()
   const [status, setStatus] = useState('PENDENTE')
+  const [formOfPayment, setFormOfPayment] = useState('Boleto')
   const [loading, setLoading] = useState(false)
+
+  const sformOfPaymentOptions: OptionsProps[] = [
+    { label: 'Boleto', value: 'Boleto' },
+    { label: 'Pix', value: 'Pix' },
+    { label: 'Dinheiro', value: 'Dinheiro' },
+    { label: 'Cheque', value: 'Cheque' },
+    { label: 'Cartão de Crédito', value: 'Cartão de Crédito' },
+    { label: 'Cartão de Débito', value: 'Cartão de Débito' },
+  ]
 
   const updateTypeDocument = async () => {
     try {
@@ -33,7 +44,8 @@ const ConfirmationChangeTypeDocument: React.FC<MappedDataServiceOrders> = ({
       Loading.turnOn()
       await apiAdmin.put(`orderServices/${id}`, {
         typeDocument: getInverseTypeDocumentToApi(typeDocument),
-        status
+        status,
+        formOfPayment: status === 'PAGO' ? formOfPayment : undefined
       })
       await apiAdmin.get(`orderServices/move-file-by-status`, {
         params: {
@@ -100,6 +112,12 @@ const ConfirmationChangeTypeDocument: React.FC<MappedDataServiceOrders> = ({
           { label: 'PENDENTE', value: 'PENDENTE' },
           { label: 'PAGO', value: 'PAGO' },
         ]} />
+        {status === 'PAGO' && <Select
+          label="Forma de pagamento"
+          setValue={setFormOfPayment}
+          value={formOfPayment}
+          options={sformOfPaymentOptions}
+        />}
       </>}
       <ButtonGroup>
         <Button
