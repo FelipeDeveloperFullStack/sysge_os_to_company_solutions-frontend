@@ -211,6 +211,16 @@ const CreateOrderService: React.FC = () => {
     return pieces.reduce((acc, piece) => acc + piece.total, 0)
   }
 
+  const removeDuplicates = (array: AutocompleteOptions[]) => {
+    return array.reduce((acc: AutocompleteOptions[], option) => {
+      const isDuplicate = acc.some((item) => item.label === option.label);
+      if (!isDuplicate) {
+        acc.push(option);
+      }
+      return acc;
+    }, []);
+  };
+
   const getEquipaments = () => {
     const resultEquipamentsName = equipaments.map((item) => ({
       label: item.equipamentName,
@@ -225,10 +235,10 @@ const CreateOrderService: React.FC = () => {
       value: item.model,
     }))
     const resultSerialNumber = fromApiSerialNumber(equipaments)
-    setEquipamentsNameOptions(resultEquipamentsName)
-    setBrandOptions(resultBrand)
-    setModelOptions(model)
-    setSerialNumberOptions(resultSerialNumber)
+    setEquipamentsNameOptions(removeDuplicates(resultEquipamentsName))
+    setBrandOptions(removeDuplicates(resultBrand))
+    setModelOptions(removeDuplicates(model))
+    setSerialNumberOptions(removeDuplicates(resultSerialNumber))
   }
 
   useEffect(() => {
@@ -465,38 +475,38 @@ const CreateOrderService: React.FC = () => {
   useEffect(() => {
     if (!equipamentName.label?.toUpperCase()) {
       setEquipamentsNameOptions(
-        equipaments.map((item) => ({
+        removeDuplicates(equipaments.map((item) => ({
           label: item.equipamentName,
           value: item.equipamentName,
-        })),
+        }))),
       )
     } else {
       const result = equipaments.filter((item) =>
         item.equipamentName.includes(equipamentName.label?.toUpperCase()),
       )
       setEquipamentsNameOptions(
-        result.map((item) => ({
+        removeDuplicates(result.map((item) => ({
           label: item.equipamentName,
           value: item.equipamentName,
-        })),
+        }))),
       )
     }
     if (!brand.label?.toUpperCase()) {
       setBrandOptions(
-        equipaments.map((item) => ({
+        removeDuplicates(equipaments.map((item) => ({
           label: item.brand,
           value: item.brand,
-        })),
+        }))),
       )
     } else {
       const result = equipaments.filter((item) =>
         item.brand.includes(brand.label?.toUpperCase()),
       )
       setBrandOptions(
-        result.map((item) => ({
+        removeDuplicates(result.map((item) => ({
           label: item.brand,
           value: item.brand,
-        })),
+        }))),
       )
     }
     if (!model.label?.toUpperCase()) {
