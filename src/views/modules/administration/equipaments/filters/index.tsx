@@ -1,5 +1,6 @@
 import { Paper } from '@mui/material'
 import React from 'react'
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -19,6 +20,14 @@ const Filters: React.FC = () => {
   const history = useHistory()
   const { hasPermission } = usePermission()
   const dispatch = useDispatch()
+
+  const onSuccess = (response) => {
+    const code = response.code; // Obtém o código de autorização
+    console.log({ code })
+  };
+  const onFailure = (response) => {
+    console.log({ response })
+  };
 
   const onSubmitFilter = (data: EquipamentT) => {
     data = {
@@ -120,6 +129,16 @@ const Filters: React.FC = () => {
             </div>
           </ButtonContainer>
         </form>
+        <GoogleOAuthProvider clientId="670748965702-v0f7s0mlsftr1aq27mvi7a4mf974oshc.apps.googleusercontent.com">
+          <GoogleLogin
+            onSuccess={credentialResponse => {
+              console.log(credentialResponse);
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
+        </GoogleOAuthProvider>
       </Paper>
     </Container>
   )
