@@ -411,10 +411,14 @@ const CreateOrderService: React.FC = () => {
       laudos,
       itemPieces,
       manpower: manpower === '' ? 'R$ 0,00' : manpower,
-      equipament: checkBoxEnableEquipaments ? equipamentName.label : undefined,
-      brand: checkBoxEnableEquipaments ? brand.label : undefined,
-      model: checkBoxEnableEquipaments ? model.label : undefined,
-      serialNumber: checkBoxEnableEquipaments ? serialNumber.label : undefined,
+      equipament: checkBoxEnableEquipaments ? equipamentName.label : '-',
+      brand: checkBoxEnableEquipaments ? brand.label : '-',
+      model: checkBoxEnableEquipaments ? model.label : '-',
+      serialNumber: checkBoxEnableEquipaments ? serialNumber.label : '-',
+      cable: checkBoxEnableEquipaments ? data.cable : '-',
+      charger: checkBoxEnableEquipaments ? data.charger : '-',
+      breaked: checkBoxEnableEquipaments ? data.breaked : '-',
+      detail: checkBoxEnableEquipaments ? data.detail : '-',
       osNumber,
       discount,
       total,
@@ -783,6 +787,7 @@ const CreateOrderService: React.FC = () => {
                 label="Cabo"
                 hasError={!!formState.errors.cable?.message}
                 msgError={formState.errors.cable?.message}
+                disabled={!checkBoxEnableEquipaments}
                 options={[
                   { label: 'SIM', value: 'SIM' },
                   { label: 'NAO', value: 'NAO' },
@@ -801,6 +806,7 @@ const CreateOrderService: React.FC = () => {
                 label="Carregador"
                 hasError={!!formState.errors.charger?.message}
                 msgError={formState.errors.charger?.message}
+                disabled={!checkBoxEnableEquipaments}
                 options={[
                   { label: 'SIM', value: 'SIM' },
                   { label: 'NAO', value: 'NAO' },
@@ -819,6 +825,7 @@ const CreateOrderService: React.FC = () => {
                 label="Quebrado"
                 hasError={!!formState.errors.breaked?.message}
                 msgError={formState.errors.breaked?.message}
+                disabled={!checkBoxEnableEquipaments}
                 options={[
                   { label: 'SIM', value: 'SIM' },
                   { label: 'NAO', value: 'NAO' },
@@ -837,6 +844,7 @@ const CreateOrderService: React.FC = () => {
                 label="Detalhes"
                 hasError={!!formState.errors.detail?.message}
                 msgError={formState.errors.detail?.message}
+                disabled={!checkBoxEnableEquipaments}
                 options={[
                   { label: 'SIM', value: 'SIM' },
                   { label: 'NAO', value: 'NAO' },
