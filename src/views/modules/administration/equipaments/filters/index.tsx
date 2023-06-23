@@ -129,7 +129,7 @@ const Filters: React.FC = () => {
             </div>
           </ButtonContainer>
         </form>
-        <GoogleOAuthProvider clientId="670748965702-v0f7s0mlsftr1aq27mvi7a4mf974oshc.apps.googleusercontent.com">
+        {/* <GoogleOAuthProvider clientId="670748965702-v0f7s0mlsftr1aq27mvi7a4mf974oshc.apps.googleusercontent.com">
           <GoogleLogin
             onSuccess={credentialResponse => {
               console.log(credentialResponse);
@@ -138,7 +138,7 @@ const Filters: React.FC = () => {
               console.log('Login Failed');
             }}
           />
-        </GoogleOAuthProvider>
+        </GoogleOAuthProvider> */}
       </Paper>
     </Container>
   )

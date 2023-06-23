@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'src/components/Widgets/Toastify'
 import { useLoading } from 'src/hooks/useLoading'
-import { PIECE_SEE_ALL } from 'src/store/actions'
+import { PIECE_FILTER, PIECE_SEE_ALL } from 'src/store/actions'
 import { IStore } from 'src/store/Types'
 import { useAdmin } from '../../../../services/useAdmin'
 import { fromApi } from './adapters'
@@ -48,6 +48,18 @@ const Piece: React.FC = () => {
     getClients()
     scroll(0, 0)
   }, [pieceFiltered, makeRequest])
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: PIECE_FILTER,
+        payload: {
+          description: undefined,
+          value: undefined,
+        },
+      })
+    }
+  }, [])
 
   return (
     <Container>

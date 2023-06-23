@@ -61,10 +61,10 @@ const CreateService: React.FC = () => {
   }
 
   const onSubmit = async (data: ServiceT) => {
-    // if (!laudos.length) {
-    //   setError('laudoService', { message: 'Laudo do serviço obrigatório.' })
-    //   return
-    // }
+    if (!laudos.length) {
+      setError('laudoService', { message: 'Laudo do serviço obrigatório.' })
+      return
+    }
     try {
       setLoading(true)
       const { clean } = formatInputPrice(data.value)

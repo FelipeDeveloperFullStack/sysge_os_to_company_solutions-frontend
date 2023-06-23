@@ -72,10 +72,10 @@ const CreateService: React.FC<CreateServiceProps> = ({
   }
 
   const onSubmit = async (data: ServiceT) => {
-    // if (!laudos.length) {
-    //   setError('laudoService', { message: 'Laudo do serviço obrigatório.' })
-    //   return
-    // }
+    if (!laudos.length) {
+      setError('laudoService', { message: 'Laudo do serviço obrigatório.' })
+      return
+    }
     try {
       Loading.turnOn()
       setLoading(true)

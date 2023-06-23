@@ -147,6 +147,10 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
         return
       }
     }
+    if (status === 'A PAGAR' && !data.maturity) {
+      setError('maturity', { message: 'Vencimento obrigatório.' })
+      return
+    }
     await save(data)
   }
 
@@ -167,6 +171,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
 
   React.useEffect(() => {
     if (maturity) {
+      setError('maturity', { message: '' })
       const onlyNumberMaturity = onlyNumbers(maturity)
       if (!onlyNumberMaturity.length) {
         if (dateIn) {
@@ -282,12 +287,23 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
               control={control}
               defaultValue=""
               render={({ field, fieldState }) => (
-                <InputText
-                  label={'Valor p/ Revenda'}
-                  field={field}
+                // <InputText
+                //   label={'Valor p/ Revenda'}
+                //   field={field}
+                //   fieldState={fieldState}
+                //   disabled={!isToLaunchInPiece}
+                //   onKeyUp={() => onFormatterPrice(field.value, 'valueFormatedPiece')}
+                // />
+                <InputMask
+                  label='Valor p/ Revenda'
+                  variant="outlined"
                   fieldState={fieldState}
+                  hasError={!!fieldState.error}
+                  msgError={fieldState.error?.message}
+                  mask=""
                   disabled={!isToLaunchInPiece}
                   onKeyUp={() => onFormatterPrice(field.value, 'valueFormatedPiece')}
+                  {...field}
                 />
               )}
             />

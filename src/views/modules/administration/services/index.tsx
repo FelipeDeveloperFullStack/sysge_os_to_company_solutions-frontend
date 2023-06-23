@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { useLoading } from 'src/hooks/useLoading'
-import { SERVICE_SEE_ALL } from 'src/store/actions'
+import { SERVICE_FILTER, SERVICE_SEE_ALL } from 'src/store/actions'
 import { IStore } from 'src/store/Types'
 import { useAdmin } from '../../../../services/useAdmin'
 import { fromApi } from './adapters'
@@ -50,6 +50,20 @@ const Service: React.FC = () => {
     getServices()
     scroll(0, 0)
   }, [serviceFiltered, makeRequest])
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: SERVICE_FILTER,
+        payload: {
+          description: undefined,
+          value: undefined,
+        },
+      })
+    }
+  }, [])
+
+
 
   return (
     <Container>

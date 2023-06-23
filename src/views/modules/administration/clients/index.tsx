@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'src/components/Widgets/Toastify'
 import { useLoading } from 'src/hooks/useLoading'
-import { CLIENT_SEE_ALL } from 'src/store/actions'
+import { CLIENT_FILTER, CLIENT_SEE_ALL } from 'src/store/actions'
 import { IStore } from 'src/store/Types'
 import { useAdmin } from '../../../../services/useAdmin'
 import { fromApi } from './adapters'
@@ -54,6 +54,24 @@ const Client: React.FC = () => {
     getClients()
     scroll(0, 0)
   }, [clientFiltered, makeRequest])
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: CLIENT_FILTER,
+        payload: {
+          name: undefined,
+          cpfOrCnpj: undefined,
+          phoneNumber: undefined,
+          phoneNumberFixo: undefined,
+          address: undefined,
+          city: undefined,
+          uf: undefined,
+        },
+      })
+    }
+  }, [])
+
 
   return (
     <Container>
