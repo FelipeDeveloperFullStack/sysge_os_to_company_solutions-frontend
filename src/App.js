@@ -8,8 +8,25 @@ import { BASENAME } from './config/constant'
 import { LoadingProvider } from './hooks/useLoading'
 import { ModalProvider } from './hooks/useModal'
 import routes, { renderRoutes } from './routes'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import 'primereact/resources/themes/lara-light-indigo/theme.css'
 import 'primereact/resources/primereact.min.css'
+
+/** Configuração das cores do Theme global do sistema */
+const themeSystem = createTheme({
+  palette: {
+    primary: {
+      // main: '#00223E',
+      main: '#3f4d67',
+    },
+    // secondary: {
+    //   main: '#C00000',
+    // },
+    error: {
+      main: '#C00000',
+    },
+  },
+})
 
 const App = () => {
   setInterval(() => {
@@ -18,14 +35,16 @@ const App = () => {
 
   return (
     <React.Fragment>
-      <ModalProvider>
-        <LoadingProvider>
-          <Router basename={BASENAME}>{renderRoutes(routes)}</Router>
-          <ToastContainer />
-          <SimpleBackdrop />
-          <Modal />
-        </LoadingProvider>
-      </ModalProvider>
+      <ThemeProvider theme={themeSystem}>
+        <ModalProvider>
+          <LoadingProvider>
+            <Router basename={BASENAME}>{renderRoutes(routes)}</Router>
+            <ToastContainer />
+            <SimpleBackdrop />
+            <Modal />
+          </LoadingProvider>
+        </ModalProvider>
+      </ThemeProvider>
     </React.Fragment>
   )
 }

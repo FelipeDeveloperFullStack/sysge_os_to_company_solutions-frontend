@@ -304,7 +304,7 @@ const Filters: React.FC<FiltersProps> = ({
               <Button
                 variant="outlined"
                 textButton="Incluir"
-                color="info"
+                color="primary"
                 icon="add"
                 onClick={onHandleNewExpenses}
                 disabled={!hasPermission(DESPESAS_INCLUIR)}
@@ -318,7 +318,7 @@ const Filters: React.FC<FiltersProps> = ({
           <Button
             variant="outlined"
             textButton="Incluir"
-            color="info"
+            color="primary"
             icon="add"
             onClick={onHandleNewExpenses}
             disabled={!hasPermission(DESPESAS_INCLUIR)}

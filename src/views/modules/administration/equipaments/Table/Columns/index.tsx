@@ -51,7 +51,7 @@ export const useColumns = () => {
         <>
           <IconButton
             aria-label="edit"
-            color="info"
+            color="primary"
             onClick={() => onHandleUpdateSituationRow(params)}
             disabled={!hasPermission(EQUIPAMENTOS_EDITAR)}
           >

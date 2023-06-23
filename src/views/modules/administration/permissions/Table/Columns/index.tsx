@@ -71,7 +71,7 @@ export const useColumns = () => {
         return (
           <Chip
             label={user.status === 'ATIVO' ? 'ATIVO' : 'BLOQUEADO'}
-            color={user.status === 'ATIVO' ? 'success' : 'error'}
+            color={user.status === 'ATIVO' ? 'primary' : 'error'}
           />
         )
       },
@@ -86,7 +86,7 @@ export const useColumns = () => {
           <Tooltip title='Editar'>
             <IconButton
               aria-label="edit"
-              color="info"
+              color="primary"
               onClick={() => onHandleUpdateSituationRow(params)}
               disabled={!hasPermission(GESTAO_USUARIOS_EDITAR)}
             >

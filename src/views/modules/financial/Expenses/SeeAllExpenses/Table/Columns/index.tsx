@@ -75,7 +75,7 @@ export const useColumns = (props: ColumnsProps) => {
         return (
           <Chip
             label={isRegister ? 'REGISTRADO' : 'NÃO REGISTRADO'}
-            color={isRegister ? 'info' : 'secondary'}
+            color={isRegister ? 'primary' : 'secondary'}
           />
         )
       },
@@ -127,7 +127,7 @@ export const useColumns = (props: ColumnsProps) => {
         <>
           <IconButton
             aria-label="update"
-            color="info"
+            color="primary"
             onClick={() => onHandleUpdateSituationRow(params)}
             disabled={!hasPermission(DESPESAS_EDITAR)}
           >
