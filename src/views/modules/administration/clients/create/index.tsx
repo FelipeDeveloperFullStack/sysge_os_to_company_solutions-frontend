@@ -23,6 +23,7 @@ import { useAdmin } from 'src/services/useAdmin'
 import { CLIENT_FILTER, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import ConfirmationToSave from '../messages/ConfirmationToSave'
 import { schemaClient } from '../schemaValidation'
 import { ButtonContainer, Container, Form } from './style'
 
@@ -32,7 +33,7 @@ type CreateClientProps = {
 
 const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   const dispatch = useDispatch()
-  const { closeModal } = useModal()
+  const { closeModal, showMessage } = useModal()
   const { apiAdmin } = useAdmin()
   const { getAddressByCEP } = useServiceCEP()
   const { Loading } = useLoading()
@@ -45,6 +46,18 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
 
   const history = useHistory()
   const description = watch('name')
+
+  const clearAllFields = () => {
+    setValue('name', '')
+    setValue('cep', '')
+    setValue('address', '')
+    setValue('city', '')
+    setValue('uf', '')
+    setValue('cpfOrCnpj', '')
+    setValue('email', '')
+    setValue('phoneNumber', '')
+    setValue('phoneNumberFixo', '')
+  }
 
   const onSubmit = async (data: ClientT) => {
     try {
@@ -65,7 +78,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
           },
         })
       } else {
-        history.push(ADMINISTRATION_CLIENTS)
+        showMessage(ConfirmationToSave, { history, clearAllFields })
       }
     } catch (error) {
       exceptionHandle(error)
