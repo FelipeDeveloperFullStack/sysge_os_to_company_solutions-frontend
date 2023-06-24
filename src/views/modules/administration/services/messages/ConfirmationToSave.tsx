@@ -1,48 +1,45 @@
 import React, { useState } from 'react'
 import Button from 'src/components/Form/Button'
 import { useModal } from 'src/hooks/useModal'
+import { ADMINISTRATION_SERVICES } from 'src/layouts/typePath'
 import { ButtonGroup, Container, Text } from './style'
-import { FINANCIAL_SEE_ALL_EXPENSES } from 'src/layouts/typePath'
-import { NewExpenses } from './NewExpenses'
 
-type ConfirmationRegister = {
+type ConfirmationToSaveProps = {
   history: any
-  setMakeRequest: React.Dispatch<React.SetStateAction<number>>
+  clearAllFields: () => void
 }
 
-const ConfirmationToSave: React.FC<ConfirmationRegister> = (
-  props,
-) => {
-  const { closeModal, showMessage } = useModal()
+const ConfirmationToSave: React.FC<ConfirmationToSaveProps> = (props) => {
+  const { closeModal } = useModal()
   const [loading, setLoading] = useState(false)
 
   const onStayOnThePage = () => {
     setLoading(true)
-    showMessage(NewExpenses, { setMakeRequest: props.setMakeRequest }, true)
+    props.clearAllFields()
+    closeModal()
   }
   const onBack = () => {
-    props.history.push(FINANCIAL_SEE_ALL_EXPENSES)
+    props.history.push(ADMINISTRATION_SERVICES)
     closeModal()
   }
 
   return (
     <Container>
-      <Text>Deseja adicionar outra despesa?</Text>
+      <Text>Deseja adicionar outro serviço?</Text>
       <ButtonGroup>
         <Button
-          textButton="Confirmar"
+          textButton="Sim"
           variant="outlined"
-          color="info"
+          color="primary"
           icon="add3"
-          loading={loading}
           onClick={onStayOnThePage}
+          loading={loading}
         />
         <Button
-          textButton="Cancelar"
+          textButton="Não"
           variant="outlined"
+          color='error'
           icon="close"
-          color="error"
-          loading={loading}
           onClick={onBack}
         />
       </ButtonGroup>

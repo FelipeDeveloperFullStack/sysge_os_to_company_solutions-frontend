@@ -34,15 +34,19 @@ import { Checkbox } from 'src/components/Form/Checkbox'
 import { fromApi } from './adapter/fromApi'
 import moment from 'moment'
 import axios from 'axios'
+import ConfirmationToSave from './ConfirmationToSave'
+import { removeDuplicatesAutocomplete } from 'src/helpers/removeDuplicates'
 
 type UpdateConfirmationProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
+  history: any
 }
 
 export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
   setMakeRequest,
+  history
 }) => {
-  const { closeModal } = useModal()
+  const { closeModal, showMessage } = useModal()
   const { apiAdmin } = useAdmin()
   const [_, setValueClear] = useState(0)
   const [isToLaunchInPiece, setIsToLaunchInPiece] = useState(false)
@@ -121,7 +125,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
         toast.error('Opss! Ocorreu um erro ao tentar registrar em peças.')
       }
     } finally {
-      closeModal()
+      //closeModal()
       setLoading(false)
     }
   }
@@ -152,6 +156,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
       return
     }
     await save(data)
+    showMessage(ConfirmationToSave, { history, setMakeRequest })
   }
 
   const onFormatterPrice = (value: string, field: any) => {
@@ -197,7 +202,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
 
           cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
-        if (dataExpense) setOptionExpense(fromApi(dataExpense))
+        if (dataExpense) setOptionExpense(removeDuplicatesAutocomplete(fromApi(dataExpense)))
       } catch (error) {
         console.log(error)
         if (error?.response?.status === 403) {

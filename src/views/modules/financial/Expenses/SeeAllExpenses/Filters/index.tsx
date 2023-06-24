@@ -17,6 +17,7 @@ import { NewExpenses } from '../messages/NewExpenses'
 import { useModal } from 'src/hooks/useModal'
 import { DESPESAS_INCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
+import { useHistory } from 'react-router-dom'
 
 type SeeAllIncomeProps = {
   expense: string
@@ -44,6 +45,7 @@ const Filters: React.FC<FiltersProps> = ({
   const [yearSelected, setYearSelected] = useLocalStorage('yearSelected', '')
   const [incomes, setIncomes] = useState<Expense[]>([] as Expense[])
   const { Loading } = useLoading()
+  const history = useHistory()
   const [selectedButton, setSelectedButton] = useLocalStorage(
     'selectedButtonExpense',
     'A PAGAR',
@@ -186,7 +188,7 @@ const Filters: React.FC<FiltersProps> = ({
   }
 
   const onHandleNewExpenses = () => {
-    showMessage(NewExpenses, { setMakeRequest }, true)
+    showMessage(NewExpenses, { setMakeRequest, history }, true)
   }
 
   useEffect(() => {

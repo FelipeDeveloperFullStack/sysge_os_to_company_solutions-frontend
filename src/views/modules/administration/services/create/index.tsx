@@ -26,6 +26,7 @@ import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
 import TableView from './Table'
 import { Alert } from '@mui/material'
+import ConfirmationToSave from '../messages/ConfirmationToSave'
 
 type CreateServiceProps = {
   isNewServiceByOS?: boolean
@@ -35,7 +36,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
   isNewServiceByOS = false,
 }) => {
   const dispatch = useDispatch()
-  const { closeModal } = useModal()
+  const { closeModal, showMessage } = useModal()
   const { apiAdmin } = useAdmin()
   const [loading, setLoading] = useState(false)
   const { Loading } = useLoading()
@@ -51,6 +52,14 @@ const CreateService: React.FC<CreateServiceProps> = ({
   const [laudos, setLaudos] = useState<string[]>([])
   const history = useHistory()
   const description = watch('description')
+
+  const clearAllFields = () => {
+    setValue('description', '')
+    setValue('laudoService', '')
+    setValue('laudos', [])
+    setValue('value', '')
+    setLaudos([])
+  }
 
   const getServices = async () => {
     try {
@@ -95,7 +104,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
           },
         })
       } else {
-        history.push(ADMINISTRATION_SERVICES)
+        showMessage(ConfirmationToSave, { history, clearAllFields })
       }
     } catch (error) {
       exceptionHandle(error)

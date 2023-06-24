@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Button from 'src/components/Form/Button'
 import { useModal } from 'src/hooks/useModal'
-import { ADMINISTRATION_CLIENTS, ADMINISTRATION_PIECES } from 'src/layouts/typePath'
+import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { ButtonGroup, Container, Text } from './style'
 
 type ConfirmationToSaveProps = {

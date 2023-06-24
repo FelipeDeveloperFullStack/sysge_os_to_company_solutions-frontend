@@ -20,6 +20,7 @@ import {
 import { EquipamentT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { fromApi } from '../adapters'
+import ConfirmationToSave from '../messages/ConfirmationToSave'
 import { schemaBrand } from '../schemaValidation'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
@@ -33,14 +34,21 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
 }) => {
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
-  const { closeModal } = useModal()
+  const { closeModal, showMessage } = useModal()
   const { Loading } = useLoading()
   const [loading, setLoading] = useState(false)
 
-  const { control, handleSubmit } = useForm<EquipamentT>({
+  const { control, handleSubmit, setValue } = useForm<EquipamentT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaBrand),
   })
+
+  const clearAllFields = () => {
+    setValue('equipamentName', '')
+    setValue('brand', '')
+    setValue('model', '')
+    setValue('serialNumber', '')
+  }
 
   const history = useHistory()
 
@@ -86,7 +94,7 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
           },
         })
       } else {
-        history.push(ADMINISTRATION_EQUIPAMENTS)
+        showMessage(ConfirmationToSave, { history, clearAllFields })
       }
     } catch (error) {
       exceptionHandle(error)
