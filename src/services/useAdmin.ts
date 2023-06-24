@@ -2,11 +2,14 @@ import axios from 'axios'
 import { useAuth } from 'src/hooks/useAuth'
 
 export const useAdmin = () => {
+  const { setUserData, user } = useAuth()
+  //
   const apiAdmin = axios.create({
-    baseURL: process.env.REACT_APP_ADMIN_API_HOST,
+    baseURL: user?.user?.ip
+      ? `http://${user?.user?.ip}:3005/`
+      : process.env.REACT_APP_ADMIN_API_HOST,
   })
 
-  const { setUserData, user } = useAuth()
   //const user = JSON.parse(localStorage.getItem('@WhatsManagerStorage'));
 
   apiAdmin.defaults.headers['Authorization'] = `Bearer ${user.token}`

@@ -149,6 +149,7 @@ export interface IAccount {
     sub: string
     iat: number
     exp: number
+    ip: string | number
     permission: Permission[]
     typeUser: string
   }
