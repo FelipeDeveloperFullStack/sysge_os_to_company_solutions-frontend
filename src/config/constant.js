@@ -2,7 +2,7 @@ import { DASHBOARD } from 'src/layouts/typePath'
 
 export const BASENAME = '' // don't add '/' at end off BASENAME
 export const BASE_URL = DASHBOARD
-export const BASE_TITLE = ' | WhatsManager '
+export const BASE_TITLE = ' | Solution'
 export const API_SERVER = process.env.REACT_APP_ADMIN_API_HOST
 
 export const CONFIG = {

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getFirstName } from 'src/helpers/firstName'
 import { useAuth } from 'src/hooks/useAuth'
 
 export const useAdmin = () => {
@@ -15,6 +16,7 @@ export const useAdmin = () => {
   apiAdmin.defaults.headers['Authorization'] = `Bearer ${user.token}`
   apiAdmin.defaults.headers['Content-Type'] = `application/json`
   apiAdmin.defaults.headers['sessionkey'] = user.user.cpf
+  apiAdmin.defaults.headers['user'] = getFirstName(user.user.name)
 
   apiAdmin.interceptors.request.use(
     (config) => {
