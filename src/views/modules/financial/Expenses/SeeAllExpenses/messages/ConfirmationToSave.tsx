@@ -30,7 +30,7 @@ const ConfirmationToSave: React.FC<ConfirmationRegister> = (
       <Text>Deseja adicionar outra despesa?</Text>
       <ButtonGroup>
         <Button
-          textButton="Confirmar"
+          textButton="Sim"
           variant="outlined"
           color="info"
           icon="add3"
@@ -38,7 +38,7 @@ const ConfirmationToSave: React.FC<ConfirmationRegister> = (
           onClick={onStayOnThePage}
         />
         <Button
-          textButton="Cancelar"
+          textButton="Não"
           variant="outlined"
           icon="close"
           color="error"

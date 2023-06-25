@@ -89,7 +89,7 @@ const TableView: React.FC = () => {
                           )}
                         </TableCell>
                       ) : (
-                        <TableCell>{formatPrice(row.value)}</TableCell>
+                        column.field === 'value' ? <TableCell>{formatPrice(row.value)}</TableCell> : <TableCell>{row.user}</TableCell>
                       )}
                     </>
                   )

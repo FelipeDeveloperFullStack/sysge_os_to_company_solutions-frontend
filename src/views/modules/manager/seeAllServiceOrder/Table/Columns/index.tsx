@@ -135,6 +135,10 @@ export const useColumns = () => {
       },
     },
     {
+      field: 'user',
+      headerName: 'Alterado'
+    },
+    {
       field: 'group-buttons',
       headerName: ' ',
       sortable: false,

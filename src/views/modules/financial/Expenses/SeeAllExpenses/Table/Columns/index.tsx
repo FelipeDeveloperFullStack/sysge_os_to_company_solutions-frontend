@@ -118,6 +118,7 @@ export const useColumns = (props: ColumnsProps) => {
         }
       },
     },
+    { field: 'user', headerName: 'Alterado' },
     {
       field: 'group-buttons',
       headerName: ' ',

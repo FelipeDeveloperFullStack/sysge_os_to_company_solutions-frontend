@@ -29,6 +29,7 @@ import IconButton from '@mui/material/IconButton';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import Tooltip from '@mui/material/Tooltip';
+import { validateTwoPhoneTypes } from 'src/helpers/validateFields/validateTwoPhoneTypes'
 
 const EditClient: React.FC = () => {
   const dispatch = useDispatch()
@@ -52,6 +53,20 @@ const EditClient: React.FC = () => {
   })
 
   const onSubmit = async (data: ClientT) => {
+    if (data.phoneNumber) {
+      const validate = validateTwoPhoneTypes(data.phoneNumber)
+      if (validate?.trim() !== '') {
+        toast.error('Celular inválido')
+        return
+      }
+    }
+    if (data.phoneNumberFixo) {
+      const validate = validateTwoPhoneTypes(data.phoneNumberFixo)
+      if (validate?.trim() !== '') {
+        toast.error('Telefone Fixo inválido')
+        return
+      }
+    }
     try {
       setLoading(true)
       await apiAdmin.put(`clients/${clientId}`, data)

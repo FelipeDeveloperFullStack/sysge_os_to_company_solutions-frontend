@@ -151,10 +151,10 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
         return
       }
     }
-    if (status === 'A PAGAR' && !data.maturity) {
-      setError('maturity', { message: 'Vencimento obrigatório.' })
-      return
-    }
+    // if (status === 'A PAGAR' && !data.maturity) {
+    //   setError('maturity', { message: 'Vencimento obrigatório.' })
+    //   return
+    // }
     await save(data)
     showMessage(ConfirmationToSave, { history, setMakeRequest })
   }

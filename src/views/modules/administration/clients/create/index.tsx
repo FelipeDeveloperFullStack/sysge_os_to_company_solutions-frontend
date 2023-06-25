@@ -15,6 +15,7 @@ import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { validateCNPJ } from 'src/helpers/validateCNPJ'
 import validateCpf from 'src/helpers/validateCpf'
+import { validateTwoPhoneTypes } from 'src/helpers/validateFields/validateTwoPhoneTypes'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
@@ -60,6 +61,20 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   }
 
   const onSubmit = async (data: ClientT) => {
+    if (data.phoneNumber) {
+      const validate = validateTwoPhoneTypes(data.phoneNumber)
+      if (validate?.trim() !== '') {
+        toast.error('Celular inválido')
+        return
+      }
+    }
+    if (data.phoneNumberFixo) {
+      const validate = validateTwoPhoneTypes(data.phoneNumberFixo)
+      if (validate?.trim() !== '') {
+        toast.error('Telefone Fixo inválido')
+        return
+      }
+    }
     try {
       setLoading(true)
       Loading.turnOn()

@@ -25,6 +25,7 @@ import { ADMINISTRATION_CLIENTS_EDIT } from 'src/layouts/typePath'
 import { useHistory } from 'react-router-dom'
 import { CLIENTES_EDITAR, CLIENTES_EXCLUIR } from '../../../permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
+import formatTextWithLimit from 'src/helpers/formatTextWithLimit'
 
 export const useColumns = () => {
   const { showMessage } = useModal()
@@ -54,13 +55,14 @@ export const useColumns = () => {
     {
       field: 'address',
       headerName: 'Endereço',
-      width: 500,
+      width: 400,
       renderCell: (params: GridCellParams) => {
         const { address, city, uf } = params.row as ClientT
+        const addressClient = `${address} - ${city}/${uf}`
         return (
           <div>
             <div>
-              {address} - {city}/{uf}
+              {formatTextWithLimit(addressClient, 50)}
             </div>
           </div>
         )
@@ -69,6 +71,7 @@ export const useColumns = () => {
     {
       field: 'phoneNumber',
       headerName: 'Telefone',
+      width: 120,
       renderCell: (params: GridCellParams) => {
         const { phoneNumber, phoneNumberFixo } = params.row as ClientT
         return (
@@ -78,6 +81,10 @@ export const useColumns = () => {
           </div>
         )
       },
+    },
+    {
+      field: 'user',
+      headerName: 'Alterado',
     },
     {
       field: 'group-buttons',

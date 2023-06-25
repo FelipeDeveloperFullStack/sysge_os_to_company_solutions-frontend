@@ -13,6 +13,7 @@ import { useAuth } from 'src/hooks/useAuth';
 import { Chip, Tooltip } from '@mui/material';
 import { GESTAO_USUARIOS_BLOQUEAR, GESTAO_USUARIOS_EDITAR } from '../../static/keysPermissions';
 import { usePermission } from 'src/hooks/usePermission';
+import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters';
 
 export const useColumns = () => {
   const { showMessage } = useModal()
@@ -77,6 +78,11 @@ export const useColumns = () => {
       },
     },
     {
+      field: 'user',
+      headerName: 'Alterado',
+      width: 90,
+    },
+    {
       field: 'group-buttons',
       headerName: '',
       sortable: false,
@@ -93,7 +99,7 @@ export const useColumns = () => {
               <EditIcon />
             </IconButton>
           </Tooltip>
-          {(user.user?.cpf !== params.row?.cpf) && <>
+          {(clearSpecialCharacters(String(user.user?.cpf)) !== clearSpecialCharacters(params.row?.cpf)) && <>
             <Tooltip title={params.row.status === 'BLOQUEADO' ? 'Ativar' : 'Bloquear'}>
               <IconButton
                 aria-label="update"

@@ -35,11 +35,16 @@ export const useColumns = () => {
     {
       field: 'value',
       headerName: 'Preço',
-      width: 200,
+      width: 120,
       renderCell: (params: GridCellParams) => {
         const { value } = params.row as PieceT
         return <span>{formatPrice(value)}</span>
       },
+    },
+    {
+      field: 'user',
+      headerName: 'Alterado',
+      width: 90,
     },
     {
       field: 'group-buttons',

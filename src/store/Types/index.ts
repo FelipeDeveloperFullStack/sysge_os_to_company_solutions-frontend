@@ -63,6 +63,7 @@ export type ClientT = {
   uf?: string
   cep?: string
   _id?: string
+  user?: string
   id: string
 }
 export type PieceT = {
@@ -70,6 +71,7 @@ export type PieceT = {
   value?: string
   _id?: string
   id: string
+  user?: string
 }
 
 export type ServiceT = {
@@ -77,6 +79,7 @@ export type ServiceT = {
   laudoService?: string
   laudos?: string[]
   value?: string
+  user?: string
   _id?: string
 }
 

@@ -11,6 +11,7 @@ export type Response = {
   status: string
   month: string
   year: string
+  user: string
   _id: string
 }
 
@@ -24,6 +25,7 @@ export type Expense = {
   isRegister?: PieceT
   month: string
   year: string
+  user: string
   id: string
 }
 
@@ -81,6 +83,7 @@ export const fromApi = (
     month: getMonthAndYear(item.dateIn).month,
     year: getMonthAndYear(item.dateIn).year,
     valueFormated: item.value,
+    user: item.user || '',
     isRegister: pieces.find(
       (piece) =>
         piece.description?.toUpperCase().trim() ===

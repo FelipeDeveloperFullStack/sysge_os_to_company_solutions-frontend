@@ -42,7 +42,7 @@ const TableView: React.FC<TableViewProps> = ({
     window.localStorage.getItem('selectedButtonExpense'),
   )
 
-  const mappedIncomeFinancial = (serviceOrder: Expense[]): Expense[] => {
+  const mappedExpensesFinancial = (serviceOrder: Expense[]): Expense[] => {
     return serviceOrder.map((item: Expense) => item)
   }
 
@@ -205,7 +205,7 @@ const TableView: React.FC<TableViewProps> = ({
         </div>
       </>
       <DataTable
-        rows={mappedIncomeFinancial(incomesFiltered)}
+        rows={mappedExpensesFinancial(incomesFiltered)}
         columns={columns}
         pageSize={10}
         checkboxSelection
