@@ -85,6 +85,10 @@ const CreateService: React.FC<CreateServiceProps> = ({
       setError('laudoService', { message: 'Laudo do serviço obrigatório.' })
       return
     }
+    if (data.laudoService) {
+      setError('laudoService', { message: 'Laudo do serviço não adicionado, você precisa adicionar o laudo antes de salvar.' })
+      return
+    }
     try {
       Loading.turnOn()
       setLoading(true)

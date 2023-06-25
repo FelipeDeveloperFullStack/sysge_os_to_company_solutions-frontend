@@ -1,15 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react'
-import { Row, Col, Card, Table } from 'react-bootstrap'
+import { Row, Col, Card } from 'react-bootstrap'
 import AmChartStatistics6 from './chart/AmChartStatistics6'
-import { useAdmin } from 'src/services/useAdmin'
-import { useModal } from 'src/hooks/useModal'
 import { useLoading } from 'src/hooks/useLoading'
-import { toast } from 'src/components/Widgets/Toastify'
 import { useDashBoard } from './functions'
 import Alert from '@mui/material/Alert';
 import { formatPrice } from 'src/helpers/formatPrice'
-import { totalmem } from 'os'
 import GroupIcon from '@mui/icons-material/Group'
 import Chip from '@mui/material/Chip';
 import { ContainerIcon } from './style'
@@ -19,6 +15,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { useHistory } from 'react-router-dom'
+import { useAuth } from 'src/hooks/useAuth'
 import { ADMINISTRATION_CLIENTS, ADMINISTRATION_EQUIPAMENTS, ADMINISTRATION_PIECES, ADMINISTRATION_SERVICES, MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 // import { Link } from 'react-router-dom'
 // import AmChartEarnings from './chart/AmChartEarnings'
@@ -42,6 +39,8 @@ export type Total = {
 const DashDefault: React.FC = () => {
   const { Loading } = useLoading()
   const history = useHistory()
+  const { user } = useAuth()
+  const [typeUser] = useState(user?.user.typeUser)
 
   const [total, setTotal] = useState<Total>({
     totalClients: 0,
@@ -108,7 +107,7 @@ const DashDefault: React.FC = () => {
         </Col>
       </Row>}
       <Row>
-        <Col md={6} xl={4}>
+        {typeUser === 'ADMIN' && <Col md={6} xl={4}>
           <Card>
             <Card.Body>
               <h6 className="mb-4">Receitas</h6>
@@ -136,8 +135,8 @@ const DashDefault: React.FC = () => {
               </div> */}
             </Card.Body>
           </Card>
-        </Col>
-        <Col md={6} xl={4}>
+        </Col>}
+        {typeUser === 'ADMIN' && <Col md={6} xl={4}>
           <Card>
             <Card.Body>
               <h6 className="mb-4">Despesas</h6>
@@ -165,8 +164,8 @@ const DashDefault: React.FC = () => {
               </div> */}
             </Card.Body>
           </Card>
-        </Col>
-        <Col xl={4}>
+        </Col>}
+        {typeUser === 'ADMIN' && <Col xl={4}>
           <Card>
             <Card.Body>
               <h6 className="mb-4">Lucro</h6>
@@ -199,8 +198,8 @@ const DashDefault: React.FC = () => {
               </div> */}
             </Card.Body>
           </Card>
-        </Col>
-        <Col md={6} xl={8}>
+        </Col>}
+        {typeUser === 'ADMIN' && <Col md={6} xl={8}>
           <Card>
             <Card.Header>
               <Card.Title as="h5">Gráfico</Card.Title>
@@ -209,28 +208,9 @@ const DashDefault: React.FC = () => {
               <AmChartStatistics6 height="482px" />
             </Card.Body>
           </Card>
-        </Col>
-        <Col md={6} xl={4}>
-          {/* <Card className="bg-c-blue">
-            <Card.Header className="borderless">
-              <Card.Title as="h5" className="text-white">
-                Earnings
-              </Card.Title>
-            </Card.Header>
-            <Card.Body style={{ padding: '0 25px' }}>
-              <div className="earning-text mb-0">
-                <h3 className="mb-2 text-white f-w-300">
-                  {' '}
-                  $4295.36 <i className="feather icon-arrow-up teal accent-3" />
-                </h3>
-                <span className="text-uppercase text-white d-block">
-                  Total Earnings
-                </span>
-              </div>
-              <AmChartEarnings height="180px" />
-            </Card.Body>
-          </Card> */}
-          <Card>
+        </Col>}
+        <Col md={typeUser === 'ADMIN' ? 6 : 12} xl={typeUser === 'ADMIN' ? 4 : 12}>
+          <Card style={{ flexDirection: typeUser === 'ADMIN' ? 'column' : 'row' }}>
             <Card.Body className="border-bottom">
               <div className="row d-flex align-items-center">
                 <div className="col-auto">
