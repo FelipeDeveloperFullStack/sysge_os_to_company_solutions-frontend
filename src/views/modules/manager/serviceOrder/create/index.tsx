@@ -91,6 +91,7 @@ const CreateOrderService: React.FC = () => {
   )
   const [clients, setClients] = useState<ClientT[]>([] as ClientT[])
   const [checkBoxEnableEquipaments, setCheckBoxEnableEquipaments] = useState(true)
+  const [checkBoxEnableInfoEquipaments, setCheckBoxEnableInfoEquipaments] = useState(true)
   const [client, setClient] = useLocalStorage<AutocompleteOptions>('client',
     {} as AutocompleteOptions,
   )
@@ -415,10 +416,10 @@ const CreateOrderService: React.FC = () => {
       brand: checkBoxEnableEquipaments ? brand.label : '-',
       model: checkBoxEnableEquipaments ? model.label : '-',
       serialNumber: checkBoxEnableEquipaments ? serialNumber.label : '-',
-      cable: checkBoxEnableEquipaments ? data.cable : '-',
-      charger: checkBoxEnableEquipaments ? data.charger : '-',
-      breaked: checkBoxEnableEquipaments ? data.breaked : '-',
-      detail: checkBoxEnableEquipaments ? data.detail : '-',
+      cable: checkBoxEnableInfoEquipaments ? data.cable : '-',
+      charger: checkBoxEnableInfoEquipaments ? data.charger : '-',
+      breaked: checkBoxEnableInfoEquipaments ? data.breaked : '-',
+      detail: checkBoxEnableInfoEquipaments ? data.detail : '-',
       osNumber,
       discount,
       total,
@@ -639,6 +640,9 @@ const CreateOrderService: React.FC = () => {
   const handleChangeCheckBoxEnableEquipaments = (event: any) => {
     setCheckBoxEnableEquipaments(event.target.checked)
   }
+  const handleChangeCheckBoxEnableInfoEquipaments = (event: any) => {
+    setCheckBoxEnableInfoEquipaments(event.target.checked)
+  }
 
   const back = () => {
     history.push(MANAGER_SERVICE_ORDER)
@@ -775,6 +779,17 @@ const CreateOrderService: React.FC = () => {
             disabled={!checkBoxEnableEquipaments}
           />
         </Row>
+        <Row marginTop="10px">
+          <FormGroup>
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={checkBoxEnableInfoEquipaments}
+              onChange={(event) => handleChangeCheckBoxEnableInfoEquipaments(event)}
+              label={'Mostrar Observações do Equipamento'}
+              value={checkBoxEnableInfoEquipaments}
+            />
+          </FormGroup>
+        </Row>
         <Row columns="repeat(4, 1fr)" marginTop="10px" gap={10}>
           <Controller
             name="cable"
@@ -787,7 +802,7 @@ const CreateOrderService: React.FC = () => {
                 label="Cabo"
                 hasError={!!formState.errors.cable?.message}
                 msgError={formState.errors.cable?.message}
-                disabled={!checkBoxEnableEquipaments}
+                disabled={!checkBoxEnableInfoEquipaments}
                 options={[
                   { label: 'SIM', value: 'SIM' },
                   { label: 'NAO', value: 'NAO' },
@@ -806,7 +821,7 @@ const CreateOrderService: React.FC = () => {
                 label="Carregador"
                 hasError={!!formState.errors.charger?.message}
                 msgError={formState.errors.charger?.message}
-                disabled={!checkBoxEnableEquipaments}
+                disabled={!checkBoxEnableInfoEquipaments}
                 options={[
                   { label: 'SIM', value: 'SIM' },
                   { label: 'NAO', value: 'NAO' },
@@ -825,7 +840,7 @@ const CreateOrderService: React.FC = () => {
                 label="Quebrado"
                 hasError={!!formState.errors.breaked?.message}
                 msgError={formState.errors.breaked?.message}
-                disabled={!checkBoxEnableEquipaments}
+                disabled={!checkBoxEnableInfoEquipaments}
                 options={[
                   { label: 'SIM', value: 'SIM' },
                   { label: 'NAO', value: 'NAO' },
@@ -844,7 +859,7 @@ const CreateOrderService: React.FC = () => {
                 label="Detalhes"
                 hasError={!!formState.errors.detail?.message}
                 msgError={formState.errors.detail?.message}
-                disabled={!checkBoxEnableEquipaments}
+                disabled={!checkBoxEnableInfoEquipaments}
                 options={[
                   { label: 'SIM', value: 'SIM' },
                   { label: 'NAO', value: 'NAO' },
