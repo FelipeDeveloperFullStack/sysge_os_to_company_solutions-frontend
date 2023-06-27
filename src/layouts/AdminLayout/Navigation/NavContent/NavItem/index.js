@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { ListGroup } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import NavIcon from '../NavIcon'
 import NavBadge from '../NavBadge'
 
@@ -27,7 +27,60 @@ const LightTooltip = styled(({ className, ...props }) => (
   },
 }))
 
+function extrairParteDaString({ path }) {
+  if (!path || path.trim() === '') {
+    return path
+  }
+
+  const partes = path.split('/')
+
+  // Remove o último elemento vazio, caso exista
+  if (partes[partes.length - 1] === '') {
+    partes.pop()
+  }
+
+  // Verifica se há pelo menos dois elementos no array
+  if (partes.length >= 2) {
+    return '/' + partes.slice(1, 2).join('/')
+  }
+
+  // Retorna a string original caso não haja pelo menos dois elementos
+  return path
+}
+
+function CustomNavLink({
+  to,
+  urlPathName,
+  className,
+  exact,
+  target,
+  isHasModificationFields,
+  children,
+}) {
+  const history = useHistory()
+
+  const handleClick = (e) => {
+    e.preventDefault()
+    history.push(to)
+    //console.log({ to, urlPathName })
+    // if (urlPathName) {
+    //   if (isHasModificationFields) {
+    //     history.push(urlPathName)
+    //   }
+    // } else {
+    //   history.push(to)
+    // }
+  }
+
+  return (
+    <a href={to} className={className} onClick={handleClick} target={target}>
+      {children}
+    </a>
+  )
+}
+
 const NavItem = ({ layout, item }) => {
+  const urlPathName = JSON.parse(window.localStorage.getItem('@formDataPiece'))
   const windowSize = useWindowSize()
   const configContext = useContext(ConfigContext)
   const { dispatch } = configContext
@@ -52,17 +105,31 @@ const NavItem = ({ layout, item }) => {
       </a>
     )
   } else {
+    let isHasModificationFields = false
+    if (urlPathName) {
+      if (
+        String(item.url).includes(
+          extrairParteDaString({ path: urlPathName.url }),
+        )
+      ) {
+        isHasModificationFields = true
+        // console.log({ urlPathName: urlPathName.url, to: item.url })
+      }
+    }
+
     subContent = (
-      <NavLink
+      <CustomNavLink
         to={item.url}
+        urlPathName={urlPathName?.url}
         className="nav-link"
         exact={true}
         target={itemTarget}
+        isHasModificationFields={isHasModificationFields}
       >
         <NavIcon items={item} />
         {itemTitle}
         {/* <NavBadge items={item} /> */}
-      </NavLink>
+      </CustomNavLink>
     )
   }
   let mainContent = ''

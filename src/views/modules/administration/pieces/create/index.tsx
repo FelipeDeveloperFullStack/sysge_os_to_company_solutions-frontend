@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Alert } from '@mui/material'
@@ -21,6 +22,7 @@ import {
 } from 'src/store/actions'
 import { PieceT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import useLocalStorage from 'use-local-storage'
 import { fromApi } from '../adapters'
 import ConfirmationToSave from '../messages/ConfirmationToSave'
 import { schemaPiece } from '../schemaValidation'
@@ -32,6 +34,10 @@ type CreatePieceProps = {
 }
 
 const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
+
+  const urlPath = window.location.pathname
+
+
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
@@ -39,6 +45,11 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const [valueClear, setValueClear] = useState(0)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [formDataPiece, setFormDataPiece] = useLocalStorage('@formDataPiece', {
+    description: '',
+    value: '',
+    url: ''
+  })
 
   const { control, handleSubmit, setValue, watch } = useForm<PieceT>({
     shouldUnregister: false,
@@ -47,6 +58,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
 
   const history = useHistory()
   const description = watch('description')
+  const value = watch('value')
 
   const onFormatterPrice = (value: string) => {
     const { formated, clean } = formatInputPrice(value)
@@ -123,13 +135,22 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
 
   React.useEffect(() => {
     scroll(0, 0)
+    return () => {
+      // window.localStorage.removeItem('@formDataPiece')
+    }
   }, [])
 
   React.useEffect(() => {
-    if (description) {
+    if (description || value) {
       setErrorMessage('')
+      setFormDataPiece({
+        ...formDataPiece,
+        description: String(description).toUpperCase(),
+        value,
+        url: urlPath
+      })
     }
-  }, [description])
+  }, [description, value])
 
   return (
     <Container>

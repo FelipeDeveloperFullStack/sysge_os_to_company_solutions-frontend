@@ -43,6 +43,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import CreateClient from 'src/views/modules/administration/clients/create'
 import CreateEquipament from 'src/views/modules/administration/equipaments/create'
 import { toast } from 'src/components/Widgets/Toastify'
+import InputMask from 'src/components/Form/InputMask'
 
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
@@ -709,11 +710,13 @@ const CreateOrderService: React.FC = () => {
             control={control}
             defaultValue={getDateCurrent()}
             render={({ field, fieldState }) => (
-              <InputTextOSNumberDisabled
+              <InputMask
                 label={'Data'}
                 field={field}
                 fieldState={fieldState}
-                disabled
+                mask='99/99/9999'
+                value={field.value}
+                setValue={(value) => setValue('dateOS', value)}
               />
             )}
           />

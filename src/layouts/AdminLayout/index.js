@@ -17,6 +17,11 @@ const AdminLayout = ({ children }) => {
   const { collapseMenu } = configContext.state
   const { dispatch } = configContext
 
+  const urlPathName = JSON.parse(window.localStorage.getItem('@formDataPiece'))
+  useEffect(() => {
+    console.log({ urlPathName })
+  }, [urlPathName?.url])
+
   useOutsideClick(ref, () => {
     if (collapseMenu) {
       dispatch({ type: actionType.COLLAPSE_MENU })
