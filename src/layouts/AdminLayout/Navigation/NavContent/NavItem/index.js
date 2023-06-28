@@ -10,6 +10,9 @@ import useWindowSize from '../../../../../hooks/useWindowSize'
 /** Material UI */
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip'
 import { styled } from '@mui/material/styles'
+import { useSelector } from 'react-redux'
+import { toast } from 'src/components/Widgets/Toastify'
+import { useModal } from 'src/hooks/useModal'
 
 const LightTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -61,15 +64,17 @@ function CustomNavLink({
 
   const handleClick = (e) => {
     e.preventDefault()
-    history.push(to)
-    //console.log({ to, urlPathName })
-    // if (urlPathName) {
-    //   if (isHasModificationFields) {
-    //     history.push(urlPathName)
-    //   }
-    // } else {
-    //   history.push(to)
-    // }
+    if (urlPathName) {
+      if (isHasModificationFields) {
+        toast.warning(
+          'Atenção, necessário clicar no botão Salvar para registrar o dados.',
+        )
+      } else {
+        history.push(to)
+      }
+    } else {
+      history.push(to)
+    }
   }
 
   return (
@@ -80,7 +85,7 @@ function CustomNavLink({
 }
 
 const NavItem = ({ layout, item }) => {
-  const urlPathName = JSON.parse(window.localStorage.getItem('@formDataPiece'))
+  const layoutState = useSelector((state) => state.layout)
   const windowSize = useWindowSize()
   const configContext = useContext(ConfigContext)
   const { dispatch } = configContext
@@ -105,14 +110,9 @@ const NavItem = ({ layout, item }) => {
       </a>
     )
   } else {
-    let isHasModificationFields = false
-    if (urlPathName) {
-      if (
-        String(item.url).includes(
-          extrairParteDaString({ path: urlPathName.url }),
-        )
-      ) {
-        isHasModificationFields = true
+    const { url, fields } = layoutState
+    if (url) {
+      if (String(item.url).includes(extrairParteDaString({ path: url }))) {
         // console.log({ urlPathName: urlPathName.url, to: item.url })
       }
     }
@@ -120,11 +120,11 @@ const NavItem = ({ layout, item }) => {
     subContent = (
       <CustomNavLink
         to={item.url}
-        urlPathName={urlPathName?.url}
+        urlPathName={url}
         className="nav-link"
         exact={true}
         target={itemTarget}
-        isHasModificationFields={isHasModificationFields}
+        isHasModificationFields={Object.values(fields).some((field) => field)}
       >
         <NavIcon items={item} />
         {itemTitle}

@@ -12,7 +12,7 @@ import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { ADMINISTRATION_PIECES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { PIECE_FILTER } from 'src/store/actions'
+import { LAYOUT_IS_MODIFIED_FIELDS, PIECE_FILTER } from 'src/store/actions'
 import { PieceT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaPiece } from '../schemaValidation'
@@ -20,18 +20,21 @@ import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
 
 const CreateClient: React.FC = () => {
+  const urlPath = window.location.pathname
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const location = useLocation()
   const [idPieces, setIdPieces] = useState()
   const [loading, setLoading] = useState(false)
 
-  const { control, handleSubmit, setValue } = useForm<PieceT>({
+  const { control, handleSubmit, setValue, watch } = useForm<PieceT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaPiece),
   })
 
   const history = useHistory()
+  const description = watch('description')
+  const value = watch('value')
 
   useEffect(() => {
     scroll(0, 0)

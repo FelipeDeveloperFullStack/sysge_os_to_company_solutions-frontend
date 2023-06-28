@@ -45,6 +45,8 @@ export interface IWhatsappConnection {
 export type LayoutT = {
   title?: string
   makeRequest?: number
+  fields?: any
+  url?: string
 }
 
 export type ClientT = {

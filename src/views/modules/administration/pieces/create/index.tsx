@@ -16,6 +16,7 @@ import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_PIECES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
 import {
+  LAYOUT_IS_MODIFIED_FIELDS,
   LAYOUT_MAKE_REQUEST,
   PIECE_FILTER,
   PIECE_SEE_ALL,
@@ -37,7 +38,6 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
 
   const urlPath = window.location.pathname
 
-
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
@@ -45,11 +45,6 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const [valueClear, setValueClear] = useState(0)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [formDataPiece, setFormDataPiece] = useLocalStorage('@formDataPiece', {
-    description: '',
-    value: '',
-    url: ''
-  })
 
   const { control, handleSubmit, setValue, watch } = useForm<PieceT>({
     shouldUnregister: false,
@@ -69,7 +64,16 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
   const clearAllFields = () => {
     setValue('description', '')
     setValue('value', '')
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {},
+        url: ''
+      },
+    })
   }
+
+
 
   const getPieces = async () => {
     try {
@@ -122,10 +126,12 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
     } finally {
       Loading.turnOff()
       setLoading(false)
+      clearAllFields()
     }
   }
 
   const onHandleClose = () => {
+    clearAllFields()
     if (isNewServiceByOS) {
       closeModal()
     } else {
@@ -135,21 +141,20 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
 
   React.useEffect(() => {
     scroll(0, 0)
-    return () => {
-      // window.localStorage.removeItem('@formDataPiece')
-    }
   }, [])
 
   React.useEffect(() => {
-    if (description || value) {
-      setErrorMessage('')
-      setFormDataPiece({
-        ...formDataPiece,
-        description: String(description).toUpperCase(),
-        value,
+    setErrorMessage('')
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {
+          description: description,
+          value,
+        },
         url: urlPath
-      })
-    }
+      },
+    })
   }, [description, value])
 
   return (
