@@ -10,6 +10,7 @@ import { Income } from '../adapter'
 import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
 import { RECEITAS_EDITAR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
+import { parse, isBefore, addDays, isWithinInterval } from 'date-fns'
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -73,9 +74,20 @@ export const useColumns = (props: ColumnsProps) => {
       width: 170,
       renderCell: (params: GridCellParams) => {
         const { formOfPayment, maturityOfTheBoleto } = params.row
+        const today = new Date()
+        const threeDaysFromNow = addDays(today, 3)
+        const maturityDate = parse(
+          maturityOfTheBoleto || '',
+          'dd/MM/yyyy',
+          new Date(),
+        )
         if (formOfPayment === 'Boleto') {
+          const isWithinIntervalMaturityDate = isWithinInterval(maturityDate, { start: today, end: threeDaysFromNow })
           return (
-            <div>{formOfPayment} {maturityOfTheBoleto ? `(${maturityOfTheBoleto})` : ''}</div>
+            <div>{formOfPayment} <span style={{
+              color: isWithinIntervalMaturityDate ? 'red' : '',
+              fontWeight: isWithinIntervalMaturityDate ? '900' : '',
+            }}>{maturityOfTheBoleto ? `(${maturityOfTheBoleto})` : ''}</span></div>
           )
         } else {
           return <div>{formOfPayment}</div>
