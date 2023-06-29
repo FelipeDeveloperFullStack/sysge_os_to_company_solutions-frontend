@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Alert } from '@mui/material'
@@ -21,7 +22,7 @@ import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
 import { useAdmin } from 'src/services/useAdmin'
-import { CLIENT_FILTER, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { CLIENT_FILTER, LAYOUT_IS_MODIFIED_FIELDS, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import ConfirmationToSave from '../messages/ConfirmationToSave'
@@ -58,6 +59,13 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
     setValue('email', '')
     setValue('phoneNumber', '')
     setValue('phoneNumberFixo', '')
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {},
+        url: ''
+      },
+    })
   }
 
   const onSubmit = async (data: ClientT) => {
@@ -103,6 +111,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
     } finally {
       setLoading(false)
       Loading.turnOff()
+      clearAllFields()
     }
   }
 
@@ -145,6 +154,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   }
 
   const onHandleClose = () => {
+    clearAllFields()
     if (isNewServiceByOS) {
       closeModal()
     } else {
@@ -160,6 +170,19 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
     if (description) {
       setErrorMessage('')
     }
+  }, [description])
+
+  React.useEffect(() => {
+    setErrorMessage('')
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {
+          description,
+        },
+        url: window.location.pathname
+      },
+    })
   }, [description])
 
   return (

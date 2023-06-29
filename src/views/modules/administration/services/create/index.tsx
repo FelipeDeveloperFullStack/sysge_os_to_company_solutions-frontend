@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useState } from 'react'
@@ -14,6 +15,7 @@ import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_SERVICES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
 import {
+  LAYOUT_IS_MODIFIED_FIELDS,
   LAYOUT_MAKE_REQUEST,
   SERVICE_FILTER,
   SERVICE_SEE_ALL,
@@ -52,6 +54,9 @@ const CreateService: React.FC<CreateServiceProps> = ({
   const [laudos, setLaudos] = useState<string[]>([])
   const history = useHistory()
   const description = watch('description')
+  const laudo = watch('laudos')
+  const laudoService = watch('laudoService')
+  const value = watch('value')
 
   const clearAllFields = () => {
     setValue('description', '')
@@ -59,6 +64,13 @@ const CreateService: React.FC<CreateServiceProps> = ({
     setValue('laudos', [])
     setValue('value', '')
     setLaudos([])
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {},
+        url: ''
+      },
+    })
   }
 
   const getServices = async () => {
@@ -118,6 +130,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
     } finally {
       Loading.turnOff()
       setLoading(false)
+      clearAllFields()
     }
   }
 
@@ -140,6 +153,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
   }
 
   const onHandleClose = () => {
+    clearAllFields()
     if (isNewServiceByOS) {
       closeModal()
     } else {
@@ -156,6 +170,21 @@ const CreateService: React.FC<CreateServiceProps> = ({
       setErrorMessage('')
     }
   }, [description])
+
+  React.useEffect(() => {
+    setErrorMessage('')
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {
+          description: description,
+          value,
+          laudoService,
+        },
+        url: window.location.pathname
+      },
+    })
+  }, [description, value, laudoService])
 
   return (
     <Container>

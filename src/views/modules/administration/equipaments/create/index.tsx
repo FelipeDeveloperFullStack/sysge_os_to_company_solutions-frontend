@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
 import React, { useState } from 'react'
@@ -15,6 +16,7 @@ import { useAdmin } from 'src/services/useAdmin'
 import {
   EQUIPAMENT_FILTER,
   EQUIPAMENT_SEE_ALL,
+  LAYOUT_IS_MODIFIED_FIELDS,
   LAYOUT_MAKE_REQUEST,
 } from 'src/store/actions'
 import { EquipamentT } from 'src/store/Types'
@@ -38,16 +40,28 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
   const { Loading } = useLoading()
   const [loading, setLoading] = useState(false)
 
-  const { control, handleSubmit, setValue } = useForm<EquipamentT>({
+  const { control, handleSubmit, setValue, watch } = useForm<EquipamentT>({
     shouldUnregister: false,
     resolver: yupResolver(schemaBrand),
   })
+
+  const equipamentName = watch('equipamentName')
+  const brand = watch('brand')
+  const model = watch('model')
+  const serialNumber = watch('serialNumber')
 
   const clearAllFields = () => {
     setValue('equipamentName', '')
     setValue('brand', '')
     setValue('model', '')
     setValue('serialNumber', '')
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {},
+        url: ''
+      },
+    })
   }
 
   const history = useHistory()
@@ -101,10 +115,12 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
     } finally {
       setLoading(false)
       Loading.turnOff()
+      clearAllFields()
     }
   }
 
   const onHandleClose = () => {
+    clearAllFields()
     if (isNewServiceByOS) {
       closeModal()
     } else {
@@ -115,6 +131,21 @@ const CreateEquipament: React.FC<CreateEquipamentProps> = ({
   React.useEffect(() => {
     scroll(0, 0)
   }, [])
+
+  React.useEffect(() => {
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {
+          equipamentName,
+          brand,
+          model,
+          serialNumber
+        },
+        url: window.location.pathname
+      },
+    })
+  }, [equipamentName, brand, model, serialNumber])
 
   return (
     <Container>

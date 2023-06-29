@@ -18,7 +18,7 @@ import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatPrice, formatInputPrice } from 'src/helpers/formatPrice'
 import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { SERVICE_FILTER, SERVICE_ORDER_CREATE } from 'src/store/actions'
+import { LAYOUT_IS_MODIFIED_FIELDS, SERVICE_FILTER, SERVICE_ORDER_CREATE } from 'src/store/actions'
 import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaServiceOrder } from '../schemaValidation'
@@ -67,6 +67,13 @@ const CreateOrderService: React.FC = () => {
   const [charger, setCharger] = useLocalStorage('charger', '')
   const [breaked, setBreaked] = useLocalStorage('breaked', '')
   const [detail, setDetail] = useLocalStorage('detail', '')
+
+  const clientName = watch('clientName')
+  const equipament = watch('equipament')
+  const brandw = watch('brand')
+  const modelw = watch('model')
+  const serialNumberw = watch('serialNumber')
+
   useAddLocalStorage({
     watch,
     setValue,
@@ -661,6 +668,22 @@ const CreateOrderService: React.FC = () => {
       setClickedSerialNumber({ label: '', value: '' })
     }
   }, [checkBoxEnableEquipaments])
+
+  React.useEffect(() => {
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {
+          clientName,
+          equipament,
+          brandw,
+          modelw,
+          serialNumberw
+        },
+        url: window.location.pathname
+      },
+    })
+  }, [clientName, equipament, brandw, modelw, serialNumberw])
 
   return (
     <Container>

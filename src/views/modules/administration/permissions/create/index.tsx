@@ -13,7 +13,7 @@ import { exceptionHandle } from 'src/helpers/exceptions'
 import { useLoading } from 'src/hooks/useLoading'
 import { ADMINISTRATION_SEE_ALL_PERMISSIONS } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { LAYOUT_IS_MODIFIED_FIELDS, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { Row } from 'src/styles'
 import { schemaUser } from '../schemaValidation'
 import { PermissionUser, User } from '../type'
@@ -69,6 +69,7 @@ const CreateUserWithPermission: React.FC = () => {
   const { Loading } = useLoading()
   const [valueTab, setValueTab] = React.useState(0);
   const [permissionValues, setPermissionsValues] = React.useState<PermissionUser[]>([] as PermissionUser[])
+  const urlPath = window.location.pathname
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValueTab(newValue);
@@ -81,9 +82,24 @@ const CreateUserWithPermission: React.FC = () => {
 
   const history = useHistory()
   const typeUser = watch('typeUser')
+  const name = watch('name')
+  const email = watch('email')
+  const cpf = watch('cpf')
+  const password = watch('password')
+
+  const onClear = () => {
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {},
+        url: ''
+      },
+    })
+  }
 
   const onHandleClose = () => {
     history.push(ADMINISTRATION_SEE_ALL_PERMISSIONS)
+    onClear()
   }
 
   const onSubmit = async () => {
@@ -125,6 +141,7 @@ const CreateUserWithPermission: React.FC = () => {
     } catch (error) {
       exceptionHandle(error)
     } finally {
+      onClear()
       Loading.turnOff()
     }
   }
@@ -143,6 +160,20 @@ const CreateUserWithPermission: React.FC = () => {
     scroll(0, 0)
     setValue('typeUser', 'USER')
   }, [])
+
+  React.useEffect(() => {
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {
+          name,
+          email,
+          cpf,
+        },
+        url: urlPath
+      },
+    })
+  }, [name, email, cpf])
 
   return (
     <Container>

@@ -36,8 +36,6 @@ type CreatePieceProps = {
 
 const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
 
-  const urlPath = window.location.pathname
-
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
@@ -152,7 +150,7 @@ const CreatePiece: React.FC<CreatePieceProps> = ({ isNewServiceByOS }) => {
           description: description,
           value,
         },
-        url: urlPath
+        url: window.location.pathname
       },
     })
   }, [description, value])

@@ -157,11 +157,11 @@ const NavItem = ({ layout, item }) => {
       )
     } else {
       mainContent = (
-        <ListGroup.Item as="li" bsPrefix=" " className={item.classes}>
-          <LightTooltip placement="right" title={itemTitle}>
+        <LightTooltip placement="right" title={itemTitle}>
+          <ListGroup.Item as="li" bsPrefix=" " className={item.classes}>
             {subContent}
-          </LightTooltip>
-        </ListGroup.Item>
+          </ListGroup.Item>
+        </LightTooltip>
       )
     }
   }

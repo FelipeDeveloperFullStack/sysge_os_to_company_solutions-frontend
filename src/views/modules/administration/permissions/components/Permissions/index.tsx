@@ -8,6 +8,8 @@ import { ButtonContainer, Container } from "./style"
 import { useEffect, useState } from "react";
 import { permissionsUser } from "../../static";
 import { PermissionUser } from "../../type";
+import { LAYOUT_IS_MODIFIED_FIELDS } from "src/store/actions";
+import { useDispatch } from "react-redux";
 
 type PermissionsProps = {
   onSubmit: () => void
@@ -17,8 +19,19 @@ type PermissionsProps = {
 
 export const Permissions: React.FC<PermissionsProps> = ({ onSubmit, setPermissionsValues, targetPermission }) => {
   const history = useHistory()
+  const dispatch = useDispatch()
   const [source, setSource] = useState<PermissionUser[]>([] as PermissionUser[]);
   const [target, setTarget] = useState<PermissionUser[]>(targetPermission || [] as PermissionUser[]);
+
+  const onClear = () => {
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {},
+        url: ''
+      },
+    })
+  }
 
   useEffect(() => {
     setSource(permissionsUser)
@@ -35,6 +48,7 @@ export const Permissions: React.FC<PermissionsProps> = ({ onSubmit, setPermissio
 
   const onHandleClose = () => {
     history.push(ADMINISTRATION_SEE_ALL_PERMISSIONS)
+    onClear()
   }
 
   const itemTemplate = (item: PermissionUser) => {
