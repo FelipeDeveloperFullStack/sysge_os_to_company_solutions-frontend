@@ -35,6 +35,7 @@ export type Total = {
   qtdeExpenseInExpired: number
   totalValueIncomeInExpired3Days: number
   expiredTotal: number
+  totalIncomesPending: number
 }
 
 const DashDefault: React.FC = () => {
@@ -54,7 +55,8 @@ const DashDefault: React.FC = () => {
     qtdeExpenseInExpired: 0,
     totalValueExpenseInExpired: 0,
     totalValueIncomeInExpired3Days: 0,
-    expiredTotal: 0
+    expiredTotal: 0,
+    totalIncomesPending: 0
   } as Total)
   const {
     getTotalClients,
@@ -126,7 +128,7 @@ const DashDefault: React.FC = () => {
         </Col>
       </Row>}
       <Row>
-        {typeUser === 'ADMIN' && <Col md={6} xl={4}>
+        {typeUser === 'ADMIN' && <Col xl={3}>
           <Card>
             <Card.Body>
               <h6 className="mb-4">Receitas</h6>
@@ -155,7 +157,7 @@ const DashDefault: React.FC = () => {
             </Card.Body>
           </Card>
         </Col>}
-        {typeUser === 'ADMIN' && <Col md={6} xl={4}>
+        {typeUser === 'ADMIN' && <Col xl={3}>
           <Card>
             <Card.Body>
               <h6 className="mb-4">Despesas</h6>
@@ -184,7 +186,26 @@ const DashDefault: React.FC = () => {
             </Card.Body>
           </Card>
         </Col>}
-        {typeUser === 'ADMIN' && <Col xl={4}>
+        {typeUser === 'ADMIN' && <Col xl={3}>
+          <Card>
+            <Card.Body>
+              <h6 className="mb-4">A Receber</h6>
+              <div className="row d-flex align-items-center">
+                <div className="col-9">
+                  <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                    <i style={{ color: 'orange' }} className="feather icon-info f-30 m-r-5" />{' '}
+                    {formatPrice(total.totalIncomesPending)}
+                  </h3>
+                </div>
+
+                <div className="col-3 text-right">
+                  {/* <p className="m-b-0">36%</p> */}
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>}
+        {typeUser === 'ADMIN' && <Col xl={3}>
           <Card>
             <Card.Body>
               <h6 className="mb-4">Lucro</h6>

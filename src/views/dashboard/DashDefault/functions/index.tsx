@@ -62,6 +62,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       setTotal((previousState) => ({
         ...previousState,
         totalIncomes: data.total,
+        totalIncomesPending: data.totalPending,
       }))
     } catch (error) {
       toast.error(
