@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import InputText from '../components/InputCurrency'
 import { toast } from 'src/components/Widgets/Toastify'
@@ -11,6 +11,10 @@ import { OptionsProps } from 'src/components/Form/Select'
 import { Button } from 'src/components'
 import { useModal } from 'src/hooks/useModal'
 import { LaunchFinancialConfirmation } from './LaunchFinancialConfirmation'
+import InputMask from 'src/components/Form/InputMask'
+import { validateDate } from 'src/helpers/validateDateTime'
+import { Alert } from '@mui/material'
+import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
 
 type LauchFinancialProps = {
   data: OSData
@@ -27,6 +31,8 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
   const dispatch = useDispatch()
   const { closeModal, showMessage } = useModal()
   const [loading, setLoading] = useState(false)
+  const [maturityOfTheBoleto, setMaturityOfTheBoleto] = useState('')
+  const [validateDateMaturityErrorMessage, setValidateDateMaturityErrorMessage] = useState('')
   const [status, setStatus] = useState('PENDENTE')
   const statusOptions: OptionsProps[] = [
     { label: 'Pendente', value: 'PENDENTE' },
@@ -44,10 +50,26 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
   ]
 
   const saveOS = async () => {
+    setValidateDateMaturityErrorMessage('')
+    if (formOfPayment === 'Boleto' && clearSpecialCharacters(maturityOfTheBoleto).trim() === '') {
+      setValidateDateMaturityErrorMessage('Data de vencimento do boleto obrigatório.')
+      return
+    }
+
+    if (formOfPayment === 'Boleto') {
+      const validateDateMaturity = validateDate(maturityOfTheBoleto)
+      if (validateDateMaturity) {
+        setValidateDateMaturityErrorMessage(validateDateMaturity)
+        return
+      }
+    }
+
+
     const dataOS = {
       ...data,
       status,
       formOfPayment,
+      maturityOfTheBoleto
     }
 
     try {
@@ -63,11 +85,17 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
       toast.error('Houve um erro ao tentar salvar a Ordem de Serviço.')
     } finally {
       setLoading(false)
+      setValidateDateMaturityErrorMessage('')
     }
   }
 
+  useEffect(() => {
+    setValidateDateMaturityErrorMessage('')
+  }, [maturityOfTheBoleto])
+
   return (
-    <Modal>
+    <Modal isHasMaturity={formOfPayment === 'Boleto'}>
+      {!!validateDateMaturityErrorMessage && <Alert severity='error'>{validateDateMaturityErrorMessage}</Alert>}
       <div>Lançamento Financeiro</div>
       <InputText type="text" label="Data" value={data.dateOS} disabled />
       <InputText
@@ -76,25 +104,26 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
         value={data.client.name}
         disabled
       />
-      <InputText
+      {/* <InputText
         type="text"
         label="CPF/CNPJ"
         value={data.client.cpfOrCnpj}
         disabled
+      /> */}
+      <Select
+        label="Situação"
+        setValue={setStatus}
+        value={status}
+        options={statusOptions}
       />
       <section>
-        <Select
-          label="Situação"
-          setValue={setStatus}
-          value={status}
-          options={statusOptions}
-        />
         <Select
           label="Forma de pagamento"
           setValue={setFormOfPayment}
           value={formOfPayment}
           options={sformOfPaymentOptions}
         />
+        {formOfPayment === 'Boleto' && <InputMask type="text" label="Vencimento" value={maturityOfTheBoleto} setValue={setMaturityOfTheBoleto} mask='99/99/9999' />}
         <InputText type="text" label="Valor" value={data.total} disabled />
       </section>
       <ButtonContainer>

@@ -71,6 +71,16 @@ export const useColumns = (props: ColumnsProps) => {
       field: 'formOfPayment',
       headerName: 'Forma Pagamento',
       width: 170,
+      renderCell: (params: GridCellParams) => {
+        const { formOfPayment, maturityOfTheBoleto } = params.row
+        if (formOfPayment === 'Boleto') {
+          return (
+            <div>{formOfPayment} {maturityOfTheBoleto ? `(${maturityOfTheBoleto})` : ''}</div>
+          )
+        } else {
+          return <div>{formOfPayment}</div>
+        }
+      },
     },
     { field: 'dateOS', headerName: 'Data' },
     {

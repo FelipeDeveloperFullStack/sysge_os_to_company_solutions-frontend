@@ -33,6 +33,7 @@ export type Total = {
   totalExpenses: number
   totalValueExpenseInExpired: number
   qtdeExpenseInExpired: number
+  totalValueIncomeInExpired3Days: number
   expiredTotal: number
 }
 
@@ -52,6 +53,7 @@ const DashDefault: React.FC = () => {
     totalExpenses: 0,
     qtdeExpenseInExpired: 0,
     totalValueExpenseInExpired: 0,
+    totalValueIncomeInExpired3Days: 0,
     expiredTotal: 0
   } as Total)
   const {
@@ -63,6 +65,7 @@ const DashDefault: React.FC = () => {
     getTotalIncomes,
     getTotalExpenses,
     getTotalExpired,
+    getTotalExpiredMaturityIn3Days,
   } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
@@ -76,6 +79,7 @@ const DashDefault: React.FC = () => {
       await getTotalIncomes()
       await getTotalExpenses()
       await getTotalExpired()
+      await getTotalExpiredMaturityIn3Days()
     } catch (err) {
       exceptionHandle(err)
     } finally {
@@ -86,6 +90,14 @@ const DashDefault: React.FC = () => {
   React.useEffect(() => {
     getTotal()
   }, [])
+
+  const checkPluralText = () => {
+    if (total.totalValueIncomeInExpired3Days > 1) {
+      return 'Boletos'
+    } else {
+      return 'Boleto'
+    }
+  }
 
   return (
     <React.Fragment>
@@ -103,6 +115,13 @@ const DashDefault: React.FC = () => {
         <Col md={12} xl={12}>
           <Alert severity="error" style={{ display: 'flex', alignItems: 'center' }}>
             <span><b>Atenção:</b> Você tem um total de <Chip label={formatPrice(total.expiredTotal)} /> de despesas <Chip label={'Vencidas'} /></span>
+          </Alert>
+        </Col>
+      </Row>}
+      {total.totalValueIncomeInExpired3Days > 0 && <Row>
+        <Col md={12} xl={12}>
+          <Alert severity="info" style={{ display: 'flex', alignItems: 'center' }}>
+            <span><b>Atenção:</b> Você tem <Chip label={(total.totalValueIncomeInExpired3Days)} /> {checkPluralText()} a vencer daqui a 3 dias. Entre em contato com o cliente.</span>
           </Alert>
         </Col>
       </Row>}

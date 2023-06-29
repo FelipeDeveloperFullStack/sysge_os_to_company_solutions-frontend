@@ -155,16 +155,7 @@ export const useColumns = () => {
               <PdfIcon />
             </IconButton>
           </Tooltip>
-          {params.row.typeDocument === 'ORCAMENTO' && <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Converter para ORDEM DE SERVIÇO' : 'Converter para ORÇAMENTO'}`}>
-            <IconButton
-              aria-label="Mudar de tipo de documento"
-              color="info"
-              onClick={() => onHandleConfirmationChangeTypeDocument(params)}
-              disabled={!hasPermission(ORDEM_SERVICO_EDITAR)}
-            >
-              <CachedIcon />
-            </IconButton>
-          </Tooltip>}
+
           {params.row.status === "PENDENTE" && (
             <>
               {/* <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Editar o ORÇAMENTO' : 'Editar a ORDEM DE SERVIÇO'}`}>
@@ -184,6 +175,16 @@ export const useColumns = () => {
               <DeleteForeverIcon />
             </IconButton>
           </Tooltip>
+          {params.row.typeDocument === 'ORCAMENTO' && <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Converter para ORDEM DE SERVIÇO' : 'Converter para ORÇAMENTO'}`}>
+            <IconButton
+              aria-label="Mudar de tipo de documento"
+              color="info"
+              onClick={() => onHandleConfirmationChangeTypeDocument(params)}
+              disabled={!hasPermission(ORDEM_SERVICO_EDITAR)}
+            >
+              <CachedIcon />
+            </IconButton>
+          </Tooltip>}
         </>
       ),
     },

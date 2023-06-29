@@ -26,7 +26,7 @@ export const FormControlLabelStyled = styled(FormControlLabel)`
   width: 695px;
 `
 
-export const Modal = styled.div`
+export const Modal = styled.div<{ isHasMaturity: boolean }>`
   width: 555px;
   display: flex;
   flex-direction: column;
@@ -37,7 +37,8 @@ export const Modal = styled.div`
   > section {
     display: grid;
     gap: 10px;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: ${({ isHasMaturity }) =>
+      isHasMaturity ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)'};
   }
 `
 
