@@ -68,11 +68,7 @@ const CreateOrderService: React.FC = () => {
   const [breaked, setBreaked] = useLocalStorage('breaked', '')
   const [detail, setDetail] = useLocalStorage('detail', '')
 
-  const clientName = watch('clientName')
-  const equipament = watch('equipament')
-  const brandw = watch('brand')
-  const modelw = watch('model')
-  const serialNumberw = watch('serialNumber')
+  const typeDocument = watch('typeDocument')
 
   useAddLocalStorage({
     watch,
@@ -322,25 +318,15 @@ const CreateOrderService: React.FC = () => {
 
   // scroll(0, 0)
 
-  // const resetAllField = () => {
-  //   getOSNumber()
-  //   setTotal('R$ 0,00')
-  //   resetTotal()
-  //   setClient({} as AutocompleteOptions)
-  //   setEquipamentName({} as AutocompleteOptions)
-  //   setBrand({} as AutocompleteOptions)
-  //   setModel({} as AutocompleteOptions)
-  //   setSerialNumber({} as AutocompleteOptions)
-  //   setValue('cable', '')
-  //   setValue('charger', '')
-  //   setValue('breaked', '')
-  //   setValue('detail', '')
-  //   setItemServices([] as ItemServices[])
-  //   setItemPieces([] as ItemPieces[])
-  //   setManpower('')
-  //   setMakeClearField(Math.random())
-  //   scroll(0, 0)
-  // }
+  const resetAllField = () => {
+    dispatch({
+      type: LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {},
+        url: ''
+      },
+    })
+  }
 
   const calcDiscount = (): string => {
     let { clean: totalManPower } = formatInputPrice(manpower)
@@ -450,6 +436,7 @@ const CreateOrderService: React.FC = () => {
       exceptionHandle(error)
     } finally {
       setLoading(false)
+      resetAllField()
     }
   }
 
@@ -654,6 +641,7 @@ const CreateOrderService: React.FC = () => {
 
   const back = () => {
     history.push(MANAGER_SERVICE_ORDER)
+    resetAllField()
   }
 
   React.useEffect(() => {
@@ -674,16 +662,17 @@ const CreateOrderService: React.FC = () => {
       type: LAYOUT_IS_MODIFIED_FIELDS,
       payload: {
         fields: {
-          clientName,
-          equipament,
-          brandw,
-          modelw,
-          serialNumberw
+          client: client.label,
+          equipamentName: equipamentName.label,
+          brand: brand.label,
+          model: model.label,
+          serialNumber: serialNumber.label,
+          typeDocument
         },
         url: window.location.pathname
       },
     })
-  }, [clientName, equipament, brandw, modelw, serialNumberw])
+  }, [client.label, equipamentName.label, brand.label, model.label, serialNumber.label, typeDocument])
 
   return (
     <Container>
