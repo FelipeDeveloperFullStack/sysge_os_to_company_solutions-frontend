@@ -128,8 +128,8 @@ const DashDefault: React.FC = () => {
         </Col>
       </Row>}
       <Row>
-        {typeUser === 'ADMIN' && <Col xl={3}>
-          <Card>
+        {typeUser === 'ADMIN' && <Col xl={3} style={{ paddingRight: '5px', paddingLeft: '5px' }}>
+          <Card style={{ width: '290px' }}>
             <Card.Body>
               <h6 className="mb-4">Receitas</h6>
               <div className="row d-flex align-items-center">
@@ -157,8 +157,8 @@ const DashDefault: React.FC = () => {
             </Card.Body>
           </Card>
         </Col>}
-        {typeUser === 'ADMIN' && <Col xl={3}>
-          <Card>
+        {typeUser === 'ADMIN' && <Col xl={3} style={{ paddingRight: '5px', paddingLeft: '5px' }}>
+          <Card style={{ width: '290px' }}>
             <Card.Body>
               <h6 className="mb-4">Despesas</h6>
               <div className="row d-flex align-items-center">
@@ -186,8 +186,8 @@ const DashDefault: React.FC = () => {
             </Card.Body>
           </Card>
         </Col>}
-        {typeUser === 'ADMIN' && <Col xl={3}>
-          <Card>
+        {typeUser === 'ADMIN' && <Col xl={3} style={{ paddingRight: '5px', paddingLeft: '5px' }}>
+          <Card style={{ width: '260px' }}>
             <Card.Body>
               <h6 className="mb-4">A Receber</h6>
               <div className="row d-flex align-items-center">
@@ -205,8 +205,8 @@ const DashDefault: React.FC = () => {
             </Card.Body>
           </Card>
         </Col>}
-        {typeUser === 'ADMIN' && <Col xl={3}>
-          <Card>
+        {typeUser === 'ADMIN' && <Col xl={3} style={{ paddingRight: '5px', paddingLeft: '5px', position: 'relative', right: '30px' }}>
+          <Card style={{ width: '305px' }}>
             <Card.Body>
               <h6 className="mb-4">Lucro</h6>
               <div className="row d-flex align-items-center">
