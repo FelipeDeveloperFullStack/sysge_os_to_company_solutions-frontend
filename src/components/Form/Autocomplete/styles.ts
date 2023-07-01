@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 interface ContainerProps {
   variation: string
   shadow?: boolean
+  isHasEdit?: boolean
 }
 interface ListSuggestionsProps {
   fieldError: boolean
@@ -26,6 +27,16 @@ export const Container = styled.div<ContainerProps>`
       }
     `}
 
+  ${({ isHasEdit }) =>
+    isHasEdit &&
+    css`
+      > div {
+        > div {
+          width: 100%;
+        }
+      }
+    `}  
+
   > p.error {
     margin-top: 4px;
     color: ${colors.orange.middleDark};
@@ -36,6 +47,11 @@ export const Container = styled.div<ContainerProps>`
 
   > label {
     margin-bottom: 0.1rem !important;
+    ${({ isHasEdit }) =>
+      isHasEdit &&
+      css`
+        margin-left: 40px;
+      `}
     > button {
       height: 18px;
       position: relative;

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/jsx-pascal-case */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
@@ -31,12 +32,16 @@ import LockIcon from '@mui/icons-material/Lock';
 import Tooltip from '@mui/material/Tooltip';
 import { validateTwoPhoneTypes } from 'src/helpers/validateFields/validateTwoPhoneTypes'
 
-const EditClient: React.FC = () => {
+type EditClientProps = {
+  isNewServiceByOS?: boolean
+}
+
+const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const { getAddressByCEP } = useServiceCEP()
-  const location = useLocation()
   const history = useHistory()
+  const location = !isNewServiceByOS ? useLocation() : null
   const [clientId, setClientId] = useState('')
   const [enableButtons, setEnableButton] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -122,6 +127,7 @@ const EditClient: React.FC = () => {
   }
 
   useEffect(() => {
+
     const {
       address,
       city,
@@ -138,7 +144,8 @@ const EditClient: React.FC = () => {
       idFolderOsUnificadas,
       idFolderOsPendentes,
       idFolderOsPagas
-    } = location.state
+    } = location?.state
+
     setValue('address', address)
     setValue('city', city)
     setValue('uf', uf)

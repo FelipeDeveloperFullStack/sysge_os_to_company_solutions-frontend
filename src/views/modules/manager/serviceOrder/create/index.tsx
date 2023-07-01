@@ -41,6 +41,7 @@ import moment from 'moment'
 import { useAddLocalStorage } from './hooks/useAddLocalStorage'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import CreateClient from 'src/views/modules/administration/clients/create'
+import EditClient from 'src/views/modules/administration/clients/edit'
 import CreateEquipament from 'src/views/modules/administration/equipaments/create'
 import { toast } from 'src/components/Widgets/Toastify'
 import InputMask from 'src/components/Form/InputMask'
@@ -621,6 +622,33 @@ const CreateOrderService: React.FC = () => {
       true,
     )
   }
+  const onHandleEditClient = () => {
+    console.log({ clickedClientName })
+    /**
+     * address,
+      city,
+      uf,
+      cep,
+      cpfOrCnpj,
+      email,
+      name,
+      phoneNumber,
+      id,
+      phoneNumberFixo,
+      idFolderClientName,
+      idFolderOrcamento,
+      idFolderOsUnificadas,
+      idFolderOsPendentes,
+      idFolderOsPagas
+     */
+    showMessage(
+      EditClient,
+      {
+        isNewServiceByOS: true,
+      },
+      true,
+    )
+  }
 
   const onHandleAddNewEquipament = () => {
     showMessage(
@@ -713,9 +741,11 @@ const CreateOrderService: React.FC = () => {
             hasError={!!validateErrorMessageClientName}
             error={validateErrorMessageClientName}
             isUseButton
+            //isHasEdit={!!clickedClientName?.value}
             iconButtonLabel={<AddCircleOutlineIcon />}
             tooltipMessageButtonLabel="Clique aqui para adicionar um novo cliente."
             onHandleClickButtonLabel={onHandleAddNewClient}
+            onHandleClickButtonLabelEdit={onHandleEditClient}
           />
           <Controller
             name="dateOS"

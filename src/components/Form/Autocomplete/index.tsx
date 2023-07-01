@@ -3,6 +3,7 @@ import InputMask from '../InputMask'
 import { Container, ListSuggestions } from './styles'
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
+import EditIcon from '@mui/icons-material/Edit'
 
 export interface AutocompleteOptions {
   label: string
@@ -31,9 +32,11 @@ interface AutocompleteProps {
   onSelect?: any
   isUseButton?: boolean
   onHandleClickButtonLabel?: () => void
+  onHandleClickButtonLabelEdit?: () => void
   tooltipMessageButtonLabel?: string
   iconButtonLabel?: React.ReactNode
   disabled?: boolean
+  isHasEdit?: boolean
 }
 
 export const Autocomplete: React.FC<AutocompleteProps> = ({
@@ -55,9 +58,11 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   onSelect,
   isUseButton = false,
   onHandleClickButtonLabel,
+  onHandleClickButtonLabelEdit,
   tooltipMessageButtonLabel,
   iconButtonLabel,
   disabled,
+  isHasEdit = false,
   ...rest
 }) => {
   const [showList, setShowList] = useState(false)
@@ -104,7 +109,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   }
 
   return (
-    <Container variation={variation} shadow={shadow}>
+    <Container variation={variation} shadow={shadow} isHasEdit={isHasEdit}>
       <label htmlFor={label}>
         {label}
         {!!isUseButton && (
@@ -118,24 +123,32 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
           </Tooltip>
         )}
       </label>
-      <InputMask
-        type="text"
-        id={label || ''}
-        // label={label || ''}
-        mask={mask || ''}
-        value={value?.label ? String(value?.label).toUpperCase() : ''}
-        onChange={onChangeInputValue}
-        onFocus={onFocusInput}
-        onBlur={onBlurInput}
-        autoComplete="off"
-        variation={variation}
-        onClick={onClick}
-        name={name}
-        onKeyUp={onKeyUp}
-        onSelect={onSelect}
-        disabled={disabled}
-        {...rest}
-      />
+      <div style={{ display: isHasEdit ? 'flex' : '' }}>
+        {!!isHasEdit && <IconButton
+          aria-label="Editar"
+          onClick={onHandleClickButtonLabelEdit}
+        >
+          <EditIcon />
+        </IconButton>}
+        <InputMask
+          type="text"
+          id={label || ''}
+          // label={label || ''}
+          mask={mask || ''}
+          value={value?.label ? String(value?.label).toUpperCase() : ''}
+          onChange={onChangeInputValue}
+          onFocus={onFocusInput}
+          onBlur={onBlurInput}
+          autoComplete="off"
+          variation={variation}
+          onClick={onClick}
+          name={name}
+          onKeyUp={onKeyUp}
+          onSelect={onSelect}
+          disabled={disabled}
+          {...rest}
+        />
+      </div>
       {error && <p className="error">{error}</p>}
       {options?.length > 0 && showList && (
         <ListSuggestions
