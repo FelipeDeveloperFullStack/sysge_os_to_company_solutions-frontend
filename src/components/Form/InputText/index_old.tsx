@@ -79,7 +79,7 @@ const InputText: React.FC<InputTextProps> = ({
         value={transformedValue}
         fullWidth
         onChange={onChange}
-        error={!!error}
+        error={!!error?.message}
         helperText={error ? error.message : null}
         focused
         inputProps={{

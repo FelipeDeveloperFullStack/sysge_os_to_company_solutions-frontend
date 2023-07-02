@@ -26,9 +26,10 @@ import TableView from './Table'
 type EditServiceProps = {
   isNewServiceByOS?: boolean
   dataService?: any
+  setClearFields?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS }) => {
+const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS, setClearFields }) => {
   const dispatch = useDispatch()
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
@@ -62,6 +63,7 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
     if (!!laudoService) {
       setLaudos([...laudos, laudoService])
       setValue('laudoService', '')
+      setError("laudoService", { message: '' })
     } else {
       setError('laudoService', {
         message: 'Necessário informar o laudo do serviço.',
@@ -70,8 +72,13 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
   }
 
   const onSubmit = async (data: ServiceT) => {
+    setError("laudoService", { message: '' })
     if (!laudos.length) {
       setError('laudoService', { message: 'Laudo do serviço obrigatório.' })
+      return
+    }
+    if (data.laudoService) {
+      setError('laudoService', { message: 'Laudo do serviço não adicionado, você precisa adicionar o laudo antes de salvar.' })
       return
     }
     try {
@@ -90,6 +97,7 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
             makeRequest: Math.random(),
           },
         })
+        if (setClearFields) setClearFields(true)
       }
       history.push(ADMINISTRATION_SERVICES)
       toast.success('Serviço atualizado com sucesso.')
@@ -97,6 +105,7 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
       exceptionHandle(error)
       if (isNewServiceByOS) {
         setErrorMessage(error?.response?.data.message)
+        if (setClearFields) setClearFields(false)
       }
     } finally {
       setLoading(false)
@@ -112,6 +121,7 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
   const onHandleClose = () => {
     if (isNewServiceByOS) {
       closeModal()
+      if (setClearFields) setClearFields(false)
     } else {
       history.push(ADMINISTRATION_SERVICES)
     }

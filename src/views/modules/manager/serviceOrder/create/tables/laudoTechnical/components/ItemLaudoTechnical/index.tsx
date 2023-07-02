@@ -39,6 +39,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   const [msgErrorAutoComplete, setMsgErrorAutoComplete] = useState('')
   const [totalValue, setTotalValue] = useState('')
   const [itemAutocompleteClicked, setItemAutocompleteClicked] = useState('')
+  const [isClearFields, setClearFields] = useState(false)
   const [qtdeValue, setQtdeValue] = useState<string>('')
   const { sum } = useTotalSum()
   const { apiAdmin } = useAdmin()
@@ -108,6 +109,14 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     setValueUnit('')
     setTotalValue('')
   }
+
+  // useEffect(() => {
+  //   clearValues()
+  //   setValueLaudoTech({ label: '', value: '' })
+  //   setClickedValue({ label: '', value: '' })
+  //   setClickedValueService({ label: '', value: '' })
+  //   setItemServices([])
+  // }, [isClearFields])
 
   useEffect(() => {
     if (services?.value) {
@@ -204,7 +213,8 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
       EditService,
       {
         isNewServiceByOS: true,
-        dataService
+        dataService,
+        setClearFields
       },
       true,
     )

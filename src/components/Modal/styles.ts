@@ -14,8 +14,10 @@ export const Container = styled.div<SimpleModalStylesProps>`
   align-items: center;
   justify-content: center;
 
-  width: 100vw;
-  height: 100vh;
+  width: 112vw;
+  height: 112vh;
+  /* width: 100vw;
+  height: 100vh; */
 
   background: ${hexToRgba(colors.black, 0.8)};
   opacity: 0;

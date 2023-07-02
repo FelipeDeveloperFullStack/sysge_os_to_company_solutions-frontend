@@ -93,6 +93,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
   }
 
   const onSubmit = async (data: ServiceT) => {
+    setError("laudoService", { message: '' })
     if (!laudos.length) {
       setError('laudoService', { message: 'Laudo do serviço obrigatório.' })
       return
@@ -145,6 +146,7 @@ const CreateService: React.FC<CreateServiceProps> = ({
     if (!!laudoService) {
       setLaudos([...laudos, laudoService])
       setValue('laudoService', '')
+      setError("laudoService", { message: null })
     } else {
       setError('laudoService', {
         message: 'Necessário informar o laudo do serviço.',
