@@ -5,4 +5,7 @@ export const DataGridStyled = styled(DataGrid)`
   .MuiDataGrid-selectedRowCount {
     visibility: hidden;
   }
+  .MuiDataGrid-columnHeaderCheckbox {
+    visibility: hidden;
+  }
 `

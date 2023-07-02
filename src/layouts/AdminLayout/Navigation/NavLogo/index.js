@@ -6,15 +6,27 @@ import InovationIcon from 'src/assets/images/inovacao.png'
 import MenuIcon from '@mui/icons-material/Menu'
 import { LinkStyled, LinkStyledNotCollapseMenu } from './styles'
 import CloseIcon from '@mui/icons-material/Close'
+import { useDispatch } from 'react-redux'
 
 const NavLogo = () => {
   const configContext = useContext(ConfigContext)
   const { collapseMenu } = configContext.state
   const { dispatch } = configContext
+  const dispatcher = useDispatch()
 
   let toggleClass = ['mobile-menu']
   if (collapseMenu) {
     toggleClass = [...toggleClass, 'on']
+  }
+
+  const onClearModifiedFieldsState = () => {
+    dispatcher({
+      type: actionType.LAYOUT_IS_MODIFIED_FIELDS,
+      payload: {
+        fields: {},
+        url: '',
+      },
+    })
   }
 
   return (
@@ -23,6 +35,7 @@ const NavLogo = () => {
         <Link
           to="/dashboard"
           className="b-brand"
+          onClick={onClearModifiedFieldsState}
           style={{
             display: 'flex',
             justifyContent: 'center',
