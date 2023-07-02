@@ -11,9 +11,10 @@ import { useLoading } from '../../../hooks/useLoading'
 import useScriptRef from '../../../hooks/useScriptRef'
 import InputMask from 'react-input-mask'
 import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
+import { LAYOUT_IS_MODIFIED_FIELDS } from 'src/store/actions'
 
 const RestLogin = ({ className, ...rest }) => {
-  const dispatcher = useDispatch()
+  const dispatch = useDispatch()
   const scriptedRef = useScriptRef()
   const { setUserData } = useAuth()
   const { Loading } = useLoading()
@@ -73,6 +74,13 @@ const RestLogin = ({ className, ...rest }) => {
     } finally {
       Loading.turnOff()
       setSubmitting(false)
+      dispatch({
+        type: LAYOUT_IS_MODIFIED_FIELDS,
+        payload: {
+          fields: {},
+          url: '',
+        },
+      })
     }
   }
 
