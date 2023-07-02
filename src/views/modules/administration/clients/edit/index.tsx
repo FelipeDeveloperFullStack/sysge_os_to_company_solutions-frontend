@@ -20,7 +20,7 @@ import validateCpf from 'src/helpers/validateCpf'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
 import { useAdmin } from 'src/services/useAdmin'
-import { CLIENT_FILTER } from 'src/store/actions'
+import { CLIENT_FILTER, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaClient } from '../schemaValidation'
@@ -31,12 +31,15 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import Tooltip from '@mui/material/Tooltip';
 import { validateTwoPhoneTypes } from 'src/helpers/validateFields/validateTwoPhoneTypes'
+import { ResponseApiClient } from 'src/views/modules/manager/serviceOrder/create/adapters/fromApi'
+import { useModal } from 'src/hooks/useModal'
 
 type EditClientProps = {
   isNewServiceByOS?: boolean
+  clientData?: ResponseApiClient
 }
 
-const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
+const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData }) => {
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const { getAddressByCEP } = useServiceCEP()
@@ -45,6 +48,8 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
   const [clientId, setClientId] = useState('')
   const [enableButtons, setEnableButton] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const { closeModal } = useModal()
 
   const {
     control,
@@ -79,9 +84,21 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
         type: CLIENT_FILTER,
         payload: {},
       })
-      history.push(ADMINISTRATION_CLIENTS)
       toast.success(`Cliente ${data.name} atualizado com sucesso.`)
+      if (isNewServiceByOS) {
+        closeModal()
+        dispatch({
+          type: LAYOUT_MAKE_REQUEST,
+          payload: {
+            makeRequest: Math.random(),
+          },
+        })
+      }
+      history.push(ADMINISTRATION_CLIENTS)
     } catch (error) {
+      if (isNewServiceByOS) {
+        setErrorMessage(error?.response?.data.message)
+      }
       exceptionHandle(error)
     } finally {
       setLoading(false)
@@ -126,6 +143,14 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
     }
   }
 
+  const onHandleClose = () => {
+    if (isNewServiceByOS) {
+      closeModal()
+    } else {
+      history.push(ADMINISTRATION_CLIENTS)
+    }
+  }
+
   useEffect(() => {
 
     const {
@@ -144,7 +169,7 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
       idFolderOsUnificadas,
       idFolderOsPendentes,
       idFolderOsPagas
-    } = location?.state
+    } = !isNewServiceByOS ? location?.state : clientData
 
     setValue('address', address)
     setValue('city', city)
@@ -166,7 +191,9 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
 
   return (
     <Container>
+      {!!errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        {!!isNewServiceByOS && <div>Editar</div>}
         <Row columns="1fr">
           <Controller
             name="name"
@@ -270,13 +297,13 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
             )}
           />
         </Row>
-        <Row marginTop="15px" display='flex' gap={1}>
+        {!isNewServiceByOS && <Row marginTop="15px" display='flex' gap={1}>
           <div><b>Atenção:</b> Realizar a alteração desses IDs abaixo somente quando a pasta não existir mais. Para habilitar os campos abaixo, clique aqui:
             <Tooltip title={enableButtons ? 'Habilitar Campos' : 'Desabilitar Campos'}>
               <IconButton onClick={() => setEnableButton(!enableButtons)}><LockIcon /></IconButton>
             </Tooltip></div>
-        </Row>
-        <Row columns="repeat(5, 1fr)" marginTop="15px">
+        </Row>}
+        {!isNewServiceByOS && <Row columns="repeat(5, 1fr)" marginTop="15px">
           <Controller
             name="idFolderClientName"
             control={control}
@@ -347,7 +374,7 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
               />
             )}
           />
-        </Row>
+        </Row>}
         <ButtonContainer>
           <Button
             textButton="Salvar"
@@ -358,11 +385,11 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS }) => {
             loading={loading}
           />
           <Button
-            textButton="Voltar"
+            textButton={isNewServiceByOS ? "Fechar" : "Voltar"}
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(ADMINISTRATION_CLIENTS)}
+            onClick={onHandleClose}
           />
         </ButtonContainer>
       </Form >

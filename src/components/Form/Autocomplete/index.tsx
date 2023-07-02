@@ -124,12 +124,16 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
         )}
       </label>
       <div style={{ display: isHasEdit ? 'flex' : '' }}>
-        {!!isHasEdit && <IconButton
-          aria-label="Editar"
-          onClick={onHandleClickButtonLabelEdit}
-        >
-          <EditIcon />
-        </IconButton>}
+        {!!isHasEdit &&
+          <Tooltip title={`Editar ${label || ''}`}>
+            <IconButton
+              aria-label="Editar"
+              onClick={onHandleClickButtonLabelEdit}
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+        }
         <InputMask
           type="text"
           id={label || ''}

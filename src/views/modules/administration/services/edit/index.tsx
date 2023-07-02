@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Alert } from '@mui/lab'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -10,9 +12,10 @@ import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
+import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_SERVICES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { SERVICE_FILTER } from 'src/store/actions'
+import { LAYOUT_MAKE_REQUEST, SERVICE_FILTER } from 'src/store/actions'
 import { ServiceT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaService } from '../schemaValidation'
@@ -20,9 +23,14 @@ import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
 import TableView from './Table'
 
-const CreateService: React.FC = () => {
-  const dispatch = useDispatch()
+type EditServiceProps = {
+  isNewServiceByOS?: boolean
+  dataService?: any
+}
 
+const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS }) => {
+  const dispatch = useDispatch()
+  const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const [idService, setIdService] = useState('')
 
@@ -33,13 +41,14 @@ const CreateService: React.FC = () => {
     })
 
   const history = useHistory()
-  const location = useLocation()
+  const location = !isNewServiceByOS ? useLocation() : null
   const [valueClear, setValueClear] = useState(0)
   const [loading, setLoading] = useState(false)
   const [laudos, setLaudos] = useState<string[]>([])
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
-    const { description, _id, value, laudoService, laudos } = location?.state
+    const { description, _id, value, laudoService, laudos } = !isNewServiceByOS ? location?.state : dataService
     setValue('description', description)
     setValue('laudoService', laudoService)
     setValue('value', formatPrice(value))
@@ -73,10 +82,22 @@ const CreateService: React.FC = () => {
         type: SERVICE_FILTER,
         payload: {},
       })
+      if (isNewServiceByOS) {
+        closeModal()
+        dispatch({
+          type: LAYOUT_MAKE_REQUEST,
+          payload: {
+            makeRequest: Math.random(),
+          },
+        })
+      }
       history.push(ADMINISTRATION_SERVICES)
       toast.success('Serviço atualizado com sucesso.')
     } catch (error) {
       exceptionHandle(error)
+      if (isNewServiceByOS) {
+        setErrorMessage(error?.response?.data.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -88,9 +109,19 @@ const CreateService: React.FC = () => {
     setValueClear(clean)
   }
 
+  const onHandleClose = () => {
+    if (isNewServiceByOS) {
+      closeModal()
+    } else {
+      history.push(ADMINISTRATION_SERVICES)
+    }
+  }
+
   return (
     <Container>
+      {!!errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        {!!isNewServiceByOS && <div>Editar</div>}
         <Row columns="3fr 1fr">
           <Controller
             name="description"
@@ -150,11 +181,11 @@ const CreateService: React.FC = () => {
             loading={loading}
           />
           <Button
-            textButton="Voltar"
+            textButton={isNewServiceByOS ? "Fechar" : "Voltar"}
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(ADMINISTRATION_SERVICES)}
+            onClick={onHandleClose}
           />
         </ButtonContainer>
       </Form>
@@ -162,4 +193,4 @@ const CreateService: React.FC = () => {
   )
 }
 
-export default CreateService
+export default EditService

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Autocomplete,
   AutocompleteOptions,
@@ -14,6 +14,12 @@ import hasNumber from 'src/helpers/hasNumber'
 import axios from 'axios'
 import { useAdmin } from 'src/services/useAdmin'
 import { ItemServices } from '../../../../type'
+import { useModal } from 'src/hooks/useModal'
+import EditService from 'src/views/modules/administration/services/edit'
+import { exceptionHandle } from 'src/helpers/exceptions'
+import { fromApiService } from '../../../../adapters/fromApiService'
+import { SERVICE_SEE_ALL } from 'src/store/actions'
+import { fromApi } from 'src/views/modules/administration/services/adapters'
 
 type ItemLaudoTechnicalProps = {
   itemServices: ItemServices[]
@@ -27,6 +33,8 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   setItemServices,
 }) => {
   const [valueUnit, setValueUnit] = useState('')
+  const dispatch = useDispatch()
+  const { showMessage } = useModal()
   const [msgError, setMsgError] = useState('')
   const [msgErrorAutoComplete, setMsgErrorAutoComplete] = useState('')
   const [totalValue, setTotalValue] = useState('')
@@ -41,6 +49,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     {} as AutocompleteOptions,
   )
   const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
+  const [clickedValueService, setClickedValueService] = useState({} as AutocompleteOptions)
 
   const addValueArrayLaudoTech = (itemPiece: ItemServices) => {
     setItemServices((previousState) => [
@@ -89,8 +98,8 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
 
   const services = useSelector(
     (state: IStore) =>
-      state.service.services.filter(
-        (service) => service._id === valueLaudoTech?.value,
+      state?.service?.services?.filter(
+        (service) => service?._id === valueLaudoTech?.value,
       )[0],
   )
 
@@ -139,20 +148,24 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
 
     const loadLaudoTech = async () => {
       try {
-        const { data } = await apiAdmin.get(`services`, {
+        const response = await apiAdmin.get(`services`, {
           params: {
             description:
               (valueLaudoTech.value === 0 && valueLaudoTech.label) || undefined,
           },
-          cancelToken: new axios.CancelToken((c) => (cancel = c)),
+          // cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
 
-        const dataMapped = data?.map((val: ServiceT) => ({
+        const dataMapped = response?.data?.map((val: ServiceT) => ({
           value: val._id,
           label: val.description,
         }))
 
         setOptionLaudoTech(dataMapped)
+        dispatch({
+          type: SERVICE_SEE_ALL,
+          payload: await fromApi(response),
+        })
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log('Request canceled', error.message)
@@ -161,7 +174,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     }
     loadLaudoTech()
 
-    return () => cancel && cancel()
+    //return () => cancel && cancel()
   }, [valueLaudoTech, makeRequest])
 
   const onFormatterPrice = (value: string) => {
@@ -175,6 +188,28 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     }
   }
 
+  const getServiceById = async (id: string | number) => {
+    try {
+      const { data } = await apiAdmin.get(`services/${id}`)
+      return fromApiService(data)
+    } catch (error) {
+      exceptionHandle(error)
+    }
+  }
+
+  const onHandleEditService = async () => {
+    const id = clickedValueService?.value
+    const dataService = await getServiceById(id)
+    showMessage(
+      EditService,
+      {
+        isNewServiceByOS: true,
+        dataService
+      },
+      true,
+    )
+  }
+
   return (
     <Row columns="5fr 0.1fr 1fr 1fr" gap={10} marginTop="5px">
       <Autocomplete
@@ -182,10 +217,15 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
         setValue={setValueLaudoTech}
         options={optionLaudoTech}
         setOptions={setOptionLaudoTech}
-        setClickedValue={setClickedValue}
+        setClickedValue={(value) => {
+          setClickedValue(value)
+          setClickedValueService(value)
+        }}
         hasError={!!msgErrorAutoComplete}
         error={msgErrorAutoComplete}
         onSelect={onHandleSelectedAutocomplete}
+        isHasEdit={!!clickedValueService?.label}
+        onHandleClickButtonLabelEdit={onHandleEditService}
       />
       <InputText
         value={qtdeValue}

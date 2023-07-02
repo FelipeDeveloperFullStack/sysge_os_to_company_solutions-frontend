@@ -21,4 +21,9 @@ export const Form = styled.form`
   background: #fff;
   padding: 22px;
   border-radius: 15px;
+  > div:first-child {
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: 800;
+  }
 `

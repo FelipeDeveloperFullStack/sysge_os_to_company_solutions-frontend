@@ -45,6 +45,7 @@ import EditClient from 'src/views/modules/administration/clients/edit'
 import CreateEquipament from 'src/views/modules/administration/equipaments/create'
 import { toast } from 'src/components/Widgets/Toastify'
 import InputMask from 'src/components/Form/InputMask'
+import { fromApiClient } from './adapters/fromApi'
 
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
@@ -622,29 +623,25 @@ const CreateOrderService: React.FC = () => {
       true,
     )
   }
-  const onHandleEditClient = () => {
-    console.log({ clickedClientName })
-    /**
-     * address,
-      city,
-      uf,
-      cep,
-      cpfOrCnpj,
-      email,
-      name,
-      phoneNumber,
-      id,
-      phoneNumberFixo,
-      idFolderClientName,
-      idFolderOrcamento,
-      idFolderOsUnificadas,
-      idFolderOsPendentes,
-      idFolderOsPagas
-     */
+
+  const getClientById = async () => {
+    const clientId = clickedClientName.value
+    try {
+      const { data } = await apiAdmin.get(`clients/${clientId}`)
+      return fromApiClient(data)
+    } catch (error) {
+      exceptionHandle(error)
+    }
+
+  }
+
+  const onHandleEditClient = async () => {
+    const clientData = await getClientById()
     showMessage(
       EditClient,
       {
         isNewServiceByOS: true,
+        clientData
       },
       true,
     )
@@ -741,7 +738,7 @@ const CreateOrderService: React.FC = () => {
             hasError={!!validateErrorMessageClientName}
             error={validateErrorMessageClientName}
             isUseButton
-            //isHasEdit={!!clickedClientName?.value}
+            isHasEdit={!!clickedClientName?.value}
             iconButtonLabel={<AddCircleOutlineIcon />}
             tooltipMessageButtonLabel="Clique aqui para adicionar um novo cliente."
             onHandleClickButtonLabel={onHandleAddNewClient}
