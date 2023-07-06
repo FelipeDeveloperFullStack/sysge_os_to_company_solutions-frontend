@@ -27,6 +27,8 @@ type ItemLaudoTechnicalProps = {
   setClickedValue: React.Dispatch<React.SetStateAction<AutocompleteOptions>>
 }
 
+type FieldValue = { description?: string, id?: string, quantity?: number, total?: string, unit?: string }
+
 export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   setClickedValue,
   itemServices,
@@ -118,6 +120,21 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   //   setItemServices([])
   // }, [isClearFields])
 
+  const setValueInFields = (field?: FieldValue) => {
+    setValueUnit(formatPrice(field?.unit || services?.value))
+    setQtdeValue(field?.quantity ? String(field?.quantity) : '1')
+    calcPrice(field?.quantity ? String(field?.quantity) : '1')
+    addValueArrayLaudoTech({
+      description: field?.description || valueLaudoTech.label,
+      id: field?.id || String(valueLaudoTech.value),
+      qtde: field?.quantity || 1,
+      total: field?.unit ? Number(field?.unit) : Number(services?.value),
+      unit: field?.unit || services?.value,
+    })
+    setMsgErrorAutoComplete('')
+    field?.description && setValueLaudoTech({ label: field?.description, value: field?.id })
+  }
+
   useEffect(() => {
     if (services?.value) {
       setItemServices((previousState) => {
@@ -126,17 +143,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
         )
         handleRemoveItem()
         if (!result.length) {
-          setValueUnit(formatPrice(services?.value))
-          setQtdeValue('1')
-          calcPrice('1')
-          addValueArrayLaudoTech({
-            description: valueLaudoTech.label,
-            id: String(valueLaudoTech.value),
-            qtde: 1,
-            total: Number(services?.value),
-            unit: services?.value,
-          })
-          setMsgErrorAutoComplete('')
+          setValueInFields()
         } else {
           setMsgErrorAutoComplete(
             'Esse serviço já foi adicionado, escolha outro.',
@@ -218,6 +225,14 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
       },
       true,
     )
+    const dataField: FieldValue = {
+      description: 'FORMATAÇÃO COMPLETA ALTERADA',
+      id: String(id),
+      quantity: 1,
+      total: '500',
+      unit: '500'
+    }
+    setValueInFields(dataField)
   }
 
   return (
