@@ -27,7 +27,7 @@ type ItemLaudoTechnicalProps = {
   setClickedValue: React.Dispatch<React.SetStateAction<AutocompleteOptions>>
 }
 
-type FieldValue = { description?: string, id?: string, quantity?: number, total?: string, unit?: string }
+// type FieldValue = { description?: string, id?: string, quantity?: number, total?: string, unit?: string }
 
 export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   setClickedValue,
@@ -120,19 +120,19 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   //   setItemServices([])
   // }, [isClearFields])
 
-  const setValueInFields = (field?: FieldValue) => {
-    setValueUnit(formatPrice(field?.unit || services?.value))
-    setQtdeValue(field?.quantity ? String(field?.quantity) : '1')
-    calcPrice(field?.quantity ? String(field?.quantity) : '1')
+
+  const setValueInFields = () => {
+    setValueUnit(formatPrice(services?.value))
+    setQtdeValue('1')
+    calcPrice('1')
     addValueArrayLaudoTech({
-      description: field?.description || valueLaudoTech.label,
-      id: field?.id || String(valueLaudoTech.value),
-      qtde: field?.quantity || 1,
-      total: field?.unit ? Number(field?.unit) : Number(services?.value),
-      unit: field?.unit || services?.value,
+      description: valueLaudoTech.label,
+      id: String(valueLaudoTech.value),
+      qtde: 1,
+      total: Number(services?.value),
+      unit: services?.value,
     })
     setMsgErrorAutoComplete('')
-    field?.description && setValueLaudoTech({ label: field?.description, value: field?.id })
   }
 
   useEffect(() => {
@@ -158,6 +158,20 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
       handleRemoveItem()
     }
   }, [valueLaudoTech])
+
+  useEffect(() => {
+    if (services) {
+      const idServiceCurrent = valueLaudoTech.value
+      const idStateUpdated = services._id
+      if (idServiceCurrent === idStateUpdated) {
+        if (valueLaudoTech.label.trim() !== services.description.trim()) {
+          setValueLaudoTech({ label: services.description, value: idStateUpdated })
+        } else {
+          setValueInFields()
+        }
+      }
+    }
+  }, [services])
 
   useEffect(() => {
     let cancel: any
@@ -225,14 +239,6 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
       },
       true,
     )
-    const dataField: FieldValue = {
-      description: 'FORMATAÇÃO COMPLETA ALTERADA',
-      id: String(id),
-      quantity: 1,
-      total: '500',
-      unit: '500'
-    }
-    setValueInFields(dataField)
   }
 
   return (

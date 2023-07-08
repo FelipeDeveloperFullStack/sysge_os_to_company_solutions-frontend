@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
+import { Alert } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -10,21 +12,30 @@ import Button from 'src/components/Form/Button'
 import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
+import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_PIECES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_IS_MODIFIED_FIELDS, PIECE_FILTER } from 'src/store/actions'
+import { LAYOUT_MAKE_REQUEST, PIECE_FILTER, PIECE_SEE_ALL } from 'src/store/actions'
 import { PieceT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import { fromApi } from '../adapters'
 import { schemaPiece } from '../schemaValidation'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
 
-const CreateClient: React.FC = () => {
+type EditPieceProps = {
+  isNewServiceByOS?: boolean
+  dataPiece?: any
+}
+
+const EditPiece: React.FC<EditPieceProps> = ({ isNewServiceByOS, dataPiece }) => {
   const urlPath = window.location.pathname
   const dispatch = useDispatch()
+  const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
-  const location = useLocation()
+  const location = !isNewServiceByOS ? useLocation() : null
   const [idPieces, setIdPieces] = useState()
+  const [errorMessage, setErrorMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit, setValue, watch } = useForm<PieceT>({
@@ -38,16 +49,35 @@ const CreateClient: React.FC = () => {
 
   useEffect(() => {
     scroll(0, 0)
-    const { description, value, id } = location.state
+    const { description, value, id, _id } = !isNewServiceByOS ? location?.state : dataPiece
     setValue('description', description)
     setValue('value', formatPrice(value))
-    setIdPieces(id)
+    setIdPieces(id || _id)
     scroll(0, 0)
   }, [])
 
   const onFormatterPrice = (value: string) => {
     const { formated } = formatInputPrice(value)
     setValue('value', formated)
+  }
+
+  const getPieces = async () => {
+    try {
+      const response = await apiAdmin.get(`pieces`, {
+        params: {
+          description: undefined,
+        },
+      })
+      dispatch({
+        type: PIECE_SEE_ALL,
+        payload: await fromApi(response),
+      })
+    } catch (error) {
+      exceptionHandle(
+        error,
+        'Ops! Houve um erro ao tentar buscar as peças, atualize a página e tente novamente.',
+      )
+    }
   }
 
   const onSubmit = async (data: PieceT) => {
@@ -59,18 +89,41 @@ const CreateClient: React.FC = () => {
         type: PIECE_FILTER,
         payload: {},
       })
+      if (isNewServiceByOS) {
+        await getPieces()
+        dispatch({
+          type: LAYOUT_MAKE_REQUEST,
+          payload: {
+            makeRequest: Math.random(),
+          },
+        })
+        closeModal()
+      }
       toast.success('Peça atualizada com sucesso.')
       history.push(ADMINISTRATION_PIECES)
     } catch (error) {
       exceptionHandle(error)
+      if (isNewServiceByOS) {
+        setErrorMessage(error?.response?.data.message)
+      }
     } finally {
       setLoading(false)
     }
   }
 
+  const onHandleClose = () => {
+    if (isNewServiceByOS) {
+      closeModal()
+    } else {
+      history.push(ADMINISTRATION_PIECES)
+    }
+  }
+
   return (
     <Container>
+      {!!errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        {!!isNewServiceByOS && <div>Editar</div>}
         <Row columns="5fr 1fr">
           <Controller
             name="description"
@@ -108,7 +161,7 @@ const CreateClient: React.FC = () => {
             variant="outlined"
             size="large"
             icon="back"
-            onClick={() => history.push(ADMINISTRATION_PIECES)}
+            onClick={onHandleClose}
           />
         </ButtonContainer>
       </Form>
@@ -116,4 +169,4 @@ const CreateClient: React.FC = () => {
   )
 }
 
-export default CreateClient
+export default EditPiece

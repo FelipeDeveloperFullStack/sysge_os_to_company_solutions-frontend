@@ -14,6 +14,9 @@ import hasNumber from 'src/helpers/hasNumber'
 import axios from 'axios'
 import { useAdmin } from 'src/services/useAdmin'
 import { ItemPieces } from '../../../../type'
+import { exceptionHandle } from 'src/helpers/exceptions'
+import { useModal } from 'src/hooks/useModal'
+import EditPiece from 'src/views/modules/administration/pieces/edit'
 
 type TableViewPiecesProps = {
   setItemPieces: React.Dispatch<React.SetStateAction<ItemPieces[]>>
@@ -30,8 +33,10 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
   const [totalValue, setTotalValue] = useState('')
   const [qtdeValue, setQtdeValue] = useState('')
   const [itemAutocompleteClicked, setItemAutocompleteClicked] = useState('')
+  const [clickedValuePiece, setClickedValuePiece] = useState({} as AutocompleteOptions)
   const { sum } = useTotalSum()
   const { apiAdmin } = useAdmin()
+  const { showMessage } = useModal()
   const [optionPiece, setOptionPiece] = useState<AutocompleteOptions[]>(
     [] as AutocompleteOptions[],
   )
@@ -39,6 +44,15 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
     {} as AutocompleteOptions,
   )
   const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
+
+  const getPieceById = async (id: string | number) => {
+    try {
+      const { data } = await apiAdmin.get(`pieces/${id}`)
+      return data
+    } catch (error) {
+      exceptionHandle(error)
+    }
+  }
 
   const calcPrice = (qtde: string) => {
     if (qtde?.trim() !== '') {
@@ -98,6 +112,20 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
     setTotalValue('')
   }
 
+  const setValueInFields = () => {
+    setValueUnit(formatPrice(pieces?.value))
+    setQtdeValue('1')
+    calcPrice('1')
+    addValueArrayPieces({
+      description: valuePiece.label,
+      id: String(valuePiece.value),
+      qtde: 1,
+      total: Number(pieces?.value),
+      unit: pieces?.value,
+    })
+    setMsgErrorAutoComplete('')
+  }
+
   useEffect(() => {
     if (pieces?.value) {
       setItemPieces((previousState) => {
@@ -106,17 +134,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
         )
         handleRemoveItemPieces()
         if (!result.length) {
-          setValueUnit(formatPrice(pieces?.value))
-          setQtdeValue('1')
-          calcPrice('1')
-          addValueArrayPieces({
-            description: valuePiece.label,
-            id: String(valuePiece.value),
-            qtde: 1,
-            total: Number(pieces?.value),
-            unit: pieces?.value,
-          })
-          setMsgErrorAutoComplete('')
+          setValueInFields()
         } else {
           setMsgErrorAutoComplete(
             'Essa peças já foi adicionada, escolha outra.',
@@ -180,6 +198,33 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
     }
   }
 
+  const onHandleEditPiece = async () => {
+    const id = clickedValuePiece?.value
+    const dataPiece = await getPieceById(id)
+    showMessage(
+      EditPiece,
+      {
+        isNewServiceByOS: true,
+        dataPiece,
+      },
+      true,
+    )
+  }
+
+  useEffect(() => {
+    if (pieces) {
+      const idServiceCurrent = valuePiece.value
+      const idStateUpdated = pieces._id
+      if (idServiceCurrent === idStateUpdated) {
+        if (valuePiece.label.trim() !== pieces.description.trim()) {
+          setValuePiece({ label: pieces.description, value: idStateUpdated })
+        } else {
+          setValueInFields()
+        }
+      }
+    }
+  }, [pieces])
+
   return (
     <Row columns="5fr 0.1fr 1fr 1fr" gap={10} marginTop="5px">
       <Autocomplete
@@ -190,6 +235,11 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
         hasError={!!msgErrorAutoComplete}
         error={msgErrorAutoComplete}
         onSelect={onHandleSelectedAutocomplete}
+        setClickedValue={(value) => {
+          setClickedValuePiece(value)
+        }}
+        isHasEdit={!!clickedValuePiece?.label}
+        onHandleClickButtonLabelEdit={onHandleEditPiece}
       />
       <InputText
         value={qtdeValue}

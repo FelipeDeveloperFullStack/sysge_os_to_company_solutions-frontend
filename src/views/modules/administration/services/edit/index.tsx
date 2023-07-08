@@ -15,9 +15,10 @@ import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_SERVICES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_MAKE_REQUEST, SERVICE_FILTER } from 'src/store/actions'
+import { LAYOUT_MAKE_REQUEST, SERVICE_FILTER, SERVICE_SEE_ALL } from 'src/store/actions'
 import { ServiceT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import { fromApi } from '../adapters'
 import { schemaService } from '../schemaValidation'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
@@ -57,6 +58,25 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
     setIdService(_id)
     scroll(0, 0)
   }, [])
+
+  const getServices = async () => {
+    try {
+      const response = await apiAdmin.get(`services`, {
+        params: {
+          description: undefined,
+        },
+      })
+      dispatch({
+        type: SERVICE_SEE_ALL,
+        payload: await fromApi(response),
+      })
+    } catch (error) {
+      exceptionHandle(
+        error,
+        'Ops! Houve um erro ao tentar carregar os dados de servicos.',
+      )
+    }
+  }
 
   const addLaudo = () => {
     const { laudoService } = getValues()
@@ -101,6 +121,7 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
       }
       history.push(ADMINISTRATION_SERVICES)
       toast.success('Serviço atualizado com sucesso.')
+      await getServices()
     } catch (error) {
       exceptionHandle(error)
       if (isNewServiceByOS) {
