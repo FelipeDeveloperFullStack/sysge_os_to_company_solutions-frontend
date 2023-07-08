@@ -20,7 +20,7 @@ import validateCpf from 'src/helpers/validateCpf'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
 import { useAdmin } from 'src/services/useAdmin'
-import { CLIENT_FILTER, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { CLIENT_FILTER, CLIENT_SEE_ALL, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaClient } from '../schemaValidation'
@@ -33,6 +33,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { validateTwoPhoneTypes } from 'src/helpers/validateFields/validateTwoPhoneTypes'
 import { ResponseApiClient } from 'src/views/modules/manager/serviceOrder/create/adapters/fromApi'
 import { useModal } from 'src/hooks/useModal'
+import { fromApi } from '../adapters'
 
 type EditClientProps = {
   isNewServiceByOS?: boolean
@@ -62,6 +63,29 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
     resolver: yupResolver(schemaClient),
   })
 
+  const getClients = async () => {
+    try {
+      const response = await apiAdmin.get(`clients`, {
+        params: {
+          name: undefined,
+          cpfOrCnpj: undefined,
+          phoneNumber: undefined,
+          address: undefined,
+          city: undefined,
+          uf: undefined,
+        },
+      })
+      dispatch({
+        type: CLIENT_SEE_ALL,
+        payload: await fromApi(response),
+      })
+    } catch (error) {
+      toast.error(
+        'Ops! Houve um erro ao tentar buscar os clientes, atualize a página e tente novamente.',
+      )
+    }
+  }
+
   const onSubmit = async (data: ClientT) => {
     if (data.phoneNumber) {
       const validate = validateTwoPhoneTypes(data.phoneNumber)
@@ -86,13 +110,14 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
       })
       toast.success(`Cliente ${data.name} atualizado com sucesso.`)
       if (isNewServiceByOS) {
-        closeModal()
+        await getClients()
         dispatch({
           type: LAYOUT_MAKE_REQUEST,
           payload: {
             makeRequest: Math.random(),
           },
         })
+        closeModal()
       }
       history.push(ADMINISTRATION_CLIENTS)
     } catch (error) {

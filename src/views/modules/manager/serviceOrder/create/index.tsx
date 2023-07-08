@@ -29,7 +29,6 @@ import {
   ButtonContainer,
   Container,
   Form,
-  InputTextOSNumberDisabled,
 } from './style'
 import LaudoTechnicalTable from './tables/laudoTechnical'
 import PiecesTable from './tables/pieces'
@@ -165,6 +164,12 @@ const CreateOrderService: React.FC = () => {
   }
 
   const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
+  const clientsGlobalState = useSelector(
+    (state: IStore) =>
+      state.client.clients.filter(
+        (item) => item._id === client?.value,
+      )[0],
+  )
 
   const history = useHistory()
 
@@ -698,6 +703,21 @@ const CreateOrderService: React.FC = () => {
       },
     })
   }, [client.label, equipamentName.label, brand.label, model.label, serialNumber.label, typeDocument])
+
+
+  React.useEffect(() => {
+    if (clientsGlobalState) {
+      const idServiceCurrent = client.value
+      const idStateUpdated = clientsGlobalState._id
+      if (idServiceCurrent === idStateUpdated) {
+        if (client.label.trim() !== clientsGlobalState.name.trim()) {
+          setClient({ label: clientsGlobalState.name, value: idStateUpdated })
+        } else {
+          //setValueInFields()
+        }
+      }
+    }
+  }, [clientsGlobalState])
 
   return (
     <Container>
