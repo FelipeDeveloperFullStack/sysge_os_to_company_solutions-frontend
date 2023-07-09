@@ -1,11 +1,15 @@
 import { DataGrid } from '@mui/x-data-grid'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const DataGridStyled = styled(DataGrid)`
+export const DataGridStyled = styled(DataGrid)<{ isShowCheckbox?: boolean }>`
   .MuiDataGrid-selectedRowCount {
     visibility: hidden;
   }
-  .MuiDataGrid-columnHeaderCheckbox {
-    visibility: hidden;
-  }
+  ${({ isShowCheckbox }) =>
+    !isShowCheckbox &&
+    css`
+      .MuiDataGrid-columnHeaderCheckbox {
+        visibility: hidden;
+      }
+    `}
 `

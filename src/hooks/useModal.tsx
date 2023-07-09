@@ -3,7 +3,7 @@ import { SimpleModal, MODAL_TYPES } from '../components/Modal/SimpleModal'
 
 interface IShowSimple {
   error: (message: string, styles?: React.CSSProperties, color?: string) => void
-  warning: (message: string, styles?: React.CSSProperties) => void
+  warning: (message: string, isShowButton?: boolean, styles?: React.CSSProperties) => void
   success: (message: string, styles?: React.CSSProperties) => void
 }
 
@@ -64,11 +64,12 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     })
   }
 
-  const warning = (message: string, styles?: React.CSSProperties) => {
+  const warning = (message: string, isShowButton?: boolean, styles?: React.CSSProperties) => {
     showMessage(SimpleModal, {
       type: MODAL_TYPES.WARNING,
       message,
       styles,
+      isShowButton,
     })
   }
 

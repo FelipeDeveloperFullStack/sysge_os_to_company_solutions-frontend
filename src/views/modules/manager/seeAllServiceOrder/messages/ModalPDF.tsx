@@ -14,13 +14,13 @@ export const ModalPDF: React.FC<ModalPDFProps> = ({ oSData }) => {
     'osDataAdded',
     [] as OSData[],
   )
-
   return (
     <Modal>
       {oSData?.map((item, index) => (
         <ServiceOrder
           osData={item}
           key={index}
+          isMerge={oSData.length > 1}
           setOsDataAdded={setOsDataAdded}
         />
       ))}

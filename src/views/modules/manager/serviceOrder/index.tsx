@@ -44,11 +44,13 @@ import useLocalStorage from 'use-local-storage'
 type ServiceOrderProps = {
   osData?: OSData
   setOsDataAdded?: React.Dispatch<React.SetStateAction<OSData[]>>
+  isMerge?: boolean
 }
 
 const ServiceOrder: React.FC<ServiceOrderProps> = ({
   osData,
   setOsDataAdded,
+  isMerge = false
 }) => {
   const exportPDF = useGeneratePDF()
   const history = useHistory()
@@ -75,8 +77,8 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
     if (!osData) {
       setData(location?.state?.oSData)
     } else {
-      setTimeout(() => {
-        handleClickToGenerateOS()
+      setTimeout(async () => {
+        await handleClickToGenerateOS()
         if (setOsDataAdded) {
           setOsDataAdded((previousState) => [...previousState, osData])
         }
@@ -125,6 +127,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
       data?.typeDocument, //ORCAMENTO OU ORDEM_DE_SERVICO
       data?._id,
       data?.client?.id,
+      isMerge
     )
     setIsOsGenerated(true)
     // await updateDateOSGenerated()

@@ -8,6 +8,8 @@ import { MappedDataServiceOrders } from '../types'
 import { useModal } from 'src/hooks/useModal'
 import { ModalInformation } from '../messages/ModalInformation'
 import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { useAdmin } from 'src/services/useAdmin'
+import { exceptionHandle } from 'src/helpers/exceptions'
 
 type TableViewProps = {
   setSelectedAllRowIds: React.Dispatch<React.SetStateAction<string[]>>
@@ -23,8 +25,9 @@ const TableView: React.FC<TableViewProps> = ({
   serviceOrdersStore,
 }) => {
   const columns = useColumns()
+  const { apiAdmin } = useAdmin()
   const dispatch = useDispatch()
-  const { closeModal } = useModal()
+  const { closeModal, showSimple } = useModal()
   const osDataAdded = JSON.parse(window.localStorage.getItem('osDataAdded'))
 
   const mappedDataServiceOrders = (
@@ -69,15 +72,35 @@ const TableView: React.FC<TableViewProps> = ({
     })
   }
 
+  const mergePDF = async (clientName: string, idClient: string, length: number) => {
+    try {
+      await apiAdmin.post(`orderServices/merge-pdf`, {
+        clientName,
+        idClient,
+        length
+      })
+    } catch (error) {
+      exceptionHandle(error)
+    }
+  }
+
   useEffect(() => {
     if (osDataAdded) {
       const oSData = JSON.parse(window.localStorage.getItem('oSData'))
       if (osDataAdded?.length === oSData?.length) {
         setIsOpenModalInformation(false)
-        closeModal()
+        showSimple.warning('Aguardando a inicialização do processo de unificação, por favor aguarde...', false)
         removeLocalStorage()
         updateTableList()
         setSelectedAllRowIds([])
+        if (oSData.length > 1) {
+          setTimeout(() => {
+            closeModal()
+            const clientName = oSData[0]?.client?.name
+            const clientId = oSData[0]?.client?.id
+            mergePDF(String(clientName).trim(), clientId, oSData?.length)
+          }, 30000)
+        }
       }
     }
   }, [osDataAdded])
@@ -91,6 +114,7 @@ const TableView: React.FC<TableViewProps> = ({
         checkboxSelection
         //setCellClick={setIsRowSelected}
         setSelectedAllRowIds={setSelectedAllRowIds}
+        isShowCheckbox
       />
       {!!isOpenModalInformation && (
         <ModalInformation

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Badge, Paper } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -35,6 +35,9 @@ const Filters: React.FC<FiltersProps> = ({
   const dispatch = useDispatch()
   const clientNameOrOsNumber = watch('description')
   const { hasPermission } = usePermission()
+  const osDataAdded = JSON.parse(window.localStorage.getItem('osDataAdded'))
+  const oSData = JSON.parse(window.localStorage.getItem('oSData'))
+  const [isDisabledButtonGenerate, setIsDisableButtonGenerate] = useState(false)
 
   const onSubmitFilter = (data: ModelT) => {
     data = {
@@ -89,6 +92,15 @@ const Filters: React.FC<FiltersProps> = ({
     }
   }, [clientNameOrOsNumber])
 
+  React.useEffect(() => {
+    if (osDataAdded) {
+      setIsDisableButtonGenerate(true)
+      if (osDataAdded?.length === oSData?.length) {
+        setIsDisableButtonGenerate(false)
+      }
+    }
+  }, [osDataAdded])
+
   return (
     <Container>
       <Paper elevation={1}>
@@ -119,11 +131,12 @@ const Filters: React.FC<FiltersProps> = ({
             {!!selectedAllRowIds?.length && (
               <ButtonGenerateOSContainer>
                 <Button
-                  textButton={`Gerar (${selectedAllRowIds?.length})`}
+                  textButton={isDisabledButtonGenerate ? 'Aguarde...' : `Gerar (${selectedAllRowIds?.length})`}
                   variant="contained"
                   onClick={onHandleGenerateOS}
                   size="medium"
                   icon="doc"
+                  disabled={isDisabledButtonGenerate}
                 />
               </ButtonGenerateOSContainer>
             )}

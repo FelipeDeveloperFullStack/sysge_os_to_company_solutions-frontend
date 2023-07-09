@@ -12,6 +12,7 @@ type DataTableProps<TypeGenericRow> = {
   checkboxSelection?: boolean
   setCellClick?: (cellClick: TypeGenericRow[]) => void
   setSelectedAllRowIds?: (allRow: string[]) => void
+  isShowCheckbox?: boolean
 }
 
 export const DataTable = <TypeGenericRow extends object>({
@@ -19,6 +20,7 @@ export const DataTable = <TypeGenericRow extends object>({
   rows,
   pageSize = 10,
   checkboxSelection = false,
+  isShowCheckbox = false,
   setCellClick,
   setSelectedAllRowIds,
 }: DataTableProps<TypeGenericRow>) => {
@@ -41,6 +43,7 @@ export const DataTable = <TypeGenericRow extends object>({
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridStyled
+        isShowCheckbox={isShowCheckbox}
         rows={rows}
         columns={columns}
         pageSize={pageSize}

@@ -27,6 +27,7 @@ interface ISimpleModal {
   message: string
   styles?: React.CSSProperties
   color?: string
+  isShowButton?: boolean
 }
 
 export const SimpleModal: React.FC<ISimpleModal> = ({
@@ -34,6 +35,7 @@ export const SimpleModal: React.FC<ISimpleModal> = ({
   message,
   styles,
   color,
+  isShowButton = true
 }) => {
   const { closeModal } = useModal()
 
@@ -45,12 +47,12 @@ export const SimpleModal: React.FC<ISimpleModal> = ({
     <Container style={styles}>
       <img src={icons[type]} />
       <p>{message}</p>
-      <Button
+      {isShowButton && <Button
         onClick={onOk}
         color="success"
         variant="outlined"
         textButton="Ok"
-      />
+      />}
     </Container>
   )
 }

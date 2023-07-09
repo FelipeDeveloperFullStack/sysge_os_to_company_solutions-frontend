@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ListGroup, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
@@ -9,6 +9,9 @@ import ChatList from './ChatList'
 import { LOGOUT } from './../../../../store/actions'
 
 import avatar1 from '../../../../assets/images/user/avatar-1.jpg'
+import { socket } from 'src/services/Socket'
+import { MESSAGE_PROGRESS_SOCKET } from 'src/services/Socket/EventTypes'
+import { Alert } from '@mui/lab'
 //import avatar2 from '../../../../assets/images/user/avatar-2.jpg'
 //import avatar3 from '../../../../assets/images/user/avatar-3.jpg'
 //import avatar4 from '../../../../assets/images/user/avatar-4.jpg'
@@ -18,6 +21,7 @@ const NavRight = () => {
   const dispatcher = useDispatch()
   const [listOpen, setListOpen] = useState(false)
   const user = useSelector((state) => state.account.user)
+  const [messageProgress, setMessageProgress] = useState('')
 
   const handleLogout = () => {
     dispatcher({ type: LOGOUT })
@@ -36,6 +40,12 @@ const NavRight = () => {
     //         console.log('error - ', error)
     //     })
   }
+
+  useEffect(() => {
+    socket.on(MESSAGE_PROGRESS_SOCKET, (message) => {
+      setMessageProgress(message)
+    })
+  }, [])
 
   return (
     <React.Fragment>
@@ -150,6 +160,14 @@ const NavRight = () => {
             </Dropdown.Toggle>
           </Dropdown>
         </ListGroup.Item> */}
+
+        <ListGroup.Item as="li" bsPrefix=" ">
+          {!!messageProgress && (
+            <div style={{ position: 'relative', top: '5px' }}>
+              <Alert severity="info">{messageProgress}</Alert>
+            </div>
+          )}
+        </ListGroup.Item>
 
         <ListGroup.Item as="li" bsPrefix=" ">
           {user.name}

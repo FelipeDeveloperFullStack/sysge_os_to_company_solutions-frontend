@@ -18,6 +18,7 @@ export const useGeneratePDF = () => {
     typeDocument: string,
     id: string,
     idClient: string,
+    isMerge?: boolean,
   ) => {
     try {
       Loading.turnOn()
@@ -29,6 +30,7 @@ export const useGeneratePDF = () => {
         status,
         typeDocument,
         idClient,
+        isMerge,
       })
     } catch (error) {
       toast.error('Ops! Houve um erro ao tentar gerar o PDF, tente novamente.')
@@ -47,6 +49,7 @@ export const useGeneratePDF = () => {
     typeDocument?: string,
     id?: string,
     idClient?: string,
+    isMerge?: boolean,
     //@ts-ignore
   ) => {
     try {
@@ -99,6 +102,7 @@ export const useGeneratePDF = () => {
                 typeDocument,
                 id,
                 idClient,
+                isMerge,
               )
             }
           }

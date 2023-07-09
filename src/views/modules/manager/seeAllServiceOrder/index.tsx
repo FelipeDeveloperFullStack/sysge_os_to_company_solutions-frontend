@@ -28,7 +28,7 @@ const SeeAllServiceOrder = (props: Props) => {
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
-  const { showMessage, closeModal } = useModal()
+  const { showMessage, showSimple } = useModal()
   const [isOpenModalInformation, setIsOpenModalInformation] = useState(false)
   const serviceOrderFiltered = useSelector(
     (state: IStore) => state.serviceOrder.serviceOrderFilter,
@@ -144,6 +144,19 @@ const SeeAllServiceOrder = (props: Props) => {
     }
   }
 
+  const checkArrayDistinct = (array: string[]): boolean => {
+    const distinctValues = new Set(array);
+    return distinctValues.size !== 1;
+  };
+
+  const checkIfTheSameClientOnSameOS = (osData: OSData[]) => {
+    const clients: string[] = []
+    osData.forEach((os) => {
+      clients.push(os.client.id)
+    })
+    return checkArrayDistinct(clients)
+  }
+
   const onHandleGenerateOS = async () => {
     setOSData([])
     let index = 0
@@ -152,6 +165,10 @@ const SeeAllServiceOrder = (props: Props) => {
       await onHandleGeneratePDF(item)
       if (index === selectedAllRowIds.length - 1) {
         const data = JSON.parse(window.localStorage.getItem('oSData'))
+        if (checkIfTheSameClientOnSameOS(data)) {
+          showSimple.warning('Para unificar selecione o mesmo cliente.')
+          return
+        }
         showMessage(ModalPDF, { oSData: data })
         setIsOpenModalInformation(true)
       }
