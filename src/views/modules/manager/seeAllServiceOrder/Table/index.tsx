@@ -89,7 +89,11 @@ const TableView: React.FC<TableViewProps> = ({
       const oSData = JSON.parse(window.localStorage.getItem('oSData'))
       if (osDataAdded?.length === oSData?.length) {
         setIsOpenModalInformation(false)
-        showSimple.warning('Aguardando a inicialização do processo de unificação, por favor aguarde...', false)
+        if (oSData.length > 1) {
+          showSimple.warning('Aguardando a inicialização do processo de unificação, por favor aguarde...', false)
+        } else {
+          closeModal()
+        }
         removeLocalStorage()
         updateTableList()
         setSelectedAllRowIds([])

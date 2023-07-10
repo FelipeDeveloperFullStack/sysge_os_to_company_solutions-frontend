@@ -30,7 +30,6 @@ const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
       setLoading(true)
       await apiAdmin.delete(`orderServices/${id}/${idFileCreatedGoogleDrive}`)
       toast.success(`${getTypeDocument(typeDocument)} de nº ${osNumber} excluída com sucesso!`)
-      closeModal()
       dispatch({
         type: LAYOUT_MAKE_REQUEST,
         payload: {
@@ -45,6 +44,7 @@ const RemoveConfirmation: React.FC<MappedDataServiceOrders> = ({
     } finally {
       Loading.turnOff()
       setLoading(false)
+      closeModal()
     }
   }
 
