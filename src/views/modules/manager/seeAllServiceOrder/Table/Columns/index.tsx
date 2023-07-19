@@ -116,7 +116,7 @@ export const useColumns = () => {
     },
     {
       field: 'dateGeneratedOS',
-      headerName: 'OS Gerada',
+      headerName: 'Google Drive',
       width: 165,
       renderCell: (params: GridCellParams) => {
         const dateGeneratedOS = params.value as string
