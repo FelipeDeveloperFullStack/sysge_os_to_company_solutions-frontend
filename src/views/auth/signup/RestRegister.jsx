@@ -6,7 +6,10 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import axios from 'axios'
 import useScriptRef from '../../../hooks/useScriptRef'
-import { API_SERVER } from '../../../config/constant'
+import {
+  API_SERVER_DEVELOPMENT,
+  API_SERVER_PRODUTION,
+} from '../../../config/constant'
 import onlyNumbers from '../../../helpers/clear/onlyNumbers'
 import { permissionsUser } from 'src/views/modules/administration/permissions/static'
 import validateCpf from 'src/helpers/validateCpf'
@@ -36,13 +39,16 @@ const RestRegister = ({ className, ...rest }) => {
           return
         }
         axios
-          .post(API_SERVER + 'users/create', {
-            name: values.username,
-            // email: values.email,
-            cpf: String(onlyNumbers(values.cpf)),
-            password: values.password,
-            permissions: permissionsUser,
-          })
+          .post(
+            API_SERVER_DEVELOPMENT || API_SERVER_PRODUTION + 'users/create',
+            {
+              name: values.username,
+              // email: values.email,
+              cpf: String(onlyNumbers(values.cpf)),
+              password: values.password,
+              permissions: permissionsUser,
+            },
+          )
           .then(function (response) {
             history.push('/auth/signin')
           })
