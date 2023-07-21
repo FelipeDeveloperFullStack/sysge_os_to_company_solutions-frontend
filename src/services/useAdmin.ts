@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { getFirstName } from 'src/helpers/firstName'
 import { useAuth } from 'src/hooks/useAuth'
 
 export const useAdmin = () => {
   const { setUserData, user } = useAuth()
-  //
+
   const apiAdmin = axios.create({
     baseURL: user?.user?.ip
       ? `http://${user?.user?.ip}:3005/`

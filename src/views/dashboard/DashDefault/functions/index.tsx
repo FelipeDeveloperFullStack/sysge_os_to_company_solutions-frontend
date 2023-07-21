@@ -44,7 +44,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       const { data } = await apiAdmin.get('expense/total')
       setTotal((previousState) => ({
         ...previousState,
-        totalExpenses: data.total,
+        totalExpenses: data?.total,
       }))
     } catch (error) {
       toast.error(
@@ -61,8 +61,8 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       const { data } = await apiAdmin.get('orderServices/total/incomes')
       setTotal((previousState) => ({
         ...previousState,
-        totalIncomes: data.total,
-        totalIncomesPending: data.totalPending,
+        totalIncomes: data?.total,
+        totalIncomesPending: data?.totalPending,
       }))
     } catch (error) {
       toast.error(
@@ -79,7 +79,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       const { data } = await apiAdmin.get('equipaments/total')
       setTotal((previousState) => ({
         ...previousState,
-        totalEquipaments: data.total,
+        totalEquipaments: data?.total,
       }))
     } catch (error) {
       toast.error(
@@ -96,7 +96,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       const { data } = await apiAdmin.get('services/total')
       setTotal((previousState) => ({
         ...previousState,
-        totalServices: data.total,
+        totalServices: data?.total,
       }))
     } catch (error) {
       toast.error(
@@ -112,7 +112,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       const { data } = await apiAdmin.get('pieces/total')
       setTotal((previousState) => ({
         ...previousState,
-        totalPieces: data.total,
+        totalPieces: data?.total,
       }))
     } catch (error) {
       toast.error(
@@ -129,7 +129,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       const { data } = await apiAdmin.get('clients/total')
       setTotal((previousState) => ({
         ...previousState,
-        totalClients: data.total,
+        totalClients: data?.total,
       }))
     } catch (error) {
       toast.error(
@@ -146,7 +146,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       const { data } = await apiAdmin.get('orderServices/total')
       setTotal((previousState) => ({
         ...previousState,
-        totalOrderService: data.total,
+        totalOrderService: data?.total,
       }))
     } catch (error) {
       toast.error(

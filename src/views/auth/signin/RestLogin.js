@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Formik } from 'formik'
 import jwt from 'jwt-decode'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Button, Col, Row } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
@@ -12,12 +12,20 @@ import useScriptRef from '../../../hooks/useScriptRef'
 import InputMask from 'react-input-mask'
 import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
 import { LAYOUT_IS_MODIFIED_FIELDS } from 'src/store/actions'
+import { socket } from 'src/services/Socket'
 
 const RestLogin = ({ className, ...rest }) => {
   const dispatch = useDispatch()
   const scriptedRef = useScriptRef()
   const { setUserData } = useAuth()
   const { Loading } = useLoading()
+  const [ip, setIp] = useState('')
+
+  useEffect(() => {
+    socket.on('ip-address', (data) => {
+      setIp(data.ip)
+    })
+  }, [])
 
   const handleSubmit = async (
     values,
@@ -27,7 +35,7 @@ const RestLogin = ({ className, ...rest }) => {
       Loading.turnOn()
       setSubmitting(true)
       axios
-        .post(API_SERVER + 'users/auth/login', {
+        .post(`http://${ip}:3005/users/auth/login`, {
           password: values.password,
           username: clearSpecialCharacters(values.cpf),
         })
