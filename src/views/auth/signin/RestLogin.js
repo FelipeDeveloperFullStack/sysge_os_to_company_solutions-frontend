@@ -39,7 +39,7 @@ const RestLogin = ({ className, ...rest }) => {
       setSubmitting(true)
       axios
         .post(
-          `${API_SERVER_DEVELOPMENT || API_SERVER_PRODUTION}/users/auth/login`,
+          `${API_SERVER_DEVELOPMENT || API_SERVER_PRODUTION}users/auth/login`,
           {
             password: values.password,
             username: clearSpecialCharacters(values.cpf),
