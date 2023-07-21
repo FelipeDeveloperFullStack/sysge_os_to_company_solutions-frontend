@@ -5,7 +5,10 @@ import React, { useEffect, useState } from 'react'
 import { Alert, Button, Col, Row } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
-import { API_SERVER } from '../../../config/constant'
+import {
+  API_SERVER_DEVELOPMENT,
+  API_SERVER_PRODUTION,
+} from '../../../config/constant'
 import { useAuth } from '../../../hooks/useAuth'
 import { useLoading } from '../../../hooks/useLoading'
 import useScriptRef from '../../../hooks/useScriptRef'
@@ -21,11 +24,11 @@ const RestLogin = ({ className, ...rest }) => {
   const { Loading } = useLoading()
   const [ip, setIp] = useState('')
 
-  useEffect(() => {
-    socket.on('ip-address', (data) => {
-      setIp(data.ip)
-    })
-  }, [])
+  // useEffect(() => {
+  //   socket.on('ip-address', (data) => {
+  //     setIp(data.ip)
+  //   })
+  // }, [])
 
   const handleSubmit = async (
     values,
@@ -35,10 +38,13 @@ const RestLogin = ({ className, ...rest }) => {
       Loading.turnOn()
       setSubmitting(true)
       axios
-        .post(`http://${ip}:3005/users/auth/login`, {
-          password: values.password,
-          username: clearSpecialCharacters(values.cpf),
-        })
+        .post(
+          `${API_SERVER_DEVELOPMENT || API_SERVER_PRODUTION}/users/auth/login`,
+          {
+            password: values.password,
+            username: clearSpecialCharacters(values.cpf),
+          },
+        )
         .then(function (response) {
           const dataUser = jwt(response.data.access_token)
           setUserData(dataUser, response.data.access_token)
