@@ -26,11 +26,27 @@ import { useHistory } from 'react-router-dom'
 import { CLIENTES_EDITAR, CLIENTES_EXCLUIR } from '../../../permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
 import formatTextWithLimit from 'src/helpers/formatTextWithLimit'
+import { NotificationText } from './style'
+import { useAdmin } from 'src/services/useAdmin'
+import { useEffect, useState } from 'react'
 
 export const useColumns = () => {
   const { showMessage } = useModal()
   const history = useHistory()
   const { hasPermission } = usePermission()
+  const { apiAdmin } = useAdmin()
+  const [clientsWithoutEmail, setClientsWithoutEmail] = useState([])
+
+  const getTotalClientWithoutEmail = async () => {
+    try {
+      const { data } = await apiAdmin.get('orderServices/total-client-without-email')
+      setClientsWithoutEmail(data)
+    } catch (error) {
+      console.log(
+        'Houve um erro ao tentar retornar o total de client sem e-mail de cobrança na plataforma.',
+      )
+    }
+  }
 
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
@@ -46,11 +62,27 @@ export const useColumns = () => {
     }
   }
 
+  useEffect(() => {
+    getTotalClientWithoutEmail()
+  }, [])
+
   const columns: GridColDef[] = [
     {
       field: 'name',
       headerName: 'Nome',
       width: 450,
+      renderCell: (params: GridCellParams) => {
+        const { name, id } = params.row as ClientT
+        const isClientWithotEmail = clientsWithoutEmail.find((client) => client._id === id)
+        return (
+          <div>
+            <div>
+              {name}
+            </div>
+            {isClientWithotEmail && <NotificationText>{isClientWithotEmail ? 'E-mail obrigatório para envio de cobrança.' : ''}</NotificationText>}
+          </div>
+        )
+      },
     },
     {
       field: 'address',

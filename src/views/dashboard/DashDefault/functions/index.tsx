@@ -22,6 +22,19 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       )
     }
   }
+  const getTotalClientWithoutEmail = async () => {
+    try {
+      const { data } = await apiAdmin.get('orderServices/total-client-without-email')
+      setTotal((previousState) => ({
+        ...previousState,
+        clientsWithoutEmail: data,
+      }))
+    } catch (error) {
+      toast.error(
+        'Houve um erro ao tentar retornar o total de client sem e-mail de cobrança na plataforma.',
+      )
+    }
+  }
   const getTotalExpired = async () => {
     try {
       const { data } = await apiAdmin.get('expense/expired')
@@ -166,6 +179,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
     getTotalIncomes,
     getTotalExpenses,
     getTotalExpired,
-    getTotalExpiredMaturityIn3Days
+    getTotalExpiredMaturityIn3Days,
+    getTotalClientWithoutEmail
   }
 }

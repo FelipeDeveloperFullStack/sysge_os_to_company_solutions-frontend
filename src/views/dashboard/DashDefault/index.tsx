@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react'
 import { Row, Col, Card } from 'react-bootstrap'
@@ -17,6 +18,7 @@ import { exceptionHandle } from 'src/helpers/exceptions'
 import { useHistory } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
 import { ADMINISTRATION_CLIENTS, ADMINISTRATION_EQUIPAMENTS, ADMINISTRATION_PIECES, ADMINISTRATION_SERVICES, MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
+import { ClientT } from 'src/store/Types'
 // import { Link } from 'react-router-dom'
 // import AmChartEarnings from './chart/AmChartEarnings'
 // import avatar1 from '../../../assets/images/user/avatar-1.jpg'
@@ -36,6 +38,7 @@ export type Total = {
   totalValueIncomeInExpired3Days: number
   expiredTotal: number
   totalIncomesPending: number
+  clientsWithoutEmail: ClientT[]
 }
 
 const DashDefault: React.FC = () => {
@@ -56,7 +59,8 @@ const DashDefault: React.FC = () => {
     totalValueExpenseInExpired: 0,
     totalValueIncomeInExpired3Days: 0,
     expiredTotal: 0,
-    totalIncomesPending: 0
+    totalIncomesPending: 0,
+    clientsWithoutEmail: []
   } as Total)
   const {
     getTotalClients,
@@ -68,6 +72,7 @@ const DashDefault: React.FC = () => {
     getTotalExpenses,
     getTotalExpired,
     getTotalExpiredMaturityIn3Days,
+    getTotalClientWithoutEmail,
   } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
@@ -82,6 +87,7 @@ const DashDefault: React.FC = () => {
       await getTotalExpenses()
       await getTotalExpired()
       await getTotalExpiredMaturityIn3Days()
+      await getTotalClientWithoutEmail()
     } catch (err) {
       exceptionHandle(err)
     } finally {
@@ -98,6 +104,13 @@ const DashDefault: React.FC = () => {
       return 'Boletos'
     } else {
       return 'Boleto'
+    }
+  }
+  const checkPluralTextClient = () => {
+    if (total.clientsWithoutEmail.length > 1) {
+      return 'clientes que precisam'
+    } else {
+      return 'cliente que precisa'
     }
   }
 
@@ -127,6 +140,24 @@ const DashDefault: React.FC = () => {
           </Alert>
         </Col>
       </Row>}
+      {!!total.clientsWithoutEmail.length &&
+        <Row>
+          <Col md={12} xl={12}>
+            <Alert severity="warning" style={{ display: 'flex', alignItems: 'center' }}>
+              <span><b>Atenção:</b> Você possui <Chip label={(total.clientsWithoutEmail.length)} /> {checkPluralTextClient()} de atualização do e-mail para envio da cobrança. Segue abaixo:</span>
+              <ul>
+                {total.clientsWithoutEmail.map((client) => {
+                  return (
+                    <div>
+                      <li>Cliente: {client.name}</li>
+                    </div>
+                  )
+                })}
+              </ul>
+              <div onClick={() => history.push(ADMINISTRATION_CLIENTS)}><a href='#'>Clique aqui</a> para acessar a área de clientes.</div>
+            </Alert>
+          </Col>
+        </Row>}
       <Row>
         {typeUser === 'ADMIN' && <Col xl={3} >
           <Card>

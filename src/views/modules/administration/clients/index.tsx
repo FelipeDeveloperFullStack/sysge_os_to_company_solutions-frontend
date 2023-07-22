@@ -67,6 +67,7 @@ const Client: React.FC = () => {
           address: undefined,
           city: undefined,
           uf: undefined,
+          withoutEmail: undefined
         },
       })
     }

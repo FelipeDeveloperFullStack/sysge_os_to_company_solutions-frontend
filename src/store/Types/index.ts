@@ -66,6 +66,7 @@ export type ClientT = {
   cep?: string
   _id?: string
   user?: string
+  withoutEmail?: boolean
   id: string
 }
 export type PieceT = {
