@@ -540,7 +540,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   <b>Valor S/Desconto: </b> <span>{data?.subTotal}</span>
                 </Text>
               )}
-              <Text marginRight="-20px" width='226px' isNotUsingBorderBottom display="flex">
+              <Text marginRight="-20px" width='225px' isNotUsingBorderBottom display="flex">
                 <b>Total A Pagar: </b> {data?.total}
               </Text>
             </PaperStyled>
