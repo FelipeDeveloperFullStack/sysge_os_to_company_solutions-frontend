@@ -16,6 +16,8 @@ export type Income = {
   year: string
   idFileCreatedGoogleDrive?: string
   maturityOfTheBoleto?: string
+  isSendNowDayMaturityBoleto?: boolean
+  isSendThreeDayMaturityBoleto?: boolean
   id: string
 }
 
@@ -75,6 +77,8 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     idFileCreatedGoogleDrive: item.idFileCreatedGoogleDrive,
     maturityOfTheBoleto: item.maturityOfTheBoleto,
     id: item._id,
+    isSendNowDayMaturityBoleto: item?.isSendNowDayMaturityBoleto,
+    isSendThreeDayMaturityBoleto: item?.isSendThreeDayMaturityBoleto,
   }))
 
   const orderedYear = (resultFromApi: Income[]): string[] => {

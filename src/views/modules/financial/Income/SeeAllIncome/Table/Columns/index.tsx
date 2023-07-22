@@ -11,6 +11,7 @@ import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
 import { RECEITAS_EDITAR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
 import { parse, isBefore, addDays, isWithinInterval } from 'date-fns'
+import { NotificationText } from './style'
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -48,7 +49,18 @@ export const useColumns = (props: ColumnsProps) => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'clientName', headerName: 'Nome', width: 410 },
+    {
+      field: 'clientName', headerName: 'Nome', width: 410,
+      renderCell: (params: GridCellParams) => {
+        const data = params.row as Income
+        return (
+          <div>
+            <div>{data.clientName}</div>
+            {(data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto) && <NotificationText>Notificação de cobrança enviado</NotificationText>}
+          </div>
+        )
+      },
+    },
     { field: 'osNumber', headerName: 'Nº OS' },
     {
       field: 'valueFormated',
@@ -82,7 +94,7 @@ export const useColumns = (props: ColumnsProps) => {
           new Date(),
         )
         if (formOfPayment === 'Boleto') {
-          const isWithinIntervalMaturityDate = isWithinInterval(maturityDate, { start: today, end: threeDaysFromNow })
+          const isWithinIntervalMaturityDate = isBefore(maturityDate, threeDaysFromNow)
           return (
             <div>{formOfPayment} <span style={{
               color: isWithinIntervalMaturityDate ? 'red' : '',

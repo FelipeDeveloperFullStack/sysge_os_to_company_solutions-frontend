@@ -8,4 +8,7 @@ export type MappedDataServiceOrders = {
   typeDocument: string
   idFileCreatedGoogleDrive?: string
   clientId?: string
+  isSendNowDayMaturityBoleto?: boolean
+  isSendThreeDayMaturityBoleto?: boolean
+  dateGeneratedOS?: string
 }

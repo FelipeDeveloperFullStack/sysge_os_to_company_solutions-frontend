@@ -46,6 +46,8 @@ const TableView: React.FC<TableViewProps> = ({
           dateGeneratedOS: item.dateGeneratedOS,
           idFileCreatedGoogleDrive: item.idFileCreatedGoogleDrive,
           clientId: item.client.id,
+          isSendNowDayMaturityBoleto: item?.isSendNowDayMaturityBoleto,
+          isSendThreeDayMaturityBoleto: item?.isSendThreeDayMaturityBoleto,
           user: item.user || ''
         }
       })

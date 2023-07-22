@@ -41,6 +41,8 @@ export type OSData = {
   dateGeneratedOS?: string
   idFileCreatedGoogleDrive?: string
   maturityOfTheBoleto?: string
+  isSendThreeDayMaturityBoleto?: boolean
+  isSendNowDayMaturityBoleto?: boolean
   user?: string
   _id?: string
 }

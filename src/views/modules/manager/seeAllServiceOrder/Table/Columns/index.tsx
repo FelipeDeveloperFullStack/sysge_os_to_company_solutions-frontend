@@ -18,6 +18,7 @@ import Tooltip from '@mui/material/Tooltip';
 import ConfirmationChangeTypeDocument from '../../messages/ConfirmationChangeTypeDocument';
 import { usePermission } from 'src/hooks/usePermission';
 import { ORDEM_SERVICO_EDITAR, ORDEM_SERVICO_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions';
+import { NotificationText } from './style';
 
 export const useColumns = () => {
   const { showMessage } = useModal()
@@ -73,7 +74,18 @@ export const useColumns = () => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Nome', width: 230 },
+    {
+      field: 'name', headerName: 'Nome', width: 230,
+      renderCell: (params: GridCellParams) => {
+        const data = params.row as MappedDataServiceOrders
+        return (
+          <div>
+            <div>{data.name}</div>
+            {/* {(data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto) && <NotificationText>Notificação de cobrança enviado</NotificationText>} */}
+          </div>
+        )
+      },
+    },
     { field: 'osNumber', headerName: 'Nº OS', width: 60 },
     { field: 'dateOS', headerName: 'Data' },
     {
