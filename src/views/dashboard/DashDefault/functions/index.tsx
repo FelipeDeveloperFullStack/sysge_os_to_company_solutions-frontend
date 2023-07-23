@@ -22,6 +22,19 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       )
     }
   }
+  const getTotalBoletoNotImported = async () => {
+    try {
+      const { data } = await apiAdmin.get('orderServices/total-boleto-not-imported')
+      setTotal((previousState) => ({
+        ...previousState,
+        boletoNotImported: data,
+      }))
+    } catch (error) {
+      toast.error(
+        'Houve um erro ao tentar retornar o total de ordem de serviço sem boleto importado para o envio de cobrança na plataforma.',
+      )
+    }
+  }
   const getTotalClientWithoutEmail = async () => {
     try {
       const { data } = await apiAdmin.get('orderServices/total-client-without-email')
@@ -180,6 +193,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
     getTotalExpenses,
     getTotalExpired,
     getTotalExpiredMaturityIn3Days,
-    getTotalClientWithoutEmail
+    getTotalClientWithoutEmail,
+    getTotalBoletoNotImported
   }
 }

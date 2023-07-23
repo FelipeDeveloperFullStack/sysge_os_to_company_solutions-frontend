@@ -19,6 +19,7 @@ import { useHistory } from 'react-router-dom'
 import { useAuth } from 'src/hooks/useAuth'
 import { ADMINISTRATION_CLIENTS, ADMINISTRATION_EQUIPAMENTS, ADMINISTRATION_PIECES, ADMINISTRATION_SERVICES, MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { ClientT } from 'src/store/Types'
+import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
 // import { Link } from 'react-router-dom'
 // import AmChartEarnings from './chart/AmChartEarnings'
 // import avatar1 from '../../../assets/images/user/avatar-1.jpg'
@@ -39,6 +40,7 @@ export type Total = {
   expiredTotal: number
   totalIncomesPending: number
   clientsWithoutEmail: ClientT[]
+  boletoNotImported: OSData[]
 }
 
 const DashDefault: React.FC = () => {
@@ -60,7 +62,8 @@ const DashDefault: React.FC = () => {
     totalValueIncomeInExpired3Days: 0,
     expiredTotal: 0,
     totalIncomesPending: 0,
-    clientsWithoutEmail: []
+    clientsWithoutEmail: [],
+    boletoNotImported: []
   } as Total)
   const {
     getTotalClients,
@@ -73,6 +76,7 @@ const DashDefault: React.FC = () => {
     getTotalExpired,
     getTotalExpiredMaturityIn3Days,
     getTotalClientWithoutEmail,
+    getTotalBoletoNotImported
   } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
@@ -88,6 +92,7 @@ const DashDefault: React.FC = () => {
       await getTotalExpired()
       await getTotalExpiredMaturityIn3Days()
       await getTotalClientWithoutEmail()
+      await getTotalBoletoNotImported()
     } catch (err) {
       exceptionHandle(err)
     } finally {
@@ -111,6 +116,13 @@ const DashDefault: React.FC = () => {
       return 'clientes que precisam'
     } else {
       return 'cliente que precisa'
+    }
+  }
+  const checkPluralTextOrderServiceWithoutBoleto = () => {
+    if (total.boletoNotImported.length > 1) {
+      return 'ordens de serviços que precisam'
+    } else {
+      return 'ordem de serviço que precisa'
     }
   }
 
@@ -144,7 +156,7 @@ const DashDefault: React.FC = () => {
         <Row>
           <Col md={12} xl={12}>
             <Alert severity="warning" style={{ display: 'flex', alignItems: 'center' }}>
-              <span><b>Atenção:</b> Você possui <Chip label={(total.clientsWithoutEmail.length)} /> {checkPluralTextClient()} de atualização do e-mail para envio da cobrança. Segue abaixo:</span>
+              <span><b>Atenção:</b> Você possui <Chip label={(total.clientsWithoutEmail.length)} /> {checkPluralTextClient()} de atualização do e-mail para o envio da cobrança. Segue abaixo:</span>
               <ul>
                 {total.clientsWithoutEmail.map((client) => {
                   return (
@@ -155,6 +167,24 @@ const DashDefault: React.FC = () => {
                 })}
               </ul>
               <div onClick={() => history.push(ADMINISTRATION_CLIENTS)}><a href='#'>Clique aqui</a> para acessar a área de clientes.</div>
+            </Alert>
+          </Col>
+        </Row>}
+      {!!total.boletoNotImported.length &&
+        <Row>
+          <Col md={12} xl={12}>
+            <Alert severity="warning" style={{ display: 'flex', alignItems: 'center' }}>
+              <span><b>Atenção:</b> Você tem <Chip label={(total.boletoNotImported.length)} /> {checkPluralTextOrderServiceWithoutBoleto()} de importação do boleto para o envio da cobrança. Segue abaixo:</span>
+              <ul>
+                {total.boletoNotImported.map((client) => {
+                  return (
+                    <div>
+                      <li>Ordem de Serviço: Nº {client.osNumber}</li>
+                    </div>
+                  )
+                })}
+              </ul>
+              <div onClick={() => history.push(MANAGER_SERVICE_ORDER)}><a href='#'>Clique aqui</a> para acessar a área de ordens de serviços.</div>
             </Alert>
           </Col>
         </Row>}

@@ -38,6 +38,7 @@ export type OSData = {
   manpower: string
   osNumber: string
   formOfPayment?: string
+  isBoletoUploaded?: boolean
   dateGeneratedOS?: string
   idFileCreatedGoogleDrive?: string
   maturityOfTheBoleto?: string

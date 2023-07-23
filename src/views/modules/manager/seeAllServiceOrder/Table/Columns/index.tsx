@@ -1,6 +1,8 @@
 import { GridCellParams, GridColDef } from '@mui/x-data-grid'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import EditIcon from '@mui/icons-material/Edit'
+import TaskIcon from '@mui/icons-material/Task';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import CachedIcon from '@mui/icons-material/Cached';
 import PdfIcon from '@mui/icons-material/PictureAsPdf'
 import IconButton from '@mui/material/IconButton'
@@ -19,6 +21,7 @@ import ConfirmationChangeTypeDocument from '../../messages/ConfirmationChangeTyp
 import { usePermission } from 'src/hooks/usePermission';
 import { ORDEM_SERVICO_EDITAR, ORDEM_SERVICO_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions';
 import { NotificationText } from './style';
+import UploadDocument from '../../messages/UploadDocument';
 
 export const useColumns = () => {
   const { showMessage } = useModal()
@@ -48,6 +51,12 @@ export const useColumns = () => {
     if (params.field === 'group-buttons') {
       const serviceOrder = params.row as MappedDataServiceOrders
       showMessage(RemoveConfirmation, serviceOrder)
+    }
+  }
+  const onUploadDocument = (params: GridCellParams) => {
+    if (params.field === 'group-buttons') {
+      const serviceOrder = params.row as MappedDataServiceOrders
+      showMessage(UploadDocument, serviceOrder, true)
     }
   }
 
@@ -197,6 +206,19 @@ export const useColumns = () => {
               <CachedIcon />
             </IconButton>
           </Tooltip>}
+          {(params.row.typeDocument !== 'ORCAMENTO'
+            && params.row.status === 'PENDENTE'
+            && params.row.formOfPayment === 'Boleto') &&
+            <Tooltip title={params.row?.isBoletoUploaded ? 'Boleto importado' : 'Importar boleto'}>
+              <IconButton
+                aria-label="Importar Boleto"
+                color={params.row?.isBoletoUploaded ? 'info' : 'default'}
+                onClick={() => onUploadDocument(params)}
+                disabled={!hasPermission(ORDEM_SERVICO_EXCLUIR)}
+              >
+                {!params.row?.isBoletoUploaded ? <UploadFileIcon /> : <TaskIcon />}
+              </IconButton>
+            </Tooltip>}
         </>
       ),
     },

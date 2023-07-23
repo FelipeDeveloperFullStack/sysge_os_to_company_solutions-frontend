@@ -11,4 +11,5 @@ export type MappedDataServiceOrders = {
   isSendNowDayMaturityBoleto?: boolean
   isSendThreeDayMaturityBoleto?: boolean
   dateGeneratedOS?: string
+  isBoletoUploaded?: boolean
 }

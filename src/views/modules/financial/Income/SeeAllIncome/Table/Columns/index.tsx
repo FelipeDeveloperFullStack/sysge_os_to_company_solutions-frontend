@@ -56,7 +56,8 @@ export const useColumns = (props: ColumnsProps) => {
         return (
           <div>
             <div>{data.clientName}</div>
-            {(data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto) && <NotificationText>Notificação de cobrança enviado</NotificationText>}
+            {(data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto && data?.isBoletoUploaded) && <NotificationText>Notificação de cobrança enviado</NotificationText>}
+            {(!data?.isBoletoUploaded && data.formOfPayment === 'Boleto' && data.situation === 'PENDENTE') && <NotificationText warning={!data?.isBoletoUploaded}>Boleto não importado</NotificationText>}
           </div>
         )
       },
@@ -85,7 +86,7 @@ export const useColumns = (props: ColumnsProps) => {
       headerName: 'Forma Pagamento',
       width: 170,
       renderCell: (params: GridCellParams) => {
-        const { formOfPayment, maturityOfTheBoleto } = params.row
+        const { formOfPayment, maturityOfTheBoleto, isBoletoUploaded } = params.row
         const today = new Date()
         const threeDaysFromNow = addDays(today, 3)
         const maturityDate = parse(
@@ -96,10 +97,16 @@ export const useColumns = (props: ColumnsProps) => {
         if (formOfPayment === 'Boleto') {
           const isWithinIntervalMaturityDate = isBefore(maturityDate, threeDaysFromNow)
           return (
-            <div>{formOfPayment} <span style={{
-              color: isWithinIntervalMaturityDate ? 'red' : '',
-              fontWeight: isWithinIntervalMaturityDate ? '900' : '',
-            }}>{maturityOfTheBoleto ? `(${maturityOfTheBoleto})` : ''}</span></div>
+            <div>
+              <div>{formOfPayment}
+                <span style={{
+                  color: isWithinIntervalMaturityDate ? 'red' : '',
+                  fontWeight: isWithinIntervalMaturityDate ? '900' : '',
+                }}>{maturityOfTheBoleto ? `(${maturityOfTheBoleto})` : ''}
+                </span>
+              </div>
+              {isBoletoUploaded && <div>Boleto Importado.</div>}
+            </div>
           )
         } else {
           return <div>{formOfPayment}</div>
