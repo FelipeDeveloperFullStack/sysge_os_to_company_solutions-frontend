@@ -84,7 +84,7 @@ export const useColumns = (props: ColumnsProps) => {
     {
       field: 'formOfPayment',
       headerName: 'Forma Pagamento',
-      width: 170,
+      width: 130,
       renderCell: (params: GridCellParams) => {
         const { formOfPayment, maturityOfTheBoleto, isBoletoUploaded } = params.row
         const today = new Date()
@@ -102,7 +102,7 @@ export const useColumns = (props: ColumnsProps) => {
                 <span style={{
                   color: isWithinIntervalMaturityDate ? 'red' : '',
                   fontWeight: isWithinIntervalMaturityDate ? '900' : '',
-                }}>{maturityOfTheBoleto ? `(${maturityOfTheBoleto})` : ''}
+                }}>
                 </span>
               </div>
               {isBoletoUploaded && <div>Boleto Importado.</div>}
@@ -113,7 +113,31 @@ export const useColumns = (props: ColumnsProps) => {
         }
       },
     },
-    { field: 'dateOS', headerName: 'Data' },
+    {
+      field: 'maturityOfTheBoleto',
+      headerName: 'Vencimento',
+      width: 100,
+      renderCell: (params: GridCellParams) => {
+        const { maturityOfTheBoleto } = params.row
+        const today = new Date()
+        const threeDaysFromNow = addDays(today, 3)
+        const maturityDate = parse(
+          maturityOfTheBoleto || '',
+          'dd/MM/yyyy',
+          new Date(),
+        )
+        const isWithinIntervalMaturityDate = isBefore(maturityDate, threeDaysFromNow)
+        return (
+          <span style={{
+            color: isWithinIntervalMaturityDate ? 'red' : '',
+            fontWeight: isWithinIntervalMaturityDate ? '900' : '',
+          }}>
+            {maturityOfTheBoleto}
+          </span>
+        )
+      },
+    },
+    { field: 'dateOS', headerName: 'Entrada' },
     {
       field: 'group-buttons',
       headerName: ' ',
