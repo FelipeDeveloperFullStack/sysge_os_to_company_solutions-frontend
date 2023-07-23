@@ -11,7 +11,7 @@ import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
 import { RECEITAS_EDITAR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
 import { parse, isBefore, addDays, isWithinInterval } from 'date-fns'
-import { NotificationText } from './style'
+import { NofiticationMessage, NotificationText } from './style'
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -54,11 +54,16 @@ export const useColumns = (props: ColumnsProps) => {
       renderCell: (params: GridCellParams) => {
         const data = params.row as Income
         return (
-          <div>
-            <div>{data.clientName}</div>
-            {(data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto && data?.isBoletoUploaded) && <NotificationText>Notificação de cobrança enviado</NotificationText>}
-            {(!data?.isBoletoUploaded && data.formOfPayment === 'Boleto' && data.situation === 'PENDENTE') && <NotificationText warning={!data?.isBoletoUploaded}>Boleto não importado</NotificationText>}
-          </div>
+          <>
+            <NofiticationMessage>
+              <div>{data.clientName}</div>
+              <section>
+                {((data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto) && data.situation === 'PENDENTE') && <NotificationText>Notificação de cobrança enviado</NotificationText>}
+                {(!data?.isBoletoUploaded && data.formOfPayment === 'Boleto' && data.situation === 'PENDENTE') && <NotificationText warning={!data?.isBoletoUploaded}>Boleto não importado</NotificationText>}
+                {(data?.isBoletoUploaded) && <NotificationText success>Boleto Importado</NotificationText>}
+              </section>
+            </NofiticationMessage>
+          </>
         )
       },
     },
@@ -86,7 +91,7 @@ export const useColumns = (props: ColumnsProps) => {
       headerName: 'Forma Pagamento',
       width: 130,
       renderCell: (params: GridCellParams) => {
-        const { formOfPayment, maturityOfTheBoleto, isBoletoUploaded } = params.row
+        const { formOfPayment, maturityOfTheBoleto } = params.row as Income
         const today = new Date()
         const threeDaysFromNow = addDays(today, 3)
         const maturityDate = parse(
@@ -105,7 +110,6 @@ export const useColumns = (props: ColumnsProps) => {
                 }}>
                 </span>
               </div>
-              {isBoletoUploaded && <div>Boleto Importado.</div>}
             </div>
           )
         } else {
@@ -118,7 +122,7 @@ export const useColumns = (props: ColumnsProps) => {
       headerName: 'Vencimento',
       width: 100,
       renderCell: (params: GridCellParams) => {
-        const { maturityOfTheBoleto } = params.row
+        const { maturityOfTheBoleto, situation } = params.row as Income
         const today = new Date()
         const threeDaysFromNow = addDays(today, 3)
         const maturityDate = parse(
@@ -129,8 +133,8 @@ export const useColumns = (props: ColumnsProps) => {
         const isWithinIntervalMaturityDate = isBefore(maturityDate, threeDaysFromNow)
         return (
           <span style={{
-            color: isWithinIntervalMaturityDate ? 'red' : '',
-            fontWeight: isWithinIntervalMaturityDate ? '900' : '',
+            color: situation === 'PENDENTE' ? isWithinIntervalMaturityDate ? 'red' : '' : '',
+            fontWeight: situation === 'PENDENTE' ? isWithinIntervalMaturityDate ? '900' : '' : '',
           }}>
             {maturityOfTheBoleto}
           </span>
