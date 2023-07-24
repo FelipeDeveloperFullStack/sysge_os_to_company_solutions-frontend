@@ -18,6 +18,40 @@ export const UploadWithTemplate: React.FC<UploadWithTemplateProps> = ({ accept =
   const [messageSuccess, setMessageSuccess] = useState('')
   const dispatch = useDispatch()
 
+  const uploadInvoice = async (documentFiles) => {
+    let formData = new FormData();
+    for (const file of documentFiles) {
+      formData.append('file[]', file);
+    }
+    await fetch(endpoint,
+      {
+        method: 'POST',
+        body: formData
+      },
+    );
+  };
+
+  const invoiceUploadHandler = ({ files }) => {
+    //const [file] = files;
+    const fileList = Array.from(files) as File[]; // Forçando o tipo File[]
+
+    const fileReader = new FileReader();
+
+    fileReader.onload = (e) => {
+      uploadInvoice(fileList)
+      // for (const file of files) {
+      //   uploadInvoice([file]);
+      // }
+      //uploadInvoice(e.target.result);
+    };
+    //fileReader.readAsDataURL(file);
+    fileList.forEach((file) => {
+      fileReader.readAsDataURL(file);
+    });
+  };
+
+
+
   const updateRequests = () => {
     dispatch({
       type: LAYOUT_MAKE_REQUEST,
@@ -36,6 +70,8 @@ export const UploadWithTemplate: React.FC<UploadWithTemplateProps> = ({ accept =
     <div className="card">
       {messageSuccess && <Alert>{messageSuccess}</Alert>}
       <FileUpload
+        //customUpload={true}
+        //uploadHandler={invoiceUploadHandler}
         onUpload={onTemplateUpload}
         name={multiple ? 'file[]' : 'file'}
         url={endpoint}

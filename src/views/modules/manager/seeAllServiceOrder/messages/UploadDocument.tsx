@@ -47,7 +47,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
       {isBoletoUploaded && <Alert severity="warning">
         Ao clicar em <span><b>Enviar</b></span> o documento PDF importado irá <b>substituir</b> o arquivo já existente vinculando a ordem de serviço de nº <b>{osNumber}</b>.
       </Alert>}
-      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}`} />
+      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}`} multiple />
       <ButtonGroup>
         <Button
           textButton="Fechar"
