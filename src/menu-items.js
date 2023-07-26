@@ -1,6 +1,7 @@
 import {
   ADMINISTRATION_CLIENTS,
   ADMINISTRATION_EQUIPAMENTS,
+  ADMINISTRATION_MANAGER_EXTRACT_NUBANK,
   ADMINISTRATION_PIECES,
   ADMINISTRATION_SEE_ALL_PERMISSIONS,
   ADMINISTRATION_SERVICES,
@@ -119,6 +120,15 @@ const menuItems = {
           // icon: 'feather icon-monitor',
           icon: 'managerUsersIcon',
           permission: 'GESTAO_USUARIOS_VISUALIZAR',
+        },
+        {
+          id: 'extract_nubank',
+          title: 'Extrato de despesas',
+          type: 'item',
+          url: ADMINISTRATION_MANAGER_EXTRACT_NUBANK,
+          // icon: 'feather icon-monitor',
+          icon: 'extractNubankIcon',
+          permission: 'EXTRATO_NUBANK_VISUALIZAR',
         },
         // {
         //   id: 'charts',

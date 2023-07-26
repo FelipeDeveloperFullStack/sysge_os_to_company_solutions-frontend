@@ -15,6 +15,7 @@ import {
   ADMINISTRATION_EQUIPAMENTS,
   ADMINISTRATION_EQUIPAMENTS_CREATE,
   ADMINISTRATION_EQUIPAMENTS_EDIT,
+  ADMINISTRATION_MANAGER_EXTRACT_NUBANK,
   ADMINISTRATION_MANAGER_USER_CREATE,
   ADMINISTRATION_MANAGER_USER_EDIT,
   ADMINISTRATION_MODELS,
@@ -240,6 +241,11 @@ const routes = [
         component: lazy(() =>
           import('./views/modules/financial/Expenses/SeeAllExpenses'),
         ),
+      },
+      {
+        exact: true,
+        path: ADMINISTRATION_MANAGER_EXTRACT_NUBANK,
+        component: lazy(() => import('./views/modules/administration/nubank')),
       },
       {
         exact: true,

@@ -28,3 +28,5 @@ export const DASHBOARD = '/dashboard'
 export const ADMINISTRATION_SEE_ALL_PERMISSIONS = '/gestao-usuarios'
 export const ADMINISTRATION_MANAGER_USER_CREATE = '/gestao-usuarios/nova'
 export const ADMINISTRATION_MANAGER_USER_EDIT = '/gestao-usuarios/editar'
+// Extract Nubank
+export const ADMINISTRATION_MANAGER_EXTRACT_NUBANK = '/extract/nubank'
