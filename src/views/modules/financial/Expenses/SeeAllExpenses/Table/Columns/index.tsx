@@ -131,7 +131,16 @@ export const useColumns = (props: ColumnsProps) => {
         }
       },
     },
-    { field: 'user', headerName: 'Alterado' },
+    {
+      field: 'user',
+      headerName: 'Alterado',
+      renderCell: (params: GridCellParams) => {
+        const user = params.value as string
+        return (
+          <div style={user === 'NUBANK' ? { fontWeight: 900 } : { fontWeight: 100 }}>{user}</div>
+        )
+      },
+    },
     {
       field: 'group-buttons',
       headerName: ' ',

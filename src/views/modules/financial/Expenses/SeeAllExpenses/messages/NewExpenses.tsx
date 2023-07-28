@@ -227,6 +227,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
     <NewExpenseContainer>
       <form onSubmit={handleSubmit(onSubmitIncome)} autoComplete="off">
         <Row display="flex" flexDirection="column" gap={1}>
+          <Alert severity='warning'>Certifique-se de que ao adicionar esse despesa não tenha duplicidade com a importação do Nubank.</Alert>
           {!!messageError && <Alert severity="error">{messageError}</Alert>}
           <TitleModalNewExpense>Nova Despesa</TitleModalNewExpense>
           <Row
