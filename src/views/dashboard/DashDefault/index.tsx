@@ -37,6 +37,7 @@ export type Total = {
   totalValueExpenseInExpired: number
   qtdeExpenseInExpired: number
   totalValueIncomeInExpired3Days: number
+  totalPersonalExpense: number
   expiredTotal: number
   totalIncomesPending: number
   clientsWithoutEmail: ClientT[]
@@ -62,6 +63,7 @@ const DashDefault: React.FC = () => {
     totalValueIncomeInExpired3Days: 0,
     expiredTotal: 0,
     totalIncomesPending: 0,
+    totalPersonalExpense: 0,
     clientsWithoutEmail: [],
     boletoNotImported: []
   } as Total)
@@ -76,7 +78,8 @@ const DashDefault: React.FC = () => {
     getTotalExpired,
     getTotalExpiredMaturityIn3Days,
     getTotalClientWithoutEmail,
-    getTotalBoletoNotImported
+    getTotalBoletoNotImported,
+    getTotalPersonalExpense,
   } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
@@ -93,6 +96,7 @@ const DashDefault: React.FC = () => {
       await getTotalExpiredMaturityIn3Days()
       await getTotalClientWithoutEmail()
       await getTotalBoletoNotImported()
+      await getTotalPersonalExpense()
     } catch (err) {
       exceptionHandle(err)
     } finally {
@@ -221,19 +225,37 @@ const DashDefault: React.FC = () => {
         {typeUser === 'ADMIN' && <Col xl={3} >
           <Card>
             <Card.Body>
-              <h6 className="mb-4">Despesas</h6>
-              <div className="row d-flex align-items-center">
-                <div className="col-9">
-                  <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                    <i className="feather icon-arrow-down text-c-red f-30 m-r-5" />{' '}
-                    {formatPrice(total.totalExpenses)}
-                  </h3>
+              <h6 style={total.totalPersonalExpense > 0 ? { marginBottom: '12px' } : { marginBottom: '12px' }} className={total.totalPersonalExpense === 0 && 'mb-4'}>Despesas</h6>
+              {total.totalPersonalExpense > 0 ?
+                <div className="row d-flex align-items-center">
+                  <div className="col-9">
+                    <h5 className="f-w-300 d-flex align-items-center m-b-0" style={{ width: '245px' }}>
+                      <i className="feather icon-arrow-down text-c-red f-15 m-r-5" />{' '}
+                      {formatPrice(total.totalExpenses - total.totalPersonalExpense)} Empresa
+                    </h5>
+                  </div>
+                  <div className="col-9">
+                    <h5 className="f-w-300 d-flex align-items-center m-b-0" style={{ width: '245px' }}>
+                      <i className="feather icon-arrow-down text-c-red f-15 m-r-5" />{' '}
+                      {formatPrice(total.totalPersonalExpense)} Pessoal
+                    </h5>
+                  </div>
+                  <div className="col-3 text-right">
+                    {/* <p className="m-b-0">36%</p> */}
+                  </div>
+                </div> :
+                <div className="row d-flex align-items-center">
+                  <div className="col-9">
+                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                      <i className="feather icon-arrow-down text-c-red f-30 m-r-5" />{' '}
+                      {formatPrice(total.totalExpenses)}
+                    </h3>
+                  </div>
+                  <div className="col-3 text-right">
+                    {/* <p className="m-b-0">36%</p> */}
+                  </div>
                 </div>
-
-                <div className="col-3 text-right">
-                  {/* <p className="m-b-0">36%</p> */}
-                </div>
-              </div>
+              }
               {/* <div className="progress m-t-30" style={{ height: '7px' }}>
                 <div
                   className="progress-bar progress-c-theme2"

@@ -9,6 +9,19 @@ type DashboardProps = {
 export const useDashBoard = ({ setTotal }: DashboardProps) => {
   const { apiAdmin } = useAdmin()
 
+  const getTotalPersonalExpense = async () => {
+    try {
+      const { data } = await apiAdmin.get('expense/personal')
+      setTotal((previousState) => ({
+        ...previousState,
+        totalPersonalExpense: data?.total,
+      }))
+    } catch (error) {
+      toast.error(
+        'Houve um erro ao tentar retornar o total de receitas de vencer na plataforma.',
+      )
+    }
+  }
   const getTotalExpiredMaturityIn3Days = async () => {
     try {
       const { data } = await apiAdmin.get('orderServices/total/maturity-boleto')
@@ -194,6 +207,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
     getTotalExpired,
     getTotalExpiredMaturityIn3Days,
     getTotalClientWithoutEmail,
-    getTotalBoletoNotImported
+    getTotalBoletoNotImported,
+    getTotalPersonalExpense
   }
 }
