@@ -45,7 +45,7 @@ const AmChartStatistics6 = (props) => {
           fillColors: ['#DC143C', '#DC143C'],
           fillAlphas: 1,
           type: 'column',
-          title: 'DESPESAS ',
+          title: 'DESPESAS EMPRESA',
           valueField: 'expenses',
           columnWidth: 0.3,
           legendValueText: 'R$ [[value]]',
@@ -54,6 +54,20 @@ const AmChartStatistics6 = (props) => {
         },
         {
           id: 'g3',
+          valueAxis: 'v1',
+          lineColor: ['#FA8072', '#FA8072'],
+          fillColors: ['#FA8072', '#FA8072'],
+          fillAlphas: 1,
+          type: 'column',
+          title: 'DESPESAS PESSOAIS ',
+          valueField: 'personal_expenses',
+          columnWidth: 0.3,
+          legendValueText: 'R$ [[value]]',
+          balloonText:
+            "[[title]]<br /><b style='font-size: 130%'>R$ [[value]]</b>",
+        },
+        {
+          id: 'g4',
           valueAxis: 'v1',
           lineColor: ['#32CD32', '#32CD32'],
           fillColors: ['#32CD32', '#32CD32'],
@@ -74,7 +88,7 @@ const AmChartStatistics6 = (props) => {
         cursorAlpha: 0,
         valueLineAlpha: 0.2,
       },
-      categoryField: 'Month',
+      categoryField: 'month',
       categoryAxis: {
         dashLength: 1,
         gridAlpha: 0,
@@ -82,40 +96,28 @@ const AmChartStatistics6 = (props) => {
         lineAlpha: 0,
         minorGridEnabled: true,
       },
-      legend: {
-        useGraphSettings: true,
-        position: 'top',
+      // legend: {
+      //   useGraphSettings: true,
+      //   position: 'top',
+      // },
+      // Configuração do numberFormatter
+      numberFormatter: {
+        decimalSeparator: ',',
+        thousandsSeparator: '.',
+        precision: 2,
+        decimalPlaces: 2,
+        usePrefixes: true,
+        prefixesOfBigNumbers: [
+          { number: 1e3, prefix: 'mil' },
+          { number: 1e6, prefix: 'milhões' },
+          { number: 1e9, prefix: 'bilhões' },
+        ],
       },
       balloon: {
         borderThickness: 1,
         shadowAlpha: 0,
       },
-      dataProvider: [
-        {
-          Month: 'JAN',
-          incomes: 200.9,
-          expenses: 50,
-          profit: 150.9,
-        },
-        {
-          Month: 'FEV',
-          incomes: 400,
-          expenses: 100,
-          profit: 300,
-        },
-        {
-          Month: 'MAR',
-          incomes: 150,
-          expenses: 50,
-          profit: 100,
-        },
-        {
-          Month: 'ABR',
-          incomes: 50,
-          expenses: 10,
-          profit: 40.51,
-        },
-      ],
+      dataProvider: props.dataChart,
     })
   })
 

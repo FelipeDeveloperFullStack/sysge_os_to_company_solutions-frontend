@@ -26,6 +26,14 @@ import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
 // import avatar2 from '../../../assets/images/user/avatar-2.jpg'
 // import avatar3 from '../../../assets/images/user/avatar-3.jpg'
 
+export type DataChart = {
+  month: string
+  incomes: number
+  expenses: number
+  personal_expenses: number
+  profit: number
+}
+
 export type Total = {
   totalClients: number
   totalOrderService: number
@@ -42,6 +50,7 @@ export type Total = {
   totalIncomesPending: number
   clientsWithoutEmail: ClientT[]
   boletoNotImported: OSData[]
+  dataChart: DataChart[]
 }
 
 const DashDefault: React.FC = () => {
@@ -65,7 +74,8 @@ const DashDefault: React.FC = () => {
     totalIncomesPending: 0,
     totalPersonalExpense: 0,
     clientsWithoutEmail: [],
-    boletoNotImported: []
+    boletoNotImported: [],
+    dataChart: []
   } as Total)
   const {
     getTotalClients,
@@ -80,6 +90,7 @@ const DashDefault: React.FC = () => {
     getTotalClientWithoutEmail,
     getTotalBoletoNotImported,
     getTotalPersonalExpense,
+    getDataChart
   } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
@@ -97,6 +108,7 @@ const DashDefault: React.FC = () => {
       await getTotalClientWithoutEmail()
       await getTotalBoletoNotImported()
       await getTotalPersonalExpense()
+      await getDataChart()
     } catch (err) {
       exceptionHandle(err)
     } finally {
@@ -328,7 +340,7 @@ const DashDefault: React.FC = () => {
               <Card.Title as="h5">Gráfico</Card.Title>
             </Card.Header>
             <Card.Body>
-              <AmChartStatistics6 height="482px" />
+              <AmChartStatistics6 height="482px" dataChart={total.dataChart} />
             </Card.Body>
           </Card>
         </Col>}
