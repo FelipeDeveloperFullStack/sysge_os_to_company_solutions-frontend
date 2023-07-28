@@ -4,6 +4,7 @@ import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 import SyncIcon from '@mui/icons-material/Sync'
 import IconButton from '@mui/material/IconButton'
 import Chip from '@mui/material/Chip'
+import Tooltip from '@mui/material/Tooltip'
 import { useModal } from 'src/hooks/useModal'
 import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
 import { Expense } from '../adapter'
@@ -47,7 +48,19 @@ export const useColumns = (props: ColumnsProps) => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'expense', headerName: 'Despesa', width: 300 },
+    {
+      field: 'expense',
+      headerName: 'Despesa',
+      width: 400,
+      renderCell: (params: GridCellParams) => {
+        const data = params.row as Expense
+        return (
+          <Tooltip title={data.expense}>
+            <div>{data.expense}</div>
+          </Tooltip>
+        )
+      },
+    },
     {
       field: 'valueFormated',
       headerName: 'Valor',
