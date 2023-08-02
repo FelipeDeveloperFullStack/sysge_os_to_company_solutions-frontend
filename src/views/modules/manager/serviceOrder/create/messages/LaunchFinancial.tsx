@@ -113,7 +113,6 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
 
   useEffect(() => {
     const onlyNumber = onlyNumbers(getDateCurrent())
-    console.log({ onlyNumber })
     if (onlyNumber.length === 8) {
       setOptionMaturity(addDaysMaturity(getDateCurrent()))
     }

@@ -163,10 +163,13 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
           cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
 
-        const dataMapped = data?.map((val: ServiceT) => ({
-          value: val._id,
-          label: val.description,
-        }))
+        const dataMapped = data?.map((val: ServiceT) => {
+          const valueFormated = formatPrice(val.value)
+          return {
+            value: val._id,
+            label: `[${valueFormated}] - ${val.description}`,
+          }
+        })
 
         setOptionPiece(dataMapped)
       } catch (error) {

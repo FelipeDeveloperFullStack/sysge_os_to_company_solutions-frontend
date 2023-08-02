@@ -133,21 +133,22 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
     // await updateDateOSGenerated()
   }
 
-  const resultNewArray = (data: any[]) => {
+  const resultNewArray = (data: any[], lengthTotal?: number) => {
+    const length = lengthTotal ? lengthTotal : 6
     if (data?.length) {
-      const lengthData = 6 - data?.length
-      if (lengthData < 6) {
+      const lengthData = length - data?.length
+      if (lengthData < length) {
         return [...data, ...new Array(lengthData).fill('')]
       } else {
         return data
       }
     } else {
-      return [...new Array(6).fill('')]
+      return [...new Array(length).fill('')]
     }
   }
 
   const resultRowItemServices = (data: any[]): ItemServices[] => {
-    return resultNewArray(data)
+    return resultNewArray(data, 8)
   }
 
   const resultRowLaudos = (data: any[]): Laudo[] => {

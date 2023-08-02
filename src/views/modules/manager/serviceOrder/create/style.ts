@@ -22,3 +22,8 @@ export const InputTextOSNumberDisabled = styled(InputText)`
     font-weight: bold;
   }
 `
+
+export const GroupDiscount = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+`

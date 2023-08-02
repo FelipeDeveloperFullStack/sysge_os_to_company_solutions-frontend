@@ -7,7 +7,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Checkbox, FormGroup, FormControlLabel } from '@mui/material'
+import { Checkbox, FormGroup, FormControlLabel, Radio, RadioGroup, FormLabel, FormControl } from '@mui/material'
 import {
   Autocomplete,
   AutocompleteOptions,
@@ -29,6 +29,7 @@ import {
   ButtonContainer,
   Container,
   Form,
+  GroupDiscount,
 } from './style'
 import LaudoTechnicalTable from './tables/laudoTechnical'
 import PiecesTable from './tables/pieces'
@@ -46,9 +47,11 @@ import { toast } from 'src/components/Widgets/Toastify'
 import InputMask from 'src/components/Form/InputMask'
 import { fromApiClient } from './adapters/fromApi'
 
+type TypeDiscount = 'porcent' | 'real'
+
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
-
+  const [typeDiscount, setTypeDiscount] = useState<TypeDiscount>('porcent')
   const { apiAdmin } = useAdmin()
 
   const equipaments = useSelector(
@@ -574,7 +577,7 @@ const CreateOrderService: React.FC = () => {
     event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === 'Backspace') {
-      setDiscount((previousState) => previousState.replace('%', ''))
+      setDiscount((previousState) => previousState.replace('%', '').replace('R$', ''))
       let { clean: totalManPower } = formatInputPrice(manpower)
       if (!totalManPower) {
         totalManPower = 0
@@ -596,11 +599,20 @@ const CreateOrderService: React.FC = () => {
     if (!totalManPower) {
       totalManPower = 0
     }
-    let totalDiscount = discount.replace('%', '')
-    setDiscount(`${totalDiscount}%`)
-    let total = totalPieces + totalLaudoTech + totalManPower
-    total = total * (1 - Number(totalDiscount) / 100)
-    setTotal(() => formatPrice(total))
+    if (typeDiscount === 'porcent') {
+      let totalDiscount = String(discount).replace('R$', '').replace('%', '').replace(',', '.').trim()
+      setDiscount(`${totalDiscount}%`)
+      let total = totalPieces + totalLaudoTech + totalManPower
+      total = total * (1 - Number(totalDiscount) / 100)
+      setTotal(() => formatPrice(total))
+    } else {
+
+      let totalDiscount = String(discount).replace('R$', '').replace('%', '').replace(',', '.').trim()
+      setDiscount(`R$ ${totalDiscount}`)
+      let total = totalPieces + totalLaudoTech + totalManPower
+      total = total - Number(totalDiscount)
+      setTotal(() => formatPrice(total))
+    }
   }
 
   const onKeyUpManpower = () => {
@@ -673,6 +685,15 @@ const CreateOrderService: React.FC = () => {
     history.push(MANAGER_SERVICE_ORDER)
     resetAllField()
   }
+
+  const onHandleChangeTypeDiscount = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTypeDiscount((event.target as HTMLInputElement).value as TypeDiscount);
+    setDiscount('')
+    let { clean: totalManPower } = formatInputPrice(manpower)
+    let total = totalPieces + totalLaudoTech + totalManPower
+    total = total - 0
+    setTotal(() => formatPrice(total))
+  };
 
   React.useEffect(() => {
     if (!checkBoxEnableEquipaments) {
@@ -952,19 +973,31 @@ const CreateOrderService: React.FC = () => {
             onKeyDown={handleKeyDownManPower}
             disabled={isDisableManPower}
           />
-          <InputText
-            type="text"
-            label="Desconto"
-            mask={''}
-            value={discount}
-            setValue={setDiscount}
-            onChange={(event) => setDiscount && setDiscount(event.target.value)}
-            autoComplete="off"
-            onKeyUp={onKeyUpDiscount}
-            onKeyDown={handleKeyDownDiscount}
-            disabled={isDisableManPower}
-            isPercent
-          />
+          <GroupDiscount>
+            <FormControl style={{ marginTop: '25px' }}>
+              <RadioGroup
+                row
+                value={typeDiscount}
+                onChange={onHandleChangeTypeDiscount}
+              >
+                <FormControlLabel value="porcent" control={<Radio />} label="%" />
+                <FormControlLabel value="real" control={<Radio />} label="R$" />
+              </RadioGroup>
+            </FormControl>
+            <InputText
+              type="text"
+              label={typeDiscount === 'real' ? 'Desconto em Real' : 'Desconto em Porcentagem'}
+              mask={''}
+              value={discount}
+              setValue={setDiscount}
+              onChange={(event) => setDiscount && setDiscount(event.target.value)}
+              autoComplete="off"
+              onKeyUp={onKeyUpDiscount}
+              onKeyDown={handleKeyDownDiscount}
+              disabled={isDisableManPower}
+              isPercent={typeDiscount === 'porcent'}
+            />
+          </GroupDiscount>
           <InputText
             type="text"
             label="Total"

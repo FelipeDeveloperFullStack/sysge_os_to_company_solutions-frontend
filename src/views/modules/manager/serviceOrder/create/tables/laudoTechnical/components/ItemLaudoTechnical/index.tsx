@@ -186,10 +186,13 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
           // cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
 
-        const dataMapped = response?.data?.map((val: ServiceT) => ({
-          value: val._id,
-          label: val.description,
-        }))
+        const dataMapped = response?.data?.map((val: ServiceT) => {
+          const valueFormated = formatPrice(val.value)
+          return {
+            value: val._id,
+            label: `[${valueFormated}] - ${val.description}`,
+          }
+        })
 
         setOptionLaudoTech(dataMapped)
         dispatch({
