@@ -18,6 +18,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   name,
   typeDocument,
   isBoletoUploaded,
+  clientName
 }) => {
   const { closeModal } = useModal()
   const { user } = useAuth()
@@ -37,7 +38,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
           {getTypeDocument(typeDocument)}: <span>{osNumber}</span>
         </div>
         <div>
-          Cliente: <span>{name}</span>
+          Cliente: <span>{name || clientName}</span>
         </div>
       </Text>
       {isBoletoUploaded && <Alert>Já existe um boleto vinculado a essa ordem de serviço.</Alert>}

@@ -1,6 +1,7 @@
 export type MappedDataServiceOrders = {
   id: string
   name: string
+  clientName?: string
   osNumber: string
   dateOS: string
   total: string

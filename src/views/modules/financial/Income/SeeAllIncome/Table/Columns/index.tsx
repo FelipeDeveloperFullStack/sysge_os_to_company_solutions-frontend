@@ -1,17 +1,21 @@
 import { GridCellParams, GridColDef } from '@mui/x-data-grid'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
-import SyncIcon from '@mui/icons-material/Sync'
+// import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
+// import SyncIcon from '@mui/icons-material/Sync'
 import IconButton from '@mui/material/IconButton'
 import Chip from '@mui/material/Chip'
 import { useModal } from 'src/hooks/useModal'
 import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
 import { Income } from '../adapter'
 import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
-import { RECEITAS_EDITAR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import { ORDEM_SERVICO_EXCLUIR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
-import { parse, isBefore, addDays, isWithinInterval } from 'date-fns'
+import { parse, isBefore, addDays } from 'date-fns'
 import { NofiticationMessage, NotificationText } from './style'
+import { Tooltip } from '@mui/material'
+import TaskIcon from '@mui/icons-material/Task';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import UploadDocument from 'src/views/modules/manager/seeAllServiceOrder/messages/UploadDocument'
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -45,6 +49,13 @@ export const useColumns = (props: ColumnsProps) => {
         situation,
         setMakeRequest: props.setMakeRequest,
       })
+    }
+  }
+
+  const onUploadDocument = (params: GridCellParams) => {
+    if (params.field === 'group-buttons') {
+      const serviceOrder = params.row as Income
+      showMessage(UploadDocument, serviceOrder, true)
     }
   }
 
@@ -171,6 +182,19 @@ export const useColumns = (props: ColumnsProps) => {
               <DeleteForeverIcon />
             </IconButton>
           </>
+          {(params.row.typeDocument !== 'ORCAMENTO'
+            && params.row.situation === 'PENDENTE'
+            && params.row.formOfPayment === 'Boleto') &&
+            <Tooltip title={params.row?.isBoletoUploaded ? 'Boleto importado' : 'Importar boleto'}>
+              <IconButton
+                aria-label="Importar Boleto"
+                color={params.row?.isBoletoUploaded ? 'info' : 'default'}
+                onClick={() => onUploadDocument(params)}
+                disabled={!hasPermission(ORDEM_SERVICO_EXCLUIR)}
+              >
+                {!params.row?.isBoletoUploaded ? <UploadFileIcon /> : <TaskIcon />}
+              </IconButton>
+            </Tooltip>}
         </>
       ),
     },

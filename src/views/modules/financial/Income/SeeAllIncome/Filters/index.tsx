@@ -16,6 +16,8 @@ import { ptBR } from 'date-fns/locale'
 import hasNumber from 'src/helpers/hasNumber'
 import { socket } from 'src/services/Socket'
 import { EVENT_UPDATE_OS_ORCAMENTO } from 'src/services/Socket/EventTypes'
+import { useSelector } from 'react-redux'
+import { IStore } from 'src/store/Types'
 
 type SeeAllIncomeProps = {
   nameOrOsNumber: string
@@ -45,6 +47,7 @@ const Filters: React.FC<FiltersProps> = ({
   )
   const nameOrOsNumber = watch('nameOrOsNumber')
   const [isUsingLoading, setIsUsingLoading] = useState(true)
+  const makeRequestGlobal = useSelector((state: IStore) => state.layout.makeRequest)
 
   const onSubmitIncome = (nameOrOsNumber: SeeAllIncomeProps) => {
     // const result = dateFilter(`${monthSelected}/${yearSelected}`, incomes)
@@ -216,7 +219,7 @@ const Filters: React.FC<FiltersProps> = ({
        */
       getDataOrderServices()
     })
-  }, [makeRequest])
+  }, [makeRequest, makeRequestGlobal])
 
   useEffect(() => {
     const result = dateFilter(
