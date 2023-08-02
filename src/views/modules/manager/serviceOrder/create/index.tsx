@@ -606,7 +606,6 @@ const CreateOrderService: React.FC = () => {
       total = total * (1 - Number(totalDiscount) / 100)
       setTotal(() => formatPrice(total))
     } else {
-
       let totalDiscount = String(discount).replace('R$', '').replace('%', '').replace(',', '.').trim()
       setDiscount(`R$ ${totalDiscount}`)
       let total = totalPieces + totalLaudoTech + totalManPower
