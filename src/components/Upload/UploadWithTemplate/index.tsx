@@ -11,11 +11,12 @@ interface UploadWithTemplateProps {
   endpoint: string
   multiple?: boolean
   call?: () => Promise<void>
+  closeModal?: () => void
 }
 
 type AcceptType = '.pdf' | 'video/*' | 'audio/*' | 'image/jpeg, image/png' | 'image/*'
 
-export const UploadWithTemplate: React.FC<UploadWithTemplateProps> = ({ accept = '.pdf', endpoint, multiple = false, call }) => {
+export const UploadWithTemplate: React.FC<UploadWithTemplateProps> = ({ accept = '.pdf', endpoint, multiple = false, call, closeModal }) => {
   const [messageSuccess, setMessageSuccess] = useState('')
   const dispatch = useDispatch()
 
@@ -64,8 +65,10 @@ export const UploadWithTemplate: React.FC<UploadWithTemplateProps> = ({ accept =
 
   const onTemplateUpload = () => {
     call && call()
-    setMessageSuccess('Arquivo importado com sucesso.');
+    setMessageSuccess('Arquivo(s) importado com sucesso.');
     updateRequests()
+    closeModal && closeModal()
+    toast.success('Arquivo(s) importado com sucesso')
   }
 
   return (

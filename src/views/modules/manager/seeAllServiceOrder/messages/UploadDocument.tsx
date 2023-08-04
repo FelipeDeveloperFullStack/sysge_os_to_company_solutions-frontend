@@ -13,6 +13,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import RemoveConfirmationDocuments from './RemoveConfirmationDocuments'
+import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { useDispatch } from 'react-redux'
 
 type Documents = {
   fileName: string
@@ -24,11 +27,14 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   name,
   typeDocument,
   isBoletoUploaded,
-  clientName
+  clientName,
+  setMakeRequest
 }) => {
-  const { closeModal } = useModal()
+  const { closeModal, showMessage } = useModal()
   const { user } = useAuth()
   const { apiAdmin } = useAdmin()
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
   const [documents, setDocuments] = useState<Documents[]>([] as Documents[])
 
   const getTypeDocument = (typeDocument: string) => {
@@ -66,8 +72,36 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
     window.open(blobUrl, '_blank');
   }
 
+  const deleteDocument = async (fileName: string) => {
+    try {
+      setLoading(true)
+      const { data } = await apiAdmin.delete(`orderServices/documents`, {
+        params: {
+          fileName
+        }
+      })
+      setDocuments(data)
+      await getDocuments()
+    } catch (error) {
+      exceptionHandle(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getConfirmationMessageToDeleteDocument = (fileName: string) => {
+    showMessage(RemoveConfirmationDocuments, { fileName, deleteDocument, loading, setMakeRequest }, true)
+  }
+
   React.useEffect(() => {
     getDocuments()
+    setMakeRequest && setMakeRequest(Math.random())
+    dispatch && dispatch({
+      type: LAYOUT_MAKE_REQUEST,
+      payload: {
+        makeRequest: Math.random(),
+      },
+    })
   }, [])
 
   return (
@@ -102,7 +136,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
                 </IconButton>
               </Tooltip>
               <Tooltip title='Excluir'>
-                <IconButton color='error'>
+                <IconButton color='error' onClick={() => getConfirmationMessageToDeleteDocument(doc.fileName)}>
                   <DeleteForeverIcon />
                 </IconButton>
               </Tooltip>
@@ -111,7 +145,10 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
           </ContainerDocuments>
         </ContainerUploadDocuments>
       ))}
-      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}`} multiple call={getDocuments} />
+      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}`}
+        multiple
+        call={getDocuments}
+        closeModal={closeModal} />
       <ButtonGroup>
         <Button
           textButton="Fechar"

@@ -55,7 +55,7 @@ export const useColumns = (props: ColumnsProps) => {
   const onUploadDocument = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
       const serviceOrder = params.row as Income
-      showMessage(UploadDocument, serviceOrder, true)
+      showMessage(UploadDocument, { ...serviceOrder, setMakeRequest: props.setMakeRequest, }, true)
     }
   }
 
