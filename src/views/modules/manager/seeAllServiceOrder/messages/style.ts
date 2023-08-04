@@ -5,6 +5,15 @@ export const Modal = styled.section`
   //display: none;
 `
 
+export const ContainerUploadDocuments = styled.section`
+  margin-left: 15px;
+`
+export const ContainerDocuments = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`
+
 export const Container = styled.section`
   //padding: 15px;
   display: flex;
