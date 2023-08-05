@@ -50,7 +50,8 @@ const TableView: React.FC<TableViewProps> = ({
           isSendThreeDayMaturityBoleto: item?.isSendThreeDayMaturityBoleto,
           user: item.user || '',
           formOfPayment: item.formOfPayment || '',
-          isBoletoUploaded: item.isBoletoUploaded
+          isBoletoUploaded: item.isBoletoUploaded,
+          isPartial: item.isPartial
         }
       })
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))

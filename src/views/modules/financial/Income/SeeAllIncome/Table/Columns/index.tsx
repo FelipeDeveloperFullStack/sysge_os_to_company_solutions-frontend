@@ -1,14 +1,15 @@
 import { GridCellParams, GridColDef } from '@mui/x-data-grid'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-// import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
+//import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 // import SyncIcon from '@mui/icons-material/Sync'
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import IconButton from '@mui/material/IconButton'
 import Chip from '@mui/material/Chip'
 import { useModal } from 'src/hooks/useModal'
 import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
 import { Income } from '../adapter'
 import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
-import { ORDEM_SERVICO_EXCLUIR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import { RECEITAS_EDITAR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import { usePermission } from 'src/hooks/usePermission'
 import { parse, isBefore, addDays } from 'date-fns'
 import { NofiticationMessage, NotificationText } from './style'
@@ -16,6 +17,7 @@ import { Tooltip } from '@mui/material'
 import TaskIcon from '@mui/icons-material/Task';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import UploadDocument from 'src/views/modules/manager/seeAllServiceOrder/messages/UploadDocument'
+import { AddPartialIncome } from '../../messages/AddPartialIncome';
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -35,6 +37,18 @@ export const useColumns = (props: ColumnsProps) => {
         clientName,
         setMakeRequest: props.setMakeRequest,
         idFileCreatedGoogleDrive,
+      })
+    }
+  }
+  const onHandlePartialIncomes = (params: GridCellParams) => {
+    if (params.field === 'group-buttons') {
+      const { clientName, id, osNumber, valueFormated } = params.row as Income
+      showMessage(AddPartialIncome, {
+        id,
+        osNumber,
+        valueFormated,
+        clientName,
+        setMakeRequest: props.setMakeRequest,
       })
     }
   }
@@ -67,7 +81,8 @@ export const useColumns = (props: ColumnsProps) => {
         return (
           <>
             <NofiticationMessage>
-              <div>{data.clientName}</div>
+              {!data?.isPartial && <div>{data.clientName}</div>}
+              {data?.isPartial && <div><b>[PARCIAL]</b> {data.clientName}</div>}
               <section>
                 {((data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto) && data.situation === 'PENDENTE') && <NotificationText>Notificação de cobrança enviado</NotificationText>}
                 {(!data?.isBoletoUploaded && data.formOfPayment === 'Boleto' && data.situation === 'PENDENTE') && <NotificationText warning={!data?.isBoletoUploaded}>Boleto não importado</NotificationText>}
@@ -158,6 +173,7 @@ export const useColumns = (props: ColumnsProps) => {
       headerName: ' ',
       sortable: false,
       disableColumnMenu: true,
+      width: 140,
       renderCell: (params: GridCellParams) => (
         <>
           {/* <IconButton
@@ -190,11 +206,23 @@ export const useColumns = (props: ColumnsProps) => {
                 aria-label="Importar Boleto"
                 color={params.row?.isBoletoUploaded ? 'info' : 'default'}
                 onClick={() => onUploadDocument(params)}
-                disabled={!hasPermission(ORDEM_SERVICO_EXCLUIR)}
+                disabled={!hasPermission(RECEITAS_EDITAR)}
               >
                 {!params.row?.isBoletoUploaded ? <UploadFileIcon /> : <TaskIcon />}
               </IconButton>
             </Tooltip>}
+          {params.row.situation === 'PENDENTE' && <>
+            <Tooltip title={'Adicionar Recebimento Parcial'}>
+              <IconButton
+                aria-label="parcial"
+                color="info"
+                onClick={() => onHandlePartialIncomes(params)}
+                disabled={!hasPermission(RECEITAS_EDITAR)}
+              >
+                <CurrencyExchangeIcon />
+              </IconButton>
+            </Tooltip>
+          </>}
         </>
       ),
     },

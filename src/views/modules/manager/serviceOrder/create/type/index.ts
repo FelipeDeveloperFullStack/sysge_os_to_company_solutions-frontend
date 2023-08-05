@@ -44,6 +44,7 @@ export type OSData = {
   maturityOfTheBoleto?: string
   isSendThreeDayMaturityBoleto?: boolean
   isSendNowDayMaturityBoleto?: boolean
+  isPartial?: boolean
   user?: string
   _id?: string
 }

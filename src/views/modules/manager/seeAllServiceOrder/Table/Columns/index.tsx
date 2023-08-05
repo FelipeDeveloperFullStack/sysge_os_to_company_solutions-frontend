@@ -89,7 +89,8 @@ export const useColumns = () => {
         const data = params.row as MappedDataServiceOrders
         return (
           <div>
-            <div>{data.name}</div>
+            {!data?.isPartial && <div>{data.name}</div>}
+            {data?.isPartial && <div><b>[PARCIAL]</b>{data.name}</div>}
             {/* {(data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto) && <NotificationText>Notificação de cobrança enviado</NotificationText>} */}
           </div>
         )
@@ -167,7 +168,7 @@ export const useColumns = () => {
       width: 150,
       renderCell: (params: GridCellParams) => (
         <>
-          <Tooltip title='Visualizar PDF' >
+          {!params.row.isPartial && <Tooltip title='Visualizar PDF' >
             <IconButton
               aria-label="PDF"
               color="info"
@@ -175,7 +176,7 @@ export const useColumns = () => {
             >
               <PdfIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip>}
 
           {params.row.status === "PENDENTE" && (
             <>
@@ -186,7 +187,7 @@ export const useColumns = () => {
               </Tooltip> */}
             </>
           )}
-          <Tooltip title='Excluir'>
+          {!params.row.isPartial && <Tooltip title='Excluir'>
             <IconButton
               aria-label="excluir"
               color="error"
@@ -195,7 +196,7 @@ export const useColumns = () => {
             >
               <DeleteForeverIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip>}
           {params.row.typeDocument === 'ORCAMENTO' && <Tooltip title={`${params.row.typeDocument === 'ORCAMENTO' ? 'Converter para ORDEM DE SERVIÇO' : 'Converter para ORÇAMENTO'}`}>
             <IconButton
               aria-label="Mudar de tipo de documento"
