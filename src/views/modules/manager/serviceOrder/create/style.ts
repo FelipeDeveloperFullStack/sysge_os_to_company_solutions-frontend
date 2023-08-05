@@ -25,5 +25,10 @@ export const InputTextOSNumberDisabled = styled(InputText)`
 
 export const GroupDiscount = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  //grid-template-columns: 1fr 2fr;
+`
+export const Total = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
 `

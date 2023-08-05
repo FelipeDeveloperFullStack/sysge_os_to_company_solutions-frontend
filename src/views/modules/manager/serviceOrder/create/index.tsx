@@ -30,6 +30,7 @@ import {
   Container,
   Form,
   GroupDiscount,
+  Total,
 } from './style'
 import LaudoTechnicalTable from './tables/laudoTechnical'
 import PiecesTable from './tables/pieces'
@@ -52,6 +53,7 @@ type TypeDiscount = 'porcent' | 'real'
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
   const [typeDiscount, setTypeDiscount] = useState<TypeDiscount>('porcent')
+  const [warranty, setWarranty] = useState(false)
   const { apiAdmin } = useAdmin()
 
   const equipaments = useSelector(
@@ -694,6 +696,15 @@ const CreateOrderService: React.FC = () => {
     setTotal(() => formatPrice(total))
   };
 
+  const onHandleChangeWarranty = (event: any) => {
+    setWarranty(event.target.checked);
+    if (!warranty) {
+      setManpower('Garantia')
+    } else {
+      setManpower('0.00')
+    }
+  };
+
   React.useEffect(() => {
     if (!checkBoxEnableEquipaments) {
       setEquipamentName({ label: '', value: '' })
@@ -960,53 +971,79 @@ const CreateOrderService: React.FC = () => {
           <PiecesTable setItemPieces={setItemPieces} itemPieces={itemPieces} />
         </Row>
         <Row columns="1fr 1fr 1fr" marginTop="10px">
-          <InputText
-            type="text"
-            label="Mão de Obra"
-            mask={''}
-            value={manpower}
-            setValue={setManpower}
-            onChange={(event) => setManpower && setManpower(event.target.value)}
-            autoComplete="off"
-            onKeyUp={onKeyUpManpower}
-            onKeyDown={handleKeyDownManPower}
-            disabled={isDisableManPower}
-          />
-          <GroupDiscount>
-            <FormControl style={{ marginTop: '25px' }}>
-              <RadioGroup
-                row
-                value={typeDiscount}
-                onChange={onHandleChangeTypeDiscount}
-              >
-                <FormControlLabel value="porcent" control={<Radio />} label="%" />
-                <FormControlLabel value="real" control={<Radio />} label="R$" />
-              </RadioGroup>
-            </FormControl>
+          <div>
+            <GroupDiscount>
+              {/* <FormControl >
+                <RadioGroup
+                  row
+                  value={warranty}
+                  onChange={onHandleChangeWarranty}
+                >
+                  <FormControlLabel value="warranty" control={<Radio />} label="Garantia" />
+                </RadioGroup>
+              </FormControl> */}
+              <FormGroup style={{ marginTop: '25px' }}>
+                <FormControlLabel
+                  control={<Checkbox />}
+                  checked={warranty}
+                  onChange={onHandleChangeWarranty}
+                  label={'Garantia'}
+                  value={warranty}
+                />
+              </FormGroup>
+            </GroupDiscount>
             <InputText
               type="text"
-              label={typeDiscount === 'real' ? 'Desconto em Real' : 'Desconto em Porcentagem'}
+              label="Mão de Obra"
               mask={''}
-              value={discount}
-              setValue={setDiscount}
-              onChange={(event) => setDiscount && setDiscount(event.target.value)}
+              value={manpower}
+              setValue={setManpower}
+              onChange={(event) => setManpower && setManpower(event.target.value)}
               autoComplete="off"
-              onKeyUp={onKeyUpDiscount}
-              onKeyDown={handleKeyDownDiscount}
+              onKeyUp={onKeyUpManpower}
+              onKeyDown={handleKeyDownManPower}
               disabled={isDisableManPower}
-              isPercent={typeDiscount === 'porcent'}
             />
+          </div>
+          <GroupDiscount>
+            <div>
+              <FormControl style={{ marginTop: '25px' }}>
+                <RadioGroup
+                  row
+                  value={typeDiscount}
+                  onChange={onHandleChangeTypeDiscount}
+                >
+                  <FormControlLabel value="porcent" control={<Radio />} label="%" />
+                  <FormControlLabel value="real" control={<Radio />} label="R$" />
+                </RadioGroup>
+              </FormControl>
+              <InputText
+                type="text"
+                label={typeDiscount === 'real' ? 'Desconto em Real' : 'Desconto em Porcentagem'}
+                mask={''}
+                value={discount}
+                setValue={setDiscount}
+                onChange={(event) => setDiscount && setDiscount(event.target.value)}
+                autoComplete="off"
+                onKeyUp={onKeyUpDiscount}
+                onKeyDown={handleKeyDownDiscount}
+                disabled={isDisableManPower}
+                isPercent={typeDiscount === 'porcent'}
+              />
+            </div>
           </GroupDiscount>
-          <InputText
-            type="text"
-            label="Total"
-            value={total}
-            setValue={setTotal}
-            autoComplete="off"
-            hasError={!!messageErrorTotal}
-            msgError={messageErrorTotal}
-            disabled
-          />
+          <Total>
+            <InputText
+              type="text"
+              label="Total"
+              value={total}
+              setValue={setTotal}
+              autoComplete="off"
+              hasError={!!messageErrorTotal}
+              msgError={messageErrorTotal}
+              disabled
+            />
+          </Total>
         </Row>
         <ButtonContainer>
           <Button
