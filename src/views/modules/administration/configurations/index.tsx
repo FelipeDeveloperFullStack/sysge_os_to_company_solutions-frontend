@@ -19,10 +19,12 @@ type UpdateHandle = {
 }
 
 type SocketResponse = {
-  event?: string
-  base64?: string
-  state?: string
-  stateReason?: number
+  data: {
+    event?: string
+    base64?: string
+    state?: string
+    stateReason?: number
+  }
 }
 
 const ConfigurationsSystem: React.FC = () => {
@@ -31,7 +33,7 @@ const ConfigurationsSystem: React.FC = () => {
   const [isEnableSendConfigurationEmail, setIsEnableSendConfigurationEmail] = useState(false)
   const [makeRequest, setMakeRequest] = useState<number>()
   const [labelButton, setLabelButton] = useState('Conectar')
-  const [webSocketData, setWebSocketData] = useState<SocketResponse>({} as SocketResponse)
+  const [webSocketData, setWebSocketData] = useState<any>({})
   const { apiAdmin } = useAdmin()
   const { showMessage } = useModal()
 
@@ -80,12 +82,13 @@ const ConfigurationsSystem: React.FC = () => {
   }, [makeRequest])
 
   React.useEffect(() => {
-    socket.on(CONNECTION_UPDATE, (data: SocketResponse) => {
-      setWebSocketData({ state: data?.state, stateReason: data?.stateReason })
+    socket.on(CONNECTION_UPDATE, (response: SocketResponse) => {
+      setWebSocketData({ state: response?.data?.state, stateReason: response?.data?.stateReason })
     })
-    socket.on(QRCODE_UPDATED, (data: SocketResponse) => {
-      setWebSocketData({ base64: data?.base64 })
-      showMessage(ConnectionQrCode, { qrCode: data?.base64 })
+    socket.on(QRCODE_UPDATED, (response: SocketResponse) => {
+      const base64 = response?.data?.base64
+      setWebSocketData({ base64 })
+      showMessage(ConnectionQrCode, { qrCode: base64 })
     })
   }, [])
 
