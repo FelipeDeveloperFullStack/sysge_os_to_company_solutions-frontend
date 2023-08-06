@@ -18,13 +18,11 @@ type UpdateHandle = {
   isEnableWhatsappBilling?: boolean
 }
 
-type SocketResponse = {
-  data: {
-    event?: string
-    base64?: string
-    state?: string
-    stateReason?: number
-  }
+export type SocketResponse = {
+  event?: string
+  base64?: string
+  state?: string
+  stateReason?: number
 }
 
 const ConfigurationsSystem: React.FC = () => {
@@ -82,15 +80,13 @@ const ConfigurationsSystem: React.FC = () => {
   }, [makeRequest])
 
   React.useEffect(() => {
-    socket.on(CONNECTION_UPDATE, (response: any) => {
-      console.log({ CONNECTION_UPDATE: response })
-      setWebSocketData({ state: response?.data?.state, stateReason: response?.data?.stateReason })
+    socket.on(CONNECTION_UPDATE, (response: SocketResponse) => {
+      setWebSocketData({ state: response?.state, stateReason: response?.stateReason })
     })
-    socket.on(QRCODE_UPDATED, (response: any) => {
-      console.log({ CONNECTION_UPDATE: response })
-      const base64 = response?.data?.base64
+    socket.on(QRCODE_UPDATED, (response: SocketResponse) => {
+      const base64 = response?.base64
       setWebSocketData({ base64 })
-      showMessage(ConnectionQrCode, { qrCode: base64 })
+      showMessage(ConnectionQrCode, { qrCode: base64, webSocketData })
     })
   }, [])
 
@@ -100,12 +96,15 @@ const ConfigurationsSystem: React.FC = () => {
     }
     if (webSocketData?.state === 'close' && webSocketData?.stateReason === 515) {
       setLabelButton('Conectar')
+      toast.error('Conexão com Whatsapp falhou, tente novamente!')
     }
     if (webSocketData?.state === 'close' && webSocketData?.stateReason === 408) {
       setLabelButton('Conectar')
+      toast.error('Conexão com Whatsapp falhou, tente novamente!')
     }
     if (webSocketData?.state === 'open' && webSocketData?.stateReason === 200) {
       setLabelButton('Conectado com sucesso.')
+      toast.success('Whatsapp conectado com sucesso!')
     }
   }, [webSocketData])
 
