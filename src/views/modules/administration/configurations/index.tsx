@@ -94,11 +94,7 @@ const ConfigurationsSystem: React.FC = () => {
     if (webSocketData?.state === 'connecting' && webSocketData?.stateReason === 200) {
       setLabelButton('Conectando...')
     }
-    if (webSocketData?.state === 'close' && webSocketData?.stateReason === 515) {
-      setLabelButton('Conectar')
-      toast.error('Conexão com Whatsapp falhou, tente novamente!')
-    }
-    if (webSocketData?.state === 'close' && webSocketData?.stateReason === 408) {
+    if (webSocketData?.state === 'close') {
       setLabelButton('Conectar')
       toast.error('Conexão com Whatsapp falhou, tente novamente!')
     }

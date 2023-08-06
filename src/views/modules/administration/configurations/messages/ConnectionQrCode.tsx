@@ -21,6 +21,7 @@ const ConnectionQrCode: React.FC<ConnectionQrCodeProps> = ({ qrCode, webSocketDa
     if (webSocketData?.state === 'open') {
       closeModal()
     }
+    console.log(webSocketData)
   }, [webSocketData?.state])
 
   return (
