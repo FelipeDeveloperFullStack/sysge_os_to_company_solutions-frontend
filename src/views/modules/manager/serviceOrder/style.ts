@@ -272,5 +272,13 @@ export const Text = styled.section<TextClientProps>`
       width: 125px !important;
       justify-content: center;
       align-items: center;
+      gap: 0px !important;
+      > span {
+        width: 120px;
+        align-self: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     `}
 `
