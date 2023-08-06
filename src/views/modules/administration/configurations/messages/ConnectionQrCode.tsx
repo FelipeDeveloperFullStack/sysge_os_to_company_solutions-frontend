@@ -7,22 +7,22 @@ import { useModal } from 'src/hooks/useModal';
 
 interface ConnectionQrCodeProps {
   qrCode: string
-  webSocketData: SocketResponse
+  webSocketState: string
 }
 
-const ConnectionQrCode: React.FC<ConnectionQrCodeProps> = ({ qrCode, webSocketData }) => {
+const ConnectionQrCode: React.FC<ConnectionQrCodeProps> = ({ qrCode, webSocketState }) => {
 
   const { closeModal } = useModal()
 
   React.useEffect(() => {
-    if (webSocketData?.state === 'close') {
+    if (webSocketState === 'close') {
       closeModal()
     }
-    if (webSocketData?.state === 'open') {
+    if (webSocketState === 'open') {
       closeModal()
     }
-    console.log(webSocketData)
-  }, [webSocketData?.state])
+    console.log(webSocketState)
+  }, [webSocketState])
 
   return (
     <Container>

@@ -32,6 +32,7 @@ const ConfigurationsSystem: React.FC = () => {
   const [makeRequest, setMakeRequest] = useState<number>()
   const [labelButton, setLabelButton] = useState('Conectar')
   const [webSocketData, setWebSocketData] = useState<SocketResponse>({} as SocketResponse)
+  const [webSocketState, setWebSocketState] = useState('')
   const { apiAdmin } = useAdmin()
   const { showMessage } = useModal()
 
@@ -82,11 +83,12 @@ const ConfigurationsSystem: React.FC = () => {
   React.useEffect(() => {
     socket.on(CONNECTION_UPDATE, (response: SocketResponse) => {
       setWebSocketData({ state: response?.state, stateReason: response?.stateReason })
+      setWebSocketState(response?.state)
     })
     socket.on(QRCODE_UPDATED, (response: SocketResponse) => {
       const base64 = response?.base64
       setWebSocketData({ ...webSocketData, base64 })
-      showMessage(ConnectionQrCode, { qrCode: base64, webSocketData }, true)
+      showMessage(ConnectionQrCode, { qrCode: base64, webSocketState }, true)
     })
   }, [])
 
