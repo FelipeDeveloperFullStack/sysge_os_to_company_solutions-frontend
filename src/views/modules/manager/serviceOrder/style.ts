@@ -23,6 +23,7 @@ type TextClientProps = {
   gap?: string
   position?: string
   bottom?: string
+  isParcialValue?: boolean
 }
 
 const swingButtonFinancial = keyframes`
@@ -63,6 +64,7 @@ export const PaperStyled = styled(Paper)<{
   flexDirection?: string
   alignItems?: string
   isNotUseBorder?: boolean
+  isParcialValue?: boolean
 }>`
   border-style: solid;
   border-color: gray;
@@ -86,6 +88,19 @@ export const PaperStyled = styled(Paper)<{
       .css-1ps6pg7-MuiPaper-root {
         border-style: none;
       }
+    `}
+  ${({ isParcialValue }) =>
+    isParcialValue &&
+    css`
+      /* display: grid !important;
+      grid-template-columns: 1fr 1fr 1fr !important;
+      padding-left: 29px !important; */
+      //padding-right: 25px;
+      display: flex;
+      flex-direction: row;
+      /* justify-content: space-between; */
+      justify-content: center;
+      padding-left: 35px;
     `}
   > div {
     > section {
@@ -247,4 +262,15 @@ export const Text = styled.section<TextClientProps>`
   gap: ${({ gap }) => gap};
   position: ${({ position }) => position};
   bottom: ${({ bottom }) => bottom};
+  ${({ isParcialValue }) =>
+    isParcialValue &&
+    css`
+      display: flex !important;
+      flex-direction: column !important;
+      font-size: 11px !important;
+      margin-right: 25px !important;
+      width: 125px !important;
+      justify-content: center;
+      align-items: center;
+    `}
 `

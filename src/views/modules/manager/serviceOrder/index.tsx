@@ -507,6 +507,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               fontSize="17px"
               flexDirection="column"
               alignItems="center"
+              isParcialValue={!!data?.valuePartial}
             >
               {!!data?.discount && (
                 <Text
@@ -514,11 +515,12 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   fontSize="11px"
                   display="flex"
                   gap="5px"
+                  isParcialValue={!!data?.valuePartial}
                 >
                   <b>Desconto: </b> <span>{data?.discount}</span>
                 </Text>
               )}
-              <Text isNotUsingBorderBottom fontSize="11px">
+              <Text isNotUsingBorderBottom fontSize="11px" isParcialValue={!!data?.valuePartial}>
                 <b>Mão De Obra: </b> {data?.manpower}
               </Text>
             </PaperStyled>
@@ -529,6 +531,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               fontSize="17px"
               flexDirection="column"
               alignItems="center"
+              isParcialValue={!!data?.valuePartial}
             >
               {!!data?.subTotal && (
                 <Text
@@ -537,8 +540,9 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   fontSize="11px"
                   display="flex"
                   gap="5px"
+                  isParcialValue={!!data?.valuePartial}
                 >
-                  <b>Valor S/Desconto: </b> <span>{data?.subTotal}</span>
+                  <b>{!!data?.valuePartial ? 'Valor Sem Desconto' : 'Valor S/Desconto:'} </b> <span>{data?.subTotal}</span>
                 </Text>
               )}
               {!!data?.valuePartial && (
@@ -548,12 +552,15 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   fontSize="11px"
                   display="flex"
                   gap="5px"
+                  justifyContent='center'
+                  isParcialValue={!!data?.valuePartial}
+                  width={!!data?.valuePartial ? '' : '225px'}
                 >
-                  <b>Valor Pago: </b> <span>{data?.valuePartial}</span>
+                  <b>{!!data?.valuePartial ? 'Valor Pago' : 'Valor Pago:'} </b> <span>{data?.valuePartial}</span>
                 </Text>
               )}
-              <Text marginRight="-20px" width='225px' isNotUsingBorderBottom display="flex">
-                <b>Total A Pagar: </b> {data?.status === 'PENDENTE' && data?.remainingValue ? data?.remainingValue : data?.total}
+              <Text marginRight="-20px" width='225px' isNotUsingBorderBottom display="flex" isParcialValue={!!data?.valuePartial}>
+                <b>{!!data?.valuePartial ? 'Total A Pagar' : 'Total A Pagar:'} </b> {data?.status === 'PENDENTE' && data?.remainingValue ? data?.remainingValue : data?.total}
               </Text>
             </PaperStyled>
           </Row>
