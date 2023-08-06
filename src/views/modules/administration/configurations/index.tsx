@@ -31,7 +31,7 @@ const ConfigurationsSystem: React.FC = () => {
   const [isEnableSendConfigurationEmail, setIsEnableSendConfigurationEmail] = useState(false)
   const [makeRequest, setMakeRequest] = useState<number>()
   const [labelButton, setLabelButton] = useState('Conectar')
-  const [webSocketData, setWebSocketData] = useState<any>({})
+  const [webSocketData, setWebSocketData] = useState<SocketResponse>({} as SocketResponse)
   const { apiAdmin } = useAdmin()
   const { showMessage } = useModal()
 
@@ -85,8 +85,8 @@ const ConfigurationsSystem: React.FC = () => {
     })
     socket.on(QRCODE_UPDATED, (response: SocketResponse) => {
       const base64 = response?.base64
-      setWebSocketData({ base64 })
-      showMessage(ConnectionQrCode, { qrCode: base64, webSocketData })
+      setWebSocketData({ ...webSocketData, base64 })
+      showMessage(ConnectionQrCode, { qrCode: base64, webSocketData }, true)
     })
   }, [])
 
