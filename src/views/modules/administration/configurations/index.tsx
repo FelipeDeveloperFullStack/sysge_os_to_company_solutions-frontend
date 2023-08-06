@@ -123,6 +123,12 @@ const ConfigurationsSystem: React.FC = () => {
         </FormGroup>
       </Paper>
       <Paper elevation={3}>
+        <Alert severity="info">Conexão com Whatsapp. (Apenas envio de mensagens)</Alert>
+        <ConnectionWhatsapp>
+          <Button textButton={labelButton} variant='contained' icon='whatsApp' onClick={onHandleConnectionButton} />
+        </ConnectionWhatsapp>
+      </Paper>
+      <Paper elevation={3}>
         <Alert severity="info">Ao marcar essa opção o sistema irá enviar a notificação de cobraça quando faltar 3 dias para o vencimento do boleto e no dia do vencimento.</Alert>
         <FormGroup>
           <Card>
@@ -135,12 +141,6 @@ const ConfigurationsSystem: React.FC = () => {
             />
           </Card>
         </FormGroup>
-      </Paper>
-      <Paper elevation={3}>
-        <Alert severity="info">Conexão com Whatsapp. (Apenas envio de mensagens)</Alert>
-        <ConnectionWhatsapp>
-          <Button textButton={labelButton} variant='contained' icon='whatsApp' onClick={onHandleConnectionButton} />
-        </ConnectionWhatsapp>
       </Paper>
     </Container>
   )

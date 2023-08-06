@@ -34,6 +34,8 @@ export type OSData = {
   itemPieces: ItemPieces[]
   total: string
   subTotal: string
+  valuePartial: string
+  remainingValue: string
   discount: string
   manpower: string
   osNumber: string

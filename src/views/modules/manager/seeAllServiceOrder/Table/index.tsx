@@ -40,7 +40,6 @@ const TableView: React.FC<TableViewProps> = ({
           name: item.client.name,
           osNumber: item.osNumber,
           dateOS: item.dateOS,
-          total: item.total,
           status: item.status,
           typeDocument: item.typeDocument,
           dateGeneratedOS: item.dateGeneratedOS,
@@ -51,7 +50,10 @@ const TableView: React.FC<TableViewProps> = ({
           user: item.user || '',
           formOfPayment: item.formOfPayment || '',
           isBoletoUploaded: item.isBoletoUploaded,
-          isPartial: item.isPartial
+          isPartial: item.isPartial,
+          total: item.total,
+          valuePartial: item?.valuePartial,
+          remainingValue: item?.remainingValue
         }
       })
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))

@@ -541,8 +541,19 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   <b>Valor S/Desconto: </b> <span>{data?.subTotal}</span>
                 </Text>
               )}
+              {!!data?.valuePartial && (
+                <Text
+                  marginRight="15px"
+                  isNotUsingBorderBottom
+                  fontSize="11px"
+                  display="flex"
+                  gap="5px"
+                >
+                  <b>Valor Pago: </b> <span>{data?.valuePartial}</span>
+                </Text>
+              )}
               <Text marginRight="-20px" width='225px' isNotUsingBorderBottom display="flex">
-                <b>Total A Pagar: </b> {data?.total}
+                <b>Total A Pagar: </b> {data?.status === 'PENDENTE' && data?.remainingValue ? data?.remainingValue : data?.total}
               </Text>
             </PaperStyled>
           </Row>

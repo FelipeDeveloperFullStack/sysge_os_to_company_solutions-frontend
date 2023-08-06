@@ -49,5 +49,7 @@ export const toApi = (data: OSData, osNumber: string): OSData => {
     manpower: data.manpower || null,
     discount: data.discount || null,
     subTotal: data.subTotal || null,
+    valuePartial: data.valuePartial || null,
+    remainingValue: data.remainingValue || null,
   }
 }
