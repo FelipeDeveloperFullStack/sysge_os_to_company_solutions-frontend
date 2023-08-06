@@ -6,8 +6,9 @@ import GroupIcon from '@mui/icons-material/Group'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
-import CreditCardIcon from '@mui/icons-material/CreditCard'
+//import CreditCardIcon from '@mui/icons-material/CreditCard'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
+import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices'
 import { Icon } from './style'
 
 const getIcon = (icon) => {
@@ -20,7 +21,7 @@ const getIcon = (icon) => {
     serviceIcon: <ManageAccountsIcon />,
     equipamentIcon: <ImportantDevicesIcon />,
     managerUsersIcon: <GroupAddIcon />,
-    extractNubankIcon: <CreditCardIcon />,
+    configurationsSystemIcon: <MiscellaneousServicesIcon />,
   }
   return icons[icon]
 }

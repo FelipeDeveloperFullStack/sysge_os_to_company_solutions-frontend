@@ -121,15 +121,14 @@ const menuItems = {
           icon: 'managerUsersIcon',
           permission: 'GESTAO_USUARIOS_VISUALIZAR',
         },
-        // {
-        //   id: 'extract_nubank',
-        //   title: 'Extrato de despesas',
-        //   type: 'item',
-        //   url: ADMINISTRATION_MANAGER_EXTRACT_NUBANK,
-        //   // icon: 'feather icon-monitor',
-        //   icon: 'extractNubankIcon',
-        //   permission: 'EXTRATO_NUBANK_VISUALIZAR',
-        // },
+        {
+          id: 'configurations',
+          title: 'Configurações',
+          type: 'item',
+          url: ADMINISTRATION_MANAGER_EXTRACT_NUBANK,
+          icon: 'configurationsSystemIcon',
+          permission: 'CONFIGURATION_VISUALIZAR',
+        },
         // {
         //   id: 'charts',
         //   title: 'Charts',

@@ -245,7 +245,9 @@ const routes = [
       {
         exact: true,
         path: ADMINISTRATION_MANAGER_EXTRACT_NUBANK,
-        component: lazy(() => import('./views/modules/administration/nubank')),
+        component: lazy(() =>
+          import('./views/modules/administration/configurations'),
+        ),
       },
       {
         exact: true,
