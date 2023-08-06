@@ -1,3 +1,3 @@
-import io from 'socket.io-client';
+import io from 'socket.io-client'
 
-export const socket = io(process.env.REACT_APP_ADMIN_API_HOST);
+export const socket = io(process.env.REACT_APP_ADMIN_API_HOST_PRODUTION)

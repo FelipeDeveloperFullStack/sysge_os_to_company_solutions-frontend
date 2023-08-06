@@ -82,12 +82,10 @@ const ConfigurationsSystem: React.FC = () => {
   }, [makeRequest])
 
   React.useEffect(() => {
-    socket.on(CONNECTION_UPDATE, (response: any) => {
-      console.log({ CONNECTION_UPDATE: response })
+    socket.on(CONNECTION_UPDATE, (response: SocketResponse) => {
       setWebSocketData({ state: response?.data?.state, stateReason: response?.data?.stateReason })
     })
     socket.on(QRCODE_UPDATED, (response: SocketResponse) => {
-      console.log({ QRCODE_UPDATED: response })
       const base64 = response?.data?.base64
       setWebSocketData({ base64 })
       showMessage(ConnectionQrCode, { qrCode: base64 })
