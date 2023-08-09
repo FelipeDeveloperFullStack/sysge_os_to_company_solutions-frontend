@@ -38,29 +38,37 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
   <tr>
     <td align="center">
       <img alt="Imagem 1" src="src/assets/github/1.png" width="250px">
+      <br>
+      Legenda da Imagem 1
     </td>
     <td align="center">
       <img alt="Imagem 2" src="src/assets/github/2.png" width="250px">
-    </td>
-    <td align="center">
-      <img alt="Imagem 2" src="src/assets/github/3.png" width="250px">
-    </td>
-    <td align="center">
-      <img alt="Imagem 2" src="src/assets/github/4.png" width="250px">
-    </td>
-    <td align="center">
-      <img alt="Imagem 2" src="src/assets/github/5.png" width="250px">
-    </td>
-    <td align="center">
-      <img alt="Imagem 2" src="src/assets/github/6.png" width="250px">
+      <br>
+      Legenda da Imagem 2
     </td>
   </tr>
   <tr>
     <td align="center">
-      Legenda da Imagem 1
+      <img alt="Imagem 3" src="src/assets/github/3.png" width="250px">
+      <br>
+      Legenda da Imagem 3
     </td>
     <td align="center">
-      Legenda da Imagem 2
+      <img alt="Imagem 4" src="src/assets/github/4.png" width="250px">
+      <br>
+      Legenda da Imagem 4
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img alt="Imagem 5" src="src/assets/github/5.png" width="250px">
+      <br>
+      Legenda da Imagem 5
+    </td>
+    <td align="center">
+      <img alt="Imagem 6" src="src/assets/github/6.png" width="250px">
+      <br>
+      Legenda da Imagem 6
     </td>
   </tr>
 </table>
