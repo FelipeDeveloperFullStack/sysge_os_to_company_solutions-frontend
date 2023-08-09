@@ -32,6 +32,39 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [Styled Components](https://styled-components.com/)
 - [Material UI](https://mui.com/)
 
+## 🖼️ Imagens
+
+<table>
+  <tr>
+    <td align="center">
+      <img alt="Imagem 1" src="src/assets/github/1.png" width="250px">
+    </td>
+    <td align="center">
+      <img alt="Imagem 2" src="src/assets/github/2.png" width="250px">
+    </td>
+    <td align="center">
+      <img alt="Imagem 2" src="src/assets/github/3.png" width="250px">
+    </td>
+    <td align="center">
+      <img alt="Imagem 2" src="src/assets/github/4.png" width="250px">
+    </td>
+    <td align="center">
+      <img alt="Imagem 2" src="src/assets/github/5.png" width="250px">
+    </td>
+    <td align="center">
+      <img alt="Imagem 2" src="src/assets/github/6.png" width="250px">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      Legenda da Imagem 1
+    </td>
+    <td align="center">
+      Legenda da Imagem 2
+    </td>
+  </tr>
+</table>
+
 ## 🤔 Como contribuir
 
 - Faça um fork desse repositório;
