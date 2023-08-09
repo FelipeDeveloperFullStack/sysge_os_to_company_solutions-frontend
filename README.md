@@ -39,7 +39,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
     <td align="center">
       <img alt="Imagem 1" src="src/assets/github/1.png" width="500px">
       <br>
-      Dashbord (Clique na imagem)
+      Dashboard (Clique na imagem)
     </td>
     <td align="center">
       <img alt="Imagem 2" src="src/assets/github/2.png" width="500px">
