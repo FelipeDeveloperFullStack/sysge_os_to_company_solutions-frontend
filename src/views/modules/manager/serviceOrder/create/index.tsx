@@ -1,52 +1,52 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import useLocalStorage from 'use-local-storage'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import { Checkbox, FormControl, FormControlLabel, FormGroup, Radio, RadioGroup } from '@mui/material'
 import axios from 'axios'
+import moment from 'moment'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { Checkbox, FormGroup, FormControlLabel, Radio, RadioGroup, FormLabel, FormControl } from '@mui/material'
 import {
   Autocomplete,
-  AutocompleteOptions,
+  AutocompleteOptions
 } from 'src/components/Form/Autocomplete'
 import Button from 'src/components/Form/Button'
+import InputMask from 'src/components/Form/InputMask'
 import { Select } from 'src/components/Widgets/Select'
+import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
-import { formatPrice, formatInputPrice } from 'src/helpers/formatPrice'
+import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
+import { useModal } from 'src/hooks/useModal'
 import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
 import { LAYOUT_IS_MODIFIED_FIELDS, SERVICE_FILTER, SERVICE_ORDER_CREATE } from 'src/store/actions'
 import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
 import { Row } from 'src/styles'
+import CreateClient from 'src/views/modules/administration/clients/create'
+import EditClient from 'src/views/modules/administration/clients/edit'
+import CreateEquipament from 'src/views/modules/administration/equipaments/create'
+import useLocalStorage from 'use-local-storage'
 import { schemaServiceOrder } from '../schemaValidation'
 import { fromApiSerialNumber, toApi } from './adapters'
+import { fromApiClient } from './adapters/fromApi'
 import InputText from './components/InputCurrency'
+import { useAddLocalStorage } from './hooks/useAddLocalStorage'
 import { useTotalSum } from './hooks/useTotalSum'
+import { LaunchFinancial } from './messages/LaunchFinancial'
 import {
   ButtonContainer,
   Container,
   Form,
   GroupDiscount,
-  Total,
+  Total
 } from './style'
 import LaudoTechnicalTable from './tables/laudoTechnical'
 import PiecesTable from './tables/pieces'
 import { Laudo } from './tables/type'
 import { ItemPieces, ItemServices, OSData } from './type'
-import { LaunchFinancial } from './messages/LaunchFinancial'
-import { useModal } from 'src/hooks/useModal'
-import moment from 'moment'
-import { useAddLocalStorage } from './hooks/useAddLocalStorage'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import CreateClient from 'src/views/modules/administration/clients/create'
-import EditClient from 'src/views/modules/administration/clients/edit'
-import CreateEquipament from 'src/views/modules/administration/equipaments/create'
-import { toast } from 'src/components/Widgets/Toastify'
-import InputMask from 'src/components/Form/InputMask'
-import { fromApiClient } from './adapters/fromApi'
 
 type TypeDiscount = 'porcent' | 'real'
 
@@ -399,8 +399,8 @@ const CreateOrderService: React.FC = () => {
       return
     }
 
-    if (laudos?.length > 6) {
-      showSimple.error('A quantidade de laudos não pode ser maior do que 6')
+    if (laudos?.length > 9) {
+      showSimple.error('A quantidade de laudos não pode ser maior do que 9')
       return
     }
 

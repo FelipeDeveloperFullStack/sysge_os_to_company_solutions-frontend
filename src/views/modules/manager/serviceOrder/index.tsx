@@ -1,45 +1,37 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
+import BackIcon from '@mui/icons-material/Reply'
+import Fab from '@mui/material/Fab'
+import { format } from 'date-fns'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import BackIcon from '@mui/icons-material/Reply'
+import { formatPrice } from 'src/helpers/formatPrice'
 import { useGeneratePDF } from 'src/hooks/useGeneratePDF'
+import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
+import { useAdmin } from 'src/services/useAdmin'
 import { Row } from 'src/styles'
 import Logo from './assets/images/logo.png'
 import Signature from './assets/images/signature.png'
+import { Laudo } from './create/tables/type'
 import { ItemPieces, ItemServices, OSData } from './create/type'
-import { formatPrice } from 'src/helpers/formatPrice'
-import Fab from '@mui/material/Fab'
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload'
 import {
   ButtonContainerGenerateOS,
-  ButtonContainerLaunchInTheFinancial,
-  CompanyAddress,
-  CompanyContact,
+  ButtonContainerLaunchInTheFinancial, CompanyContact,
   Container,
   ContainerDateOS,
   ContainerOS,
   ContainerOSNumberAndDate,
   ContainerOSText,
-  DateOS,
-  DividerStyled,
-  Header,
-  HeaderText,
-  HeaderTextFont,
+  DateOS, Header, HeaderTextFont,
   Image,
   OSNumber,
   OSText,
   PaperStyled,
   TecnicalResponsible,
-  Text,
+  Text
 } from './style'
-import { Laudo } from './create/tables/type'
-import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
-import { useAdmin } from 'src/services/useAdmin'
-import { toast } from 'src/components/Widgets/Toastify'
-import { format } from 'date-fns'
-import useLocalStorage from 'use-local-storage'
 
 type ServiceOrderProps = {
   osData?: OSData
@@ -152,7 +144,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
   }
 
   const resultRowLaudos = (data: any[]): Laudo[] => {
-    return resultNewArray(data)
+    return resultNewArray(data, 9)
   }
 
   const resultRowItemPieces = (data: any[]): ItemPieces[] => {
@@ -564,7 +556,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               </Text>
             </PaperStyled>
           </Row>
-          <PaperStyled elevation={1} padding="40px" isNotUseBorder>
+          <PaperStyled elevation={1} padding="21px 40px 0px 40px" isNotUseBorder>
             <Row
               marginLeft="15px"
               columns="repeat(2, 1fr)"
