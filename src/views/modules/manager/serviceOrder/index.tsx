@@ -556,7 +556,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
               </Text>
             </PaperStyled>
           </Row>
-          <PaperStyled elevation={1} padding="21px 40px 0px 40px" isNotUseBorder>
+          <PaperStyled elevation={1} padding="5px 40px 0px 40px" isNotUseBorder>
             <Row
               marginLeft="15px"
               columns="repeat(2, 1fr)"

@@ -106,8 +106,10 @@ export const PaperStyled = styled(Paper)<{
     > section {
       > img {
         position: absolute;
-        top: -94px;
-        width: 165px;
+        /* top: -94px; */
+        /* width: 165px; */
+        top: -76px;
+        width: 132px;
         z-index: 0;
         transform: rotate(348deg);
       }
@@ -186,6 +188,7 @@ export const HeaderTextFont = styled.section<HeaderTextFontProps>`
 
 export const Image = styled.img`
   //width: 180px;
+  //width: 171px;
   width: 171px;
   /* margin-bottom: 5px; */
   position: relative;
