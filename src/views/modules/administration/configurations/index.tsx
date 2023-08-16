@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Checkbox, FormGroup, FormControlLabel, Paper } from '@mui/material'
-import { Card, ConnectionWhatsapp, Container } from './style'
+import { Checkbox, FormControlLabel, FormGroup, Paper } from '@mui/material';
 import Alert from '@mui/material/Alert';
-import { useState } from 'react';
-import { useAdmin } from 'src/services/useAdmin';
-import { exceptionHandle } from 'src/helpers/exceptions';
-import React from 'react'
+import React, { useState } from 'react';
+import Button from 'src/components/Form/Button';
 import { toast } from 'src/components/Widgets/Toastify';
-import Button from 'src/components/Form/Button'
+import { exceptionHandle } from 'src/helpers/exceptions';
+import { useModal } from 'src/hooks/useModal';
 import { socket } from 'src/services/Socket';
 import { CONNECTION_UPDATE, QRCODE_UPDATED } from 'src/services/Socket/EventTypes';
-import { useModal } from 'src/hooks/useModal';
+import { useAdmin } from 'src/services/useAdmin';
 import ConnectionQrCode from './messages/ConnectionQrCode';
+import { Card, ConnectionWhatsapp, Container } from './style';
 
 type UpdateHandle = {
   isEnableEmailBilling?: boolean
@@ -33,8 +32,9 @@ const ConfigurationsSystem: React.FC = () => {
   const [labelButton, setLabelButton] = useState('Conectar')
   const [webSocketData, setWebSocketData] = useState<SocketResponse>({} as SocketResponse)
   const [webSocketState, setWebSocketState] = useState('')
+  const [statusConnection, setStatusConnection] = useState(false)
   const { apiAdmin } = useAdmin()
-  const { showMessage } = useModal()
+  const { showMessage, closeModal } = useModal()
 
   const update = async (data: UpdateHandle) => {
     try {
@@ -76,16 +76,47 @@ const ConfigurationsSystem: React.FC = () => {
     }
   }
 
+  const getStatusConnection = async () => {
+    try {
+      const { data } = await apiAdmin.get(`configurations/status/connection`)
+      if (data?.statusReason === 200) {
+        setStatusConnection(true)
+        setLabelButton('Conectado com sucesso.')
+        toast.success('Whatsapp conectado com sucesso!')
+      } else {
+        setStatusConnection(false)
+      }
+    } catch (error) {
+      exceptionHandle(error)
+    }
+  }
+
   React.useEffect(() => {
     getConfigurations()
   }, [makeRequest])
 
   React.useEffect(() => {
+    getStatusConnection()
+  }, [])
+
+  React.useEffect(() => {
     socket.on(CONNECTION_UPDATE, (response: SocketResponse) => {
+      let webSocketState = response?.state
+      console.log({ state: response?.state, stateReason: response?.stateReason, CONNECTION_UPDATE })
       setWebSocketData({ state: response?.state, stateReason: response?.stateReason })
       setWebSocketState(response?.state)
+      if (webSocketState === 'close') {
+        closeModal()
+      }
+      if (webSocketState === 'open') {
+        closeModal()
+      }
+      if (webSocketState === 'refused') {
+        closeModal()
+      }
     })
     socket.on(QRCODE_UPDATED, (response: SocketResponse) => {
+      console.log({ base64: response?.base64, QRCODE_UPDATED })
       const base64 = response?.base64
       setWebSocketData({ ...webSocketData, base64 })
       showMessage(ConnectionQrCode, { qrCode: base64, webSocketState }, true)
@@ -99,12 +130,13 @@ const ConfigurationsSystem: React.FC = () => {
     if (webSocketData?.state === 'close') {
       setLabelButton('Conectar')
       toast.error('Conexão com Whatsapp falhou, tente novamente!')
+      setStatusConnection(false)
     }
     if (webSocketData?.state === 'open' && webSocketData?.stateReason === 200) {
       setLabelButton('Conectado com sucesso.')
       toast.success('Whatsapp conectado com sucesso!')
     }
-  }, [webSocketData])
+  }, [webSocketData, statusConnection])
 
   return (
     <Container>
@@ -125,7 +157,7 @@ const ConfigurationsSystem: React.FC = () => {
       <Paper elevation={3}>
         <Alert severity="info">Conexão com Whatsapp. (Apenas envio de mensagens)</Alert>
         <ConnectionWhatsapp>
-          <Button textButton={labelButton} variant='contained' icon='whatsApp' onClick={onHandleConnectionButton} />
+          <Button disabled={statusConnection} textButton={labelButton} variant='contained' icon='whatsApp' onClick={onHandleConnectionButton} />
         </ConnectionWhatsapp>
       </Paper>
       <Paper elevation={3}>

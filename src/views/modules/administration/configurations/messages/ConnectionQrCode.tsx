@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react'
-import { Container } from './style'
 import Alert from '@mui/material/Alert';
-import { SocketResponse } from '..';
+import React from 'react';
 import { useModal } from 'src/hooks/useModal';
+import { Container } from './style';
 
 interface ConnectionQrCodeProps {
   qrCode: string
@@ -21,7 +20,9 @@ const ConnectionQrCode: React.FC<ConnectionQrCodeProps> = ({ qrCode, webSocketSt
     if (webSocketState === 'open') {
       closeModal()
     }
-    console.log(webSocketState)
+    if (webSocketState === 'refused') {
+      closeModal()
+    }
   }, [webSocketState])
 
   return (
