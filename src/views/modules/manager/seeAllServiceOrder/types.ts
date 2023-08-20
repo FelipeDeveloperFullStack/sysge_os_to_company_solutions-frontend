@@ -14,6 +14,7 @@ export type MappedDataServiceOrders = {
   isSendNowDayMaturityBoleto?: boolean
   isSendThreeDayMaturityBoleto?: boolean
   dateGeneratedOS?: string
+  phoneNumber?: string
   isPartial?: boolean
   isBoletoUploaded?: boolean
   setMakeRequest?: React.Dispatch<React.SetStateAction<number>>

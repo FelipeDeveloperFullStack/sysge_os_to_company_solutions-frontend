@@ -1,15 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useColumns } from './Columns'
-import { OSData } from '../../serviceOrder/create/type'
 import { DataTable } from 'src/components/Widgets/DataTable'
-import { MappedDataServiceOrders } from '../types'
-import { useModal } from 'src/hooks/useModal'
-import { ModalInformation } from '../messages/ModalInformation'
-import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
-import { useAdmin } from 'src/services/useAdmin'
+import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
 import { exceptionHandle } from 'src/helpers/exceptions'
+import { useModal } from 'src/hooks/useModal'
+import { useAdmin } from 'src/services/useAdmin'
+import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { OSData } from '../../serviceOrder/create/type'
+import { ModalInformation } from '../messages/ModalInformation'
+import { MappedDataServiceOrders } from '../types'
+import { useColumns } from './Columns'
 
 type TableViewProps = {
   setSelectedAllRowIds: React.Dispatch<React.SetStateAction<string[]>>
@@ -53,7 +54,8 @@ const TableView: React.FC<TableViewProps> = ({
           isPartial: item.isPartial,
           total: item.total,
           valuePartial: item?.valuePartial,
-          remainingValue: item?.remainingValue
+          remainingValue: item?.remainingValue,
+          phoneNumber: `55${clearSpecialCharacters(item?.client?.phoneNumber)}`
         }
       })
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))

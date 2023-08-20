@@ -1,9 +1,9 @@
 
-import React, { useState } from 'react';
-import { FileUpload } from 'primereact/fileupload';
-import { toast } from 'src/components/Widgets/Toastify';
 import { Alert } from '@mui/material';
+import { FileUpload } from 'primereact/fileupload';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { toast } from 'src/components/Widgets/Toastify';
 import { LAYOUT_MAKE_REQUEST } from 'src/store/actions';
 
 interface UploadWithTemplateProps {
@@ -11,12 +11,13 @@ interface UploadWithTemplateProps {
   endpoint: string
   multiple?: boolean
   call?: () => Promise<void>
+  otherCall?: () => Promise<void>
   closeModal?: () => void
 }
 
 type AcceptType = '.pdf' | 'video/*' | 'audio/*' | 'image/jpeg, image/png' | 'image/*'
 
-export const UploadWithTemplate: React.FC<UploadWithTemplateProps> = ({ accept = '.pdf', endpoint, multiple = false, call, closeModal }) => {
+export const UploadWithTemplate: React.FC<UploadWithTemplateProps> = ({ accept = '.pdf', endpoint, multiple = false, call, closeModal, otherCall }) => {
   const [messageSuccess, setMessageSuccess] = useState('')
   const dispatch = useDispatch()
 
@@ -69,6 +70,7 @@ export const UploadWithTemplate: React.FC<UploadWithTemplateProps> = ({ accept =
     updateRequests()
     closeModal && closeModal()
     toast.success('Arquivo(s) importado com sucesso')
+    otherCall && otherCall()
   }
 
   return (

@@ -1,21 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Alert } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Button from 'src/components/Form/Button'
 import { UploadWithTemplate } from 'src/components/Upload/UploadWithTemplate'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { useAuth } from 'src/hooks/useAuth'
 import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
-import { MappedDataServiceOrders } from '../types'
-import { ButtonGroup, Container, ContainerDocuments, ContainerUploadDocuments, Text } from './style'
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import RemoveConfirmationDocuments from './RemoveConfirmationDocuments'
 import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
-import { useDispatch } from 'react-redux'
+import { MappedDataServiceOrders } from '../types'
+import RemoveConfirmationDocuments from './RemoveConfirmationDocuments'
+import { ButtonGroup, Container, ContainerDocuments, ContainerUploadDocuments, Text } from './style'
 
 type Documents = {
   fileName: string
@@ -28,6 +28,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   typeDocument,
   isBoletoUploaded,
   clientName,
+  phoneNumber,
   setMakeRequest
 }) => {
   const { closeModal, showMessage } = useModal()
@@ -145,7 +146,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
           </ContainerDocuments>
         </ContainerUploadDocuments>
       ))}
-      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}`}
+      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}/${phoneNumber}`}
         multiple
         call={getDocuments}
         closeModal={closeModal} />
