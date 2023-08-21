@@ -28,7 +28,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   typeDocument,
   isBoletoUploaded,
   clientName,
-  phoneNumber,
+  clientId,
   setMakeRequest
 }) => {
   const { closeModal, showMessage } = useModal()
@@ -146,7 +146,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
           </ContainerDocuments>
         </ContainerUploadDocuments>
       ))}
-      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}/${phoneNumber}`}
+      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}/${clientId}`}
         multiple
         call={getDocuments}
         closeModal={closeModal} />
