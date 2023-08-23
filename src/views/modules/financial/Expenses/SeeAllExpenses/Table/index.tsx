@@ -1,21 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react'
+import { Button } from 'src/components'
+import { DataTable } from 'src/components/Widgets/DataTable'
+import { toast } from 'src/components/Widgets/Toastify'
+import { formatPrice } from 'src/helpers/formatPrice'
+import { useLoading } from 'src/hooks/useLoading'
+import { useModal } from 'src/hooks/useModal'
+import { usePermission } from 'src/hooks/usePermission'
+import { useAdmin } from 'src/services/useAdmin'
+import { DESPESAS_EDITAR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import useLocalStorage from 'use-local-storage'
 import { Expense } from './adapter'
 import { useColumns } from './Columns'
-import { DataTable } from 'src/components/Widgets/DataTable'
-import { formatPrice } from 'src/helpers/formatPrice'
-import { useAdmin } from 'src/services/useAdmin'
-import { useLoading } from 'src/hooks/useLoading'
-import { toast } from 'src/components/Widgets/Toastify'
-import { useModal } from 'src/hooks/useModal'
 import { ButtonGenerateOSContainer } from './Styles'
-import Badge from '@mui/material/Badge'
-import { Button } from 'src/components'
-import useLocalStorage from 'use-local-storage'
-import ConfirmationToSave from '../messages/ConfirmationToSave'
-import { InsertPercentToPiece } from '../messages/InsertPercentToPiece'
-import { DESPESAS_EDITAR } from 'src/views/modules/administration/permissions/static/keysPermissions'
-import { usePermission } from 'src/hooks/usePermission'
 
 type TableViewProps = {
   incomesFiltered: Expense[]
@@ -207,7 +204,7 @@ const TableView: React.FC<TableViewProps> = ({
       <DataTable
         rows={mappedExpensesFinancial(incomesFiltered)}
         columns={columns}
-        pageSize={10}
+        pageSize={50}
         checkboxSelection
         setSelectedAllRowIds={setSelectedAllRowIds}
         setCellClick={setSelectedAllRow}

@@ -1,7 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { DataTable } from 'src/components/Widgets/DataTable'
-import { EquipamentT, IStore } from 'src/store/Types'
 import { User } from '../type'
 import { useColumns } from './Columns'
 
@@ -38,7 +36,7 @@ const TableView: React.FC<TableViewProps> = ({ users }) => {
       <DataTable
         rows={mapped(users)}
         columns={columns}
-        pageSize={10}
+        pageSize={50}
       />
     </>
   )

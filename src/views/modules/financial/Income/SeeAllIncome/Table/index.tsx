@@ -1,25 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { Button } from 'src/components'
+import { DataTable } from 'src/components/Widgets/DataTable'
+import { toast } from 'src/components/Widgets/Toastify'
+import { exceptionHandle } from 'src/helpers/exceptions'
+import { formatPrice } from 'src/helpers/formatPrice'
+import { useLoading } from 'src/hooks/useLoading'
+import { useModal } from 'src/hooks/useModal'
+import { usePermission } from 'src/hooks/usePermission'
+import { useAdmin } from 'src/services/useAdmin'
+import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import { RECEITAS_EDITAR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import { ModalInformation } from 'src/views/modules/manager/seeAllServiceOrder/messages/ModalInformation'
+import { ModalPDF } from 'src/views/modules/manager/seeAllServiceOrder/messages/ModalPDF'
+import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
+import useLocalStorage from 'use-local-storage'
 import { Income } from './adapter'
 import { useColumns } from './Columns'
-import { DataTable } from 'src/components/Widgets/DataTable'
-import { formatPrice } from 'src/helpers/formatPrice'
-import { useAdmin } from 'src/services/useAdmin'
-import { useLoading } from 'src/hooks/useLoading'
-import { toast } from 'src/components/Widgets/Toastify'
-import { useModal } from 'src/hooks/useModal'
 import { ButtonGenerateOSContainer } from './Styles'
-import Badge from '@mui/material/Badge'
-import { Button } from 'src/components'
-import useLocalStorage from 'use-local-storage'
-import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
-import { exceptionHandle } from 'src/helpers/exceptions'
-import { ModalPDF } from 'src/views/modules/manager/seeAllServiceOrder/messages/ModalPDF'
-import { ModalInformation } from 'src/views/modules/manager/seeAllServiceOrder/messages/ModalInformation'
-import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
-import { useDispatch } from 'react-redux'
-import { RECEITAS_EDITAR } from 'src/views/modules/administration/permissions/static/keysPermissions'
-import { usePermission } from 'src/hooks/usePermission'
 
 type TableViewProps = {
   incomesFiltered: Income[]
@@ -230,7 +229,7 @@ const TableView: React.FC<TableViewProps> = ({
       <DataTable
         rows={mappedIncomeFinancial(incomesFiltered)}
         columns={columns}
-        pageSize={10}
+        pageSize={50}
         checkboxSelection
         setSelectedAllRowIds={setSelectedAllRowIds}
         setCellClick={setSelectedAllRow}

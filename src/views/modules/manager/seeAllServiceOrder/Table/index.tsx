@@ -123,7 +123,7 @@ const TableView: React.FC<TableViewProps> = ({
       <DataTable
         rows={mappedDataServiceOrders(serviceOrdersStore)}
         columns={columns}
-        pageSize={10}
+        pageSize={50}
         checkboxSelection
         //setCellClick={setIsRowSelected}
         setSelectedAllRowIds={setSelectedAllRowIds}

@@ -30,7 +30,7 @@ const TableView: React.FC = () => {
           </div>
         )}
       </div>
-      <DataTable rows={mapped(piecesStore)} columns={columns} pageSize={10} />
+      <DataTable rows={mapped(piecesStore)} columns={columns} pageSize={50} />
     </>
   )
 }
