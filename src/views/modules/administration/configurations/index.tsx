@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Checkbox, FormControlLabel, FormGroup, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import React, { useState } from 'react';
 import Button from 'src/components/Form/Button';
@@ -10,7 +10,7 @@ import { socket } from 'src/services/Socket';
 import { CONNECTION_UPDATE, QRCODE_UPDATED } from 'src/services/Socket/EventTypes';
 import { useAdmin } from 'src/services/useAdmin';
 import ConnectionQrCode from './messages/ConnectionQrCode';
-import { Card, ConnectionWhatsapp, Container } from './style';
+import { ConnectionWhatsapp, Container } from './style';
 
 type UpdateHandle = {
   isEnableEmailBilling?: boolean
@@ -140,7 +140,7 @@ const ConfigurationsSystem: React.FC = () => {
 
   return (
     <Container>
-      <Paper elevation={3}>
+      {/* <Paper elevation={3}>
         <Alert severity="info">Ao marcar essa opção o sistema irá enviar a notificação de cobraça imediatamente após a importação do boleto e nota fiscal na ordem de serviço do cliente.</Alert>
         <FormGroup>
           <Card>
@@ -153,14 +153,14 @@ const ConfigurationsSystem: React.FC = () => {
             />
           </Card>
         </FormGroup>
-      </Paper>
+      </Paper> */}
       <Paper elevation={3}>
         <Alert severity="info">Conexão com Whatsapp. (Apenas envio de mensagens)</Alert>
         <ConnectionWhatsapp>
           <Button disabled={statusConnection} textButton={labelButton} variant='contained' icon='whatsApp' onClick={onHandleConnectionButton} />
         </ConnectionWhatsapp>
       </Paper>
-      <Paper elevation={3}>
+      {/* <Paper elevation={3}>
         <Alert severity="info">Ao marcar essa opção o sistema irá enviar a notificação de cobraça quando faltar 3 dias para o vencimento do boleto e no dia do vencimento.</Alert>
         <FormGroup>
           <Card>
@@ -173,7 +173,7 @@ const ConfigurationsSystem: React.FC = () => {
             />
           </Card>
         </FormGroup>
-      </Paper>
+      </Paper> */}
     </Container>
   )
 }
