@@ -108,7 +108,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   return (
     <Container>
       <Text alignSelf="center" fontSize="20px" bold>
-        Importação de Boleto
+        Importação de Boleto e Nota Fiscal
       </Text>
       <Text flexDirection="column">
         <div>
@@ -120,10 +120,10 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
       </Text>
 
       {!isBoletoUploaded && <Alert severity="warning">
-        Ao clicar em <span><b>Enviar</b></span> o documento PDF importado ficará vinculado a ordem de serviço de nº <b>{osNumber}</b>.
+        Ao clicar em <span><b>Enviar</b></span> o(s) documento(s) PDF importado(s) ficará(ao) vinculado(s) a ordem de serviço de nº <b>{osNumber}</b>.
       </Alert>}
       {isBoletoUploaded && <Alert severity="warning">
-        Ao clicar em <span><b>Enviar</b></span> o documento PDF importado irá <b>substituir</b> o arquivo já existente vinculando a ordem de serviço de nº <b>{osNumber}</b>.
+        Ao clicar em <span><b>Enviar</b></span> o documento PDF importado irá ser <b>adicionado</b> junto com os arquivos já existentes.
       </Alert>}
       {documents?.length === 1 && <Alert>1 arquivo vinculado a essa ordem de serviço.</Alert>}
       {documents?.length > 1 && <Alert>{documents?.length} arquivos vinculado a essa ordem de serviço.</Alert>}
