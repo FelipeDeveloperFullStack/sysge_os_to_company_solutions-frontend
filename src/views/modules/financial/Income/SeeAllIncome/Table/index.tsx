@@ -51,9 +51,10 @@ const TableView: React.FC<TableViewProps> = ({
   )
 
   const mappedIncomeFinancial = (serviceOrder: Income[]): Income[] => {
-    return serviceOrder
+    const result = serviceOrder
       .map((item: Income) => item)
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))
+    return result
   }
 
   const updateStatus = async (id: string) => {

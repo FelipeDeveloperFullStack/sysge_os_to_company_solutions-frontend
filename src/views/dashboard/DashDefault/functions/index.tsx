@@ -42,7 +42,7 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
       const { data } = await apiAdmin.get('orderServices/total/maturity-boleto')
       setTotal((previousState) => ({
         ...previousState,
-        totalValueIncomeInExpired3Days: data?.count,
+        totalValueIncomeInExpired3Days: data?.count || 0,
       }))
     } catch (error) {
       toast.error(

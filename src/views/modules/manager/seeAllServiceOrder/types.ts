@@ -3,6 +3,7 @@ import React from 'react'
 export type MappedDataServiceOrders = {
   id: string
   name: string
+  description?: string
   clientName?: string
   osNumber: string
   dateOS: string

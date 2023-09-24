@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { useLoading } from 'src/hooks/useLoading'
@@ -12,7 +12,7 @@ import {
   EQUIPAMENT_SEE_ALL,
   PIECE_SEE_ALL,
   SERVICE_ORDER_SEE_ALL,
-  SERVICE_SEE_ALL,
+  SERVICE_SEE_ALL
 } from 'src/store/actions'
 import { IStore } from 'src/store/Types'
 import useLocalStorage from 'use-local-storage'
@@ -116,7 +116,7 @@ const SeeAllServiceOrder = (props: Props) => {
       })
       dispatch({
         type: SERVICE_ORDER_SEE_ALL,
-        payload: await await fromApi(response),
+        payload: await fromApi(response),
       })
     } catch (error) {
       exceptionHandle(

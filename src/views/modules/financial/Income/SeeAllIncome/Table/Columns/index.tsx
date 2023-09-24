@@ -1,23 +1,23 @@
-import { GridCellParams, GridColDef } from '@mui/x-data-grid'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { GridCellParams, GridColDef } from '@mui/x-data-grid';
 //import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 // import SyncIcon from '@mui/icons-material/Sync'
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
-import IconButton from '@mui/material/IconButton'
-import Chip from '@mui/material/Chip'
-import { useModal } from 'src/hooks/useModal'
-import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
-import { Income } from '../adapter'
-import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
-import { RECEITAS_EDITAR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
-import { usePermission } from 'src/hooks/usePermission'
-import { parse, isBefore, addDays } from 'date-fns'
-import { NofiticationMessage, NotificationText } from './style'
-import { Tooltip } from '@mui/material'
 import TaskIcon from '@mui/icons-material/Task';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import UploadDocument from 'src/views/modules/manager/seeAllServiceOrder/messages/UploadDocument'
+import { Tooltip } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
+import { addDays, isBefore, parse } from 'date-fns';
+import { useModal } from 'src/hooks/useModal';
+import { usePermission } from 'src/hooks/usePermission';
+import { RECEITAS_EDITAR, RECEITAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions';
+import UploadDocument from 'src/views/modules/manager/seeAllServiceOrder/messages/UploadDocument';
 import { AddPartialIncome } from '../../messages/AddPartialIncome';
+import { DeleteConfirmation } from '../../messages/DeleteConfirmation';
+import { UpdateConfirmation } from '../../messages/UpdateConfirmation';
+import { Income } from '../adapter';
+import { NofiticationMessage, NotificationText } from './style';
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -84,9 +84,21 @@ export const useColumns = (props: ColumnsProps) => {
               {!data?.isPartial && <div>{data.clientName}</div>}
               {data?.isPartial && <div><b>[PARCIAL]</b> {data.clientName}</div>}
               <section>
-                {((data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto) && data.situation === 'PENDENTE') && <NotificationText>Notificação de cobrança enviado</NotificationText>}
-                {(!data?.isBoletoUploaded && data.formOfPayment === 'Boleto' && data.situation === 'PENDENTE') && <NotificationText warning={!data?.isBoletoUploaded}>Boleto não importado</NotificationText>}
-                {(data?.isBoletoUploaded) && <NotificationText success>Boleto Importado</NotificationText>}
+                {((data.isSendNowDayMaturityBoleto || data.isSendThreeDayMaturityBoleto)
+                  && data.situation === 'PENDENTE')
+                  && <NotificationText>Notificação de cobrança enviado</NotificationText>}
+
+                {(!data?.isBoletoUploaded
+                  && data.formOfPayment === 'Boleto'
+                  && data.situation === 'PENDENTE'
+                  && data?.description !== 'NOTINHA')
+                  && <NotificationText warning={!data?.isBoletoUploaded}>Boleto não importado</NotificationText>}
+
+                {(data?.isBoletoUploaded
+                  && data?.description !== 'NOTINHA')
+                  && <NotificationText success>Boleto Importado</NotificationText>}
+
+                {data?.description === 'NOTINHA' && <div>{data.description}</div>}
               </section>
             </NofiticationMessage>
           </>
@@ -200,7 +212,8 @@ export const useColumns = (props: ColumnsProps) => {
           </>
           {(params.row.typeDocument !== 'ORCAMENTO'
             && params.row.situation === 'PENDENTE'
-            && params.row.formOfPayment === 'Boleto') &&
+            && params.row.formOfPayment === 'Boleto'
+            && params.row.description !== 'NOTINHA') &&
             <Tooltip title={params.row?.isBoletoUploaded ? 'Boleto importado' : 'Importar boleto'}>
               <IconButton
                 aria-label="Importar Boleto"
@@ -211,7 +224,7 @@ export const useColumns = (props: ColumnsProps) => {
                 {!params.row?.isBoletoUploaded ? <UploadFileIcon /> : <TaskIcon />}
               </IconButton>
             </Tooltip>}
-          {params.row.situation === 'PENDENTE' && <>
+          {(params.row.situation === 'PENDENTE' && params.row.description !== 'NOTINHA') && <>
             <Tooltip title={'Adicionar Recebimento Parcial'}>
               <IconButton
                 aria-label="parcial"

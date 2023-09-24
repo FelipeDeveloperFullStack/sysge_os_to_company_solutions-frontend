@@ -20,6 +20,7 @@ import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
 import { Row } from 'src/styles'
 import { OptionsProps, SeeAllIncomeProps } from '../types'
+import { toApi } from './adapter/toApi'
 import { schemaIncome } from './schemaValidation'
 import { statusOptions } from './statics'
 import { NewIncomeContainer, TitleModalNewIncome, UpdateDeleteConfirmationContainer } from './style'
@@ -108,15 +109,15 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
         ...data,
         maturity: data.paymentForm === 'Boleto' ? (clickedMaturity?.label || maturity) : '',
         income: clickedIncome?.label || data.income,
+        status: data?.status === 'A PAGAR' ? 'PENDENTE' : 'PAGO',
       }
-      console.table(data)
-      //await apiAdmin.post(`expense`, toApi(data))
+      await apiAdmin.post(`orderServices`, toApi(data))
       setMakeRequest(Math.random())
       toast.success('Receita financeira adicionada com sucesso.')
     } catch (error) {
       exceptionHandle(error)
     } finally {
-      //closeModal()
+      closeModal()
       setLoading(false)
     }
   }
@@ -205,11 +206,11 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
 
   React.useEffect(() => {
     setValue('status', 'PAGO')
-    setValue('paymentForm', 'Boleto')
+    setValue('paymentForm', 'Pix')
   }, [])
 
   const sformOfPaymentOptions: OptionsProps[] = [
-    { label: 'Boleto', value: 'Boleto' },
+    //{ label: 'Boleto', value: 'Boleto' },
     { label: 'Pix', value: 'Pix' },
     { label: 'Dinheiro', value: 'Dinheiro' },
     { label: 'Cheque', value: 'Cheque' },
@@ -222,6 +223,7 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
       <form onSubmit={handleSubmit(onSubmitIncome)} autoComplete="off">
         <Row display="flex" flexDirection="column" gap={1}>
           {/* <Alert severity='warning'>Certifique-se de que ao adicionar esse receita não tenha duplicidade com a importação do Nubank.</Alert> */}
+          <Alert severity="warning"><b>Essa opção de inclusão de receita não tem vínculo com nenhuma ordem serviço, consequentemente não terá opções de importação de boleto e não irá aparecer na tela de gestão de OS.</b></Alert>
           {!!messageError && <Alert severity="error">{messageError}</Alert>}
           <TitleModalNewIncome>Inclusão de Receita</TitleModalNewIncome>
           <Row>

@@ -20,6 +20,7 @@ export type Income = {
   isSendThreeDayMaturityBoleto?: boolean
   isBoletoUploaded?: boolean
   isPartial?: boolean
+  description?: string
   id: string
 }
 
@@ -65,9 +66,9 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
   }
 
   const resultFromApi = oSData.map((item) => ({
-    clientName: item.client.name,
-    cpfOrCnpj: item.client.cpfOrCnpj,
-    osNumber: item.osNumber,
+    clientName: item?.client?.name,
+    cpfOrCnpj: item?.client?.cpfOrCnpj,
+    osNumber: item?.osNumber,
     valueNumber: removeFormatValueOs(item.total),
     valueFormated: item.total,
     situation: item.status,
@@ -75,14 +76,15 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     month: getMonthAndYear(item.dateOS).month,
     year: getMonthAndYear(item.dateOS).year,
     formOfPayment: item.formOfPayment,
-    typeDocument: item.typeDocument,
-    idFileCreatedGoogleDrive: item.idFileCreatedGoogleDrive,
-    maturityOfTheBoleto: item.maturityOfTheBoleto,
+    typeDocument: item?.typeDocument,
+    idFileCreatedGoogleDrive: item?.idFileCreatedGoogleDrive,
+    maturityOfTheBoleto: item?.maturityOfTheBoleto,
     id: item._id,
     isSendNowDayMaturityBoleto: item?.isSendNowDayMaturityBoleto,
     isSendThreeDayMaturityBoleto: item?.isSendThreeDayMaturityBoleto,
     isBoletoUploaded: item?.isBoletoUploaded,
     isPartial: item?.isPartial,
+    description: item?.description || '',
   }))
 
   const orderedYear = (resultFromApi: Income[]): string[] => {

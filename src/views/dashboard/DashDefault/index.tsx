@@ -1,25 +1,25 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react'
-import { Row, Col, Card } from 'react-bootstrap'
-import AmChartStatistics6 from './chart/AmChartStatistics6'
-import { useLoading } from 'src/hooks/useLoading'
-import { useDashBoard } from './functions'
-import Alert from '@mui/material/Alert';
-import { formatPrice } from 'src/helpers/formatPrice'
-import GroupIcon from '@mui/icons-material/Group'
-import Chip from '@mui/material/Chip';
-import { ContainerIcon } from './style'
 import ContentPasteIcon from '@mui/icons-material/ContentPaste'
+import GroupIcon from '@mui/icons-material/Group'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
-import { exceptionHandle } from 'src/helpers/exceptions'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import Alert from '@mui/material/Alert'
+import Chip from '@mui/material/Chip'
+import React, { useState } from 'react'
+import { Card, Col, Row } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
+import { exceptionHandle } from 'src/helpers/exceptions'
+import { formatPrice } from 'src/helpers/formatPrice'
 import { useAuth } from 'src/hooks/useAuth'
+import { useLoading } from 'src/hooks/useLoading'
 import { ADMINISTRATION_CLIENTS, ADMINISTRATION_EQUIPAMENTS, ADMINISTRATION_PIECES, ADMINISTRATION_SERVICES, MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { ClientT } from 'src/store/Types'
 import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
+import AmChartStatistics6 from './chart/AmChartStatistics6'
+import { useDashBoard } from './functions'
+import { ContainerIcon } from './style'
 // import { Link } from 'react-router-dom'
 // import AmChartEarnings from './chart/AmChartEarnings'
 // import avatar1 from '../../../assets/images/user/avatar-1.jpg'
@@ -121,7 +121,7 @@ const DashDefault: React.FC = () => {
   }, [])
 
   const checkPluralText = () => {
-    if (total.totalValueIncomeInExpired3Days > 1) {
+    if (total?.totalValueIncomeInExpired3Days > 1) {
       return 'Boletos'
     } else {
       return 'Boleto'
@@ -161,10 +161,10 @@ const DashDefault: React.FC = () => {
           </Alert>
         </Col>
       </Row>}
-      {total.totalValueIncomeInExpired3Days > 0 && <Row>
+      {total?.totalValueIncomeInExpired3Days > 0 && <Row>
         <Col md={12} xl={12}>
           <Alert severity="info" style={{ display: 'flex', alignItems: 'center' }}>
-            <span><b>Atenção:</b> Você tem <Chip label={(total.totalValueIncomeInExpired3Days)} /> {checkPluralText()} a vencer daqui a 3 dias. Entre em contato com o cliente.</span>
+            <span><b>Atenção:</b> Você tem <Chip label={(total?.totalValueIncomeInExpired3Days)} /> {checkPluralText()} a vencer daqui a 3 dias. Entre em contato com o cliente.</span>
           </Alert>
         </Col>
       </Row>}

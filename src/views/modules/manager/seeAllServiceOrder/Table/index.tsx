@@ -38,26 +38,28 @@ const TableView: React.FC<TableViewProps> = ({
       .map((item: OSData) => {
         return {
           id: item._id,
-          name: item.client.name,
-          osNumber: item.osNumber,
+          name: item?.client?.name,
+          osNumber: item?.osNumber || '-',
           dateOS: item.dateOS,
           status: item.status,
-          typeDocument: item.typeDocument,
-          dateGeneratedOS: item.dateGeneratedOS,
-          idFileCreatedGoogleDrive: item.idFileCreatedGoogleDrive,
-          clientId: item.client.id,
+          typeDocument: item?.typeDocument,
+          dateGeneratedOS: item?.dateGeneratedOS,
+          idFileCreatedGoogleDrive: item?.idFileCreatedGoogleDrive,
+          clientId: item?.client?.id,
           isSendNowDayMaturityBoleto: item?.isSendNowDayMaturityBoleto,
           isSendThreeDayMaturityBoleto: item?.isSendThreeDayMaturityBoleto,
-          user: item.user || '',
-          formOfPayment: item.formOfPayment || '',
-          isBoletoUploaded: item.isBoletoUploaded,
-          isPartial: item.isPartial,
-          total: item.total,
+          user: item?.user || '',
+          formOfPayment: item?.formOfPayment || '',
+          isBoletoUploaded: item?.isBoletoUploaded,
+          isPartial: item?.isPartial,
+          total: item?.total,
           valuePartial: item?.valuePartial,
           remainingValue: item?.remainingValue,
-          phoneNumber: `55${clearSpecialCharacters(item?.client?.phoneNumber)}`
+          phoneNumber: `55${clearSpecialCharacters(item?.client?.phoneNumber)}`,
+          description: item?.description || ''
         }
       })
+      .filter((item) => item.description !== 'NOTINHA')
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))
   }
 
