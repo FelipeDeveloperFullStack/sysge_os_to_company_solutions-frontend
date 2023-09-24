@@ -1,23 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Paper } from '@mui/material'
+import { format, getYear, parse } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { Button } from 'src/components'
 import InputText from 'src/components/Form/InputText/index_old'
 import { toast } from 'src/components/Widgets/Toastify'
-import { useLoading } from 'src/hooks/useLoading'
-import { useAdmin } from 'src/services/useAdmin'
-import { Row } from 'src/styles'
-import useLocalStorage from 'use-local-storage'
-import { fromApi, Income } from '../Table/adapter'
-import { Container, Form } from './style'
-import { format, getYear, parse } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import hasNumber from 'src/helpers/hasNumber'
+import { useLoading } from 'src/hooks/useLoading'
+import { useModal } from 'src/hooks/useModal'
 import { socket } from 'src/services/Socket'
 import { EVENT_UPDATE_OS_ORCAMENTO } from 'src/services/Socket/EventTypes'
-import { useSelector } from 'react-redux'
+import { useAdmin } from 'src/services/useAdmin'
 import { IStore } from 'src/store/Types'
+import { Row } from 'src/styles'
+import useLocalStorage from 'use-local-storage'
+import { NewIncome } from '../messages/NewIncome'
+import { fromApi, Income } from '../Table/adapter'
+import { Container, Form } from './style'
 
 type SeeAllIncomeProps = {
   nameOrOsNumber: string
@@ -26,14 +29,17 @@ type SeeAllIncomeProps = {
 type FiltersProps = {
   setIncomesFiltered: React.Dispatch<React.SetStateAction<Income[]>>
   makeRequest: number
+  setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
 const Filters: React.FC<FiltersProps> = ({
   setIncomesFiltered,
   makeRequest,
+  setMakeRequest
 }) => {
   const { control, handleSubmit, getValues, watch } =
     useForm<SeeAllIncomeProps>()
+  const { showMessage } = useModal()
   const { apiAdmin } = useAdmin()
   const [months, setMonths] = useState([])
   const [monthSelected, setMonthSelected] = useLocalStorage('monthSelected', '')
@@ -41,6 +47,7 @@ const Filters: React.FC<FiltersProps> = ({
   const [yearSelected, setYearSelected] = useLocalStorage('yearSelected', '')
   const [incomes, setIncomes] = useState<Income[]>([] as Income[])
   const { Loading } = useLoading()
+  const history = useHistory()
   const [selectedButton, setSelectedButton] = useLocalStorage(
     'selectedButton',
     'PENDENTE',
@@ -209,6 +216,10 @@ const Filters: React.FC<FiltersProps> = ({
     }
   }
 
+  const onHandleNewIncome = () => {
+    showMessage(NewIncome, { setMakeRequest, history }, true)
+  }
+
   useEffect(() => {
     getDataOrderServices()
     socket.on(EVENT_UPDATE_OS_ORCAMENTO, (data: string) => {
@@ -317,6 +328,15 @@ const Filters: React.FC<FiltersProps> = ({
                   />
                 </Row>
               </Form>
+            </Row>
+            <Row columns='1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr' gap={1}>
+              <Button
+                variant={'outlined'}
+                textButton={'Incluir'}
+                color="primary"
+                icon="add"
+                onClick={onHandleNewIncome}
+              />
             </Row>
           </Container>
         </Paper>

@@ -47,6 +47,22 @@ export const ButtonContainer = styled.div`
   grid-template-columns: repeat(2, 1fr);
 `
 
+export const NewIncomeContainer = styled.div`
+  width: 730px;
+  > div:first-child {
+    font-size: 19px;
+    > b {
+      margin-left: 5px;
+    }
+  }
+`
+
+export const TitleModalNewIncome = styled.div`
+  font-size: 24px;
+  margin-bottom: 24px;
+  font-weight: 800;
+`
+
 export const UpdateDeleteConfirmationContainer = styled.div`
   display: flex;
   gap: 10px;

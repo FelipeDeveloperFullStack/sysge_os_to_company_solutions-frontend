@@ -1,8 +1,8 @@
 import * as yup from 'yup'
 
-export const schemaAddPartialIncome = yup
+export const schemaIncome = yup
   .object({
-    expense: yup.string().required('Nome da despesa obrigatório'),
+    income: yup.string().required('Receita obrigatória'),
     valueFormated: yup.string().required('Valor obrigatório'),
     dateIn: yup.string().required('Data de entrada obrigatório'),
     //maturity: yup.string().required('Data de vencimento obrigatório'),
