@@ -1,17 +1,17 @@
-import { GridCellParams, GridColDef } from '@mui/x-data-grid'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 import SyncIcon from '@mui/icons-material/Sync'
-import IconButton from '@mui/material/IconButton'
 import Chip from '@mui/material/Chip'
+import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import { useModal } from 'src/hooks/useModal'
-import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
-import { Expense } from '../adapter'
-import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
-import { DESPESAS_EDITAR, DESPESAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
-import { usePermission } from 'src/hooks/usePermission'
+import { GridCellParams, GridColDef } from '@mui/x-data-grid'
 import { isBefore, parse } from 'date-fns'
+import { useModal } from 'src/hooks/useModal'
+import { usePermission } from 'src/hooks/usePermission'
+import { DESPESAS_EDITAR, DESPESAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
+import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
+import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
+import { Expense } from '../adapter'
 
 type ColumnsProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -56,7 +56,10 @@ export const useColumns = (props: ColumnsProps) => {
         const data = params.row as Expense
         return (
           <Tooltip title={data.expense}>
-            <div>{data.expense}</div>
+            <div>
+              <div>{data.expense}</div>
+              <div style={data.expense_type === 'Pessoal' ? { fontWeight: 900 } : { fontWeight: 300 }}>{data.expense_type}</div>
+            </div>
           </Tooltip>
         )
       },

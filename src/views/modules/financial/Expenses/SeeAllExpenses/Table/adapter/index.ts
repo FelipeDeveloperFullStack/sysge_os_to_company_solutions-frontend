@@ -13,6 +13,7 @@ export type Response = {
   year: string
   user: string
   _id: string
+  expense_type: string
 }
 
 export type Expense = {
@@ -27,6 +28,7 @@ export type Expense = {
   year: string
   user: string
   id: string
+  expense_type?: string
 }
 
 type ResponseFromApi = {
@@ -90,6 +92,7 @@ export const fromApi = (
         item.expense?.toUpperCase().trim(),
     ),
     id: item._id,
+    expense_type: item?.expense_type,
   }))
 
   const orderedYear = (resultFromApi: Expense[]): string[] => {

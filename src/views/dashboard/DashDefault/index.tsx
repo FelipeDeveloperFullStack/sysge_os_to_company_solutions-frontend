@@ -148,7 +148,7 @@ const DashDefault: React.FC = () => {
         <Row>
           <Col md={12} xl={12}>
             <Alert severity="warning" style={{ display: 'flex', alignItems: 'center' }}>
-              <span><b>Atenção:</b> Você tem um total de <Chip label={formatPrice(total.totalValueExpenseInExpired)} /> de despesas a vencer</span>
+              <span><b>Atenção:</b> Você tem <Chip label={formatPrice(total.totalValueExpenseInExpired)} /> de despesas a vencer</span>
               {total?.qtdeExpenseInExpired > 0 && <span> e <b>{total.qtdeExpenseInExpired}</b> despesas a vencer daqui <Chip label="3 dias" />.</span>}
             </Alert>
           </Col>
