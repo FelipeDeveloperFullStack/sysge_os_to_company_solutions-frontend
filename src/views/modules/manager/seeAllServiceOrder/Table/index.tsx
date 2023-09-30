@@ -59,7 +59,7 @@ const TableView: React.FC<TableViewProps> = ({
           description: item?.description || ''
         }
       })
-      .filter((item) => item.description !== 'NOTINHA')
+      .filter((item) => !item.description)
       .sort((a, b) => Number(b.osNumber) - Number(a.osNumber))
   }
 

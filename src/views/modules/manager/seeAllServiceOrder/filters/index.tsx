@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Badge, Paper } from '@mui/material'
+import { Paper } from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -62,7 +62,7 @@ const Filters: React.FC<FiltersProps> = ({
     if (hasNumber(clientNameOrOsNumber)) {
       setDataListTable(() => [
         ...serviceOrdersStore.filter((item) =>
-          item.osNumber
+          item?.osNumber
             .toUpperCase()
             .trim()
             .includes(clientNameOrOsNumber.toUpperCase().trim()),
@@ -71,7 +71,7 @@ const Filters: React.FC<FiltersProps> = ({
     } else {
       setDataListTable(() => [
         ...serviceOrdersStore.filter((item) =>
-          item.client.name
+          item?.client?.name
             .toUpperCase()
             .trim()
             .includes(clientNameOrOsNumber.toUpperCase().trim()),
