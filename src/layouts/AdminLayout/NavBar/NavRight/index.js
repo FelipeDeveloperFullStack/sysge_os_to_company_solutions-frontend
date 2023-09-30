@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
+import { Dropdown, ListGroup } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { ListGroup, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 // import PerfectScrollbar from 'react-perfect-scrollbar'
 //import axios from 'axios'
 
-import ChatList from './ChatList'
 import { LOGOUT } from './../../../../store/actions'
+import ChatList from './ChatList'
 
-import avatar1 from '../../../../assets/images/user/avatar-1.jpg'
+import { Alert } from '@mui/lab'
 import { socket } from 'src/services/Socket'
 import { MESSAGE_PROGRESS_SOCKET } from 'src/services/Socket/EventTypes'
-import { Alert } from '@mui/lab'
+import avatar1 from '../../../../assets/images/user/avatar-1.jpg'
 //import avatar2 from '../../../../assets/images/user/avatar-2.jpg'
 //import avatar3 from '../../../../assets/images/user/avatar-3.jpg'
 //import avatar4 from '../../../../assets/images/user/avatar-4.jpg'
@@ -43,6 +43,7 @@ const NavRight = () => {
 
   useEffect(() => {
     socket.on(MESSAGE_PROGRESS_SOCKET, (message) => {
+      console.log({ message })
       setMessageProgress(message)
     })
   }, [])

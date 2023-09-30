@@ -3,15 +3,16 @@ import AddTaskIcon from '@mui/icons-material/AddTask'
 import CloseIcon from '@mui/icons-material/Close'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import EditIcon from '@mui/icons-material/Edit'
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
-import BackIcon from '@mui/icons-material/Reply'
-import WhatsAppIcon from '@mui/icons-material/WhatsApp'
-import SyncIcon from '@mui/icons-material/Sync'
-import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 import PdfIcon from '@mui/icons-material/PictureAsPdf'
-import Button from '@mui/material/Button'
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
+import BackIcon from '@mui/icons-material/Reply'
+import SyncIcon from '@mui/icons-material/Sync'
+import UploadFileIcon from '@mui/icons-material/UploadFile'
+import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import { green } from '@mui/material/colors'
 import React from 'react'
@@ -53,6 +54,7 @@ type iconType =
   | 'doc'
   | 'update'
   | 'update2'
+  | 'upload'
 
 const icons = {
   add: <AddIcon />,
@@ -67,6 +69,7 @@ const icons = {
   doc: <ReceiptLongIcon />,
   update: <SyncIcon />,
   update2: <PublishedWithChangesIcon />,
+  upload: <UploadFileIcon />
 }
 
 const defineIcon = (icon: iconType) => {

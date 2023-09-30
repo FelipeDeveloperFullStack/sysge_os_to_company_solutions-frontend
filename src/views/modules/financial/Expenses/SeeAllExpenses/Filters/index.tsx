@@ -1,23 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Paper } from '@mui/material'
+import { format, getYear, parse } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useHistory } from 'react-router-dom'
 import { Button } from 'src/components'
 import InputText from 'src/components/Form/InputText/index_old'
 import { toast } from 'src/components/Widgets/Toastify'
 import { useLoading } from 'src/hooks/useLoading'
+import { useModal } from 'src/hooks/useModal'
+import { usePermission } from 'src/hooks/usePermission'
 import { useAdmin } from 'src/services/useAdmin'
 import { Row } from 'src/styles'
-import useLocalStorage from 'use-local-storage'
-import { fromApi, Expense } from '../Table/adapter'
-import { Container, Form } from './style'
-import { format, getYear, parse } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { NewExpenses } from '../messages/NewExpenses'
-import { useModal } from 'src/hooks/useModal'
 import { DESPESAS_INCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
-import { usePermission } from 'src/hooks/usePermission'
-import { useHistory } from 'react-router-dom'
+import useLocalStorage from 'use-local-storage'
+import { NewExpenses } from '../messages/NewExpenses'
+import UploadDocument from '../messages/UploadDocument'
+import { Expense, fromApi } from '../Table/adapter'
+import { Container, Form } from './style'
 
 type SeeAllIncomeProps = {
   expense: string
@@ -191,6 +192,10 @@ const Filters: React.FC<FiltersProps> = ({
     showMessage(NewExpenses, { setMakeRequest, history }, true)
   }
 
+  const onUploadDocument = () => {
+    showMessage(UploadDocument, { setMakeRequest }, false)
+  }
+
   useEffect(() => {
     getDataOrderServices()
   }, [makeRequest])
@@ -302,7 +307,7 @@ const Filters: React.FC<FiltersProps> = ({
                 </Row>
               </Form>
             </Row>
-            <Row columns='1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr' gap={1}>
+            <Row display='flex' justifyContent='flex-start' gap={5}>
               <Button
                 variant="outlined"
                 textButton="Incluir"
@@ -311,18 +316,34 @@ const Filters: React.FC<FiltersProps> = ({
                 onClick={onHandleNewExpenses}
                 disabled={!hasPermission(DESPESAS_INCLUIR)}
               />
+              <Button
+                variant="outlined"
+                textButton="Importar Extrato Nubank"
+                color="secondary"
+                icon="upload"
+                onClick={onUploadDocument}
+                disabled={!hasPermission(DESPESAS_INCLUIR)}
+              />
             </Row>
           </Container>
         </Paper>
 
       ) : (
-        <Row columns='1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr' gap={1}>
+        <Row display='flex' justifyContent='flex-start' gap={5}>
           <Button
             variant="outlined"
             textButton="Incluir"
             color="primary"
             icon="add"
             onClick={onHandleNewExpenses}
+            disabled={!hasPermission(DESPESAS_INCLUIR)}
+          />
+          <Button
+            variant="outlined"
+            textButton="Importar Extrato Nubank"
+            color="secondary"
+            icon="upload"
+            onClick={onUploadDocument}
             disabled={!hasPermission(DESPESAS_INCLUIR)}
           />
         </Row>
