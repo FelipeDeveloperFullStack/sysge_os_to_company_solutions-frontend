@@ -98,7 +98,7 @@ export const useColumns = (props: ColumnsProps) => {
                   && data?.description !== 'NOTINHA')
                   && <NotificationText success>Boleto Importado</NotificationText>}
 
-                {data?.description === 'NOTINHA' && <div>{data.description}</div>}
+                {data?.description && <div>{String(data.description).toUpperCase()}</div>}
               </section>
             </NofiticationMessage>
           </>
