@@ -80,7 +80,7 @@ export const AddPartialIncome: React.FC<AddPartialIncomeProps> = ({
   }
 
   const sformOfPaymentOptions: OptionsProps[] = [
-    !description && { label: 'Boleto', value: 'Boleto' },
+    { label: 'Boleto', value: 'Boleto' },
     { label: 'Pix', value: 'Pix' },
     { label: 'Dinheiro', value: 'Dinheiro' },
     { label: 'Cheque', value: 'Cheque' },
@@ -166,7 +166,7 @@ export const AddPartialIncome: React.FC<AddPartialIncomeProps> = ({
               label="Forma de Pagamento Realizado:"
               setValue={(value) => setValue('paymentForm', value)}
               value={field.value}
-              options={sformOfPaymentOptions}
+              options={!description ? sformOfPaymentOptions : sformOfPaymentOptions.filter((item) => item.value !== 'Boleto')}
             />
           )}
         />
@@ -198,7 +198,7 @@ export const AddPartialIncome: React.FC<AddPartialIncomeProps> = ({
               label="Forma de Pagamento do Valor Restante:"
               setValue={(value) => setValue('remainingPaymentForm', value)}
               value={field.value}
-              options={sformOfPaymentOptions}
+              options={!description ? sformOfPaymentOptions : sformOfPaymentOptions.filter((item) => item.value !== 'Boleto')}
             />
           )}
         />

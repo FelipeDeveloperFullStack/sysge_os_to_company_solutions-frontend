@@ -1,6 +1,8 @@
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
+import SyncIcon from '@mui/icons-material/Sync';
 import TaskIcon from '@mui/icons-material/Task';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Tooltip } from '@mui/material';
@@ -110,7 +112,7 @@ export const useColumns = (props: ColumnsProps) => {
                   && data?.description !== 'NOTINHA')
                   && <NotificationText success>Boleto Importado</NotificationText>}
 
-                {data?.description && <div>{String(data.description).toUpperCase()}</div>}
+                {(data?.description) && <div><b>{data?.valuePartial && '[PARCIAL] - '}</b>{String(data.description).toUpperCase()}</div>}
               </section>
             </NofiticationMessage>
           </>
@@ -199,8 +201,8 @@ export const useColumns = (props: ColumnsProps) => {
       disableColumnMenu: true,
       width: 210,
       renderCell: (params: GridCellParams) => (
-        <>
-          {/* <Tooltip title={params.row.situation === 'PENDENTE' ? 'Atualizar para RECEBIDO' : 'Atualizar paga PENDENTE'}>
+        <>{console.log(params.row)}
+          {(params.row.situation === 'PAGO' && params.row.valuePartial) && <Tooltip title={params.row.situation === 'PENDENTE' ? 'Atualizar para RECEBIDO' : 'Atualizar paga PENDENTE'}>
             <IconButton
               aria-label="update"
               color="info"
@@ -213,7 +215,7 @@ export const useColumns = (props: ColumnsProps) => {
                 <SyncIcon />
               )}
             </IconButton>
-          </Tooltip> */}
+          </Tooltip>}
 
           <>
             <IconButton
@@ -226,7 +228,7 @@ export const useColumns = (props: ColumnsProps) => {
             </IconButton>
           </>
 
-          {!params.row?.valuePartial && <Tooltip title={'Editar'}>
+          {!params.row.valuePartial && <Tooltip title={'Editar'}>
             <IconButton aria-label="editar" color="info" onClick={() => onHandleEdit(params)}>
               <EditIcon />
             </IconButton>
@@ -244,10 +246,11 @@ export const useColumns = (props: ColumnsProps) => {
               </IconButton>
             </Tooltip>
           </>}
-          {(params.row.typeDocument !== 'ORCAMENTO'
-            && params.row.situation === 'PENDENTE'
-            && params.row.formOfPayment === 'Boleto'
-            && params.row.description !== 'NOTINHA') &&
+          {
+            (params.row.typeDocument !== 'ORCAMENTO'
+              && params.row.situation === 'PENDENTE'
+              && params.row.formOfPayment === 'Boleto'
+              && params.row.description !== 'NOTINHA') &&
             <Tooltip title={params.row?.isBoletoUploaded ? 'Boleto importado' : 'Importar boleto'}>
               <IconButton
                 aria-label="Importar Boleto"
@@ -257,7 +260,8 @@ export const useColumns = (props: ColumnsProps) => {
               >
                 {!params.row?.isBoletoUploaded ? <UploadFileIcon /> : <TaskIcon />}
               </IconButton>
-            </Tooltip>}
+            </Tooltip>
+          }
         </>
       ),
     },

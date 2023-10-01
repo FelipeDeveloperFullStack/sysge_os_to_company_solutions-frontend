@@ -8,5 +8,6 @@ export const toApi = (data: SeeAllIncomeProps) => {
     dateOS: data?.dateIn,
     formOfPayment: data?.paymentForm,
     maturityOfTheBoleto: data?.maturity,
+    isLaunchMoney: data?.isLaunchMoney,
   }
 }

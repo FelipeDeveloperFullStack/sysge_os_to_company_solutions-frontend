@@ -1,15 +1,14 @@
+import Alert from '@mui/material/Alert'
 import React, { useState } from 'react'
 import { Button } from 'src/components'
+import { toast } from 'src/components/Widgets/Toastify'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
 import {
-  UpdateDeleteConfirmationContainer,
   NewExpenseContainer,
-  Text,
+  Text, UpdateDeleteConfirmationContainer
 } from './style'
-import { toast } from 'src/components/Widgets/Toastify'
-import Alert from '@mui/material/Alert'
 
 type UpdateConfirmationProps = {
   valueFormated: string
@@ -60,8 +59,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   return (
     <NewExpenseContainer>
       <Text>
-        Deseja realmente atualizar o status desse registro financeiro para{' '}
-        <b>{changeSituation()}</b>?
+        Deseja atualizar o status desse registro para <b style={{ marginLeft: '5px' }}>{changeSituation()}</b>?
       </Text>
       <p />
       <Alert severity="info">Despesa: {expense}</Alert>

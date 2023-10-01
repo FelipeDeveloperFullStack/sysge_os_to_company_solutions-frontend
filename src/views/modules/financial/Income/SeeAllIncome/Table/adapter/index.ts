@@ -20,7 +20,9 @@ export type Income = {
   isSendThreeDayMaturityBoleto?: boolean
   isBoletoUploaded?: boolean
   isPartial?: boolean
+  isLaunchMoney?: boolean
   description?: string
+  valuePartial?: string
   id: string
 }
 
@@ -86,6 +88,7 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     isPartial: item?.isPartial,
     description: item?.description || '',
     valuePartial: item?.valuePartial,
+    isLaunchMoney: item?.isLaunchMoney,
   }))
 
   const orderedYear = (resultFromApi: Income[]): string[] => {

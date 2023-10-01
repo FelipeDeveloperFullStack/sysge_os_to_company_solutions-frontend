@@ -9,6 +9,7 @@ export type SeeAllIncomeProps = {
   dateIn: string
   maturity: string
   status: string
+  isLaunchMoney?: boolean
 }
 
 export type FiltersProps = {

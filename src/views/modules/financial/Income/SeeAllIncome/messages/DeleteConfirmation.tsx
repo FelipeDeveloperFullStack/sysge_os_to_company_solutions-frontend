@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Button } from 'src/components'
+import { toast } from 'src/components/Widgets/Toastify'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
 import {
-  UpdateDeleteConfirmationContainer,
-  UpdateConfirmationContainer,
+  UpdateConfirmationContainer, UpdateDeleteConfirmationContainer
 } from './style'
-import { toast } from 'src/components/Widgets/Toastify'
 
 type DeleteConfirmationProps = {
   osNumber: number
@@ -57,12 +56,12 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   return (
     <UpdateConfirmationContainer>
       <div>Deseja realmente excluir essa receita?</div>
-      <div>Cliente: {clientName}</div>
+      {clientName && <div>Cliente: {clientName}</div>}
       <div>Valor: {valueFormated}</div>
-      <div>
+      {osNumber && <div>
         Ao clicar em SIM a ordem de serviço de Nº {osNumber} também será
         excluída do sistema.
-      </div>
+      </div>}
       <UpdateDeleteConfirmationContainer>
         <Button
           textButton="Sim"

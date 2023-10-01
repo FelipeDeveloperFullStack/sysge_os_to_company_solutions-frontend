@@ -1,6 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Alert } from '@mui/material'
+import FormControl from '@mui/material/FormControl/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel/FormControlLabel'
+import FormLabel from '@mui/material/FormLabel/FormLabel'
+import Radio from '@mui/material/Radio/Radio'
+import RadioGroup from '@mui/material/RadioGroup/RadioGroup'
 import moment from 'moment'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -41,6 +46,7 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
   const [isDisableIncomeText, setIsDisableIncomeText] = useState(false)
   const [messageError, setMessageError] = useState(null)
   const [loading, setLoading] = React.useState(false)
+  const [isLaunchMoney, setIsLaunchMoney] = React.useState(data?.isLaunchMoney ? 'yes' : 'no' || '')
 
   const { control, handleSubmit, setValue, watch, setError } =
     useForm<SeeAllIncomeProps>({
@@ -73,6 +79,21 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
     return dataAtual.format(formato)
   }
 
+  const setLaunchMoney = (dataIncome: SeeAllIncomeProps) => {
+    if (dataIncome.paymentForm === 'Dinheiro') {
+      if (data?.situation === 'PAGO') {
+        return undefined
+      }
+      if (isLaunchMoney === 'yes') {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return undefined
+    }
+  }
+
   const saveIncome = async (dataIncome: SeeAllIncomeProps) => {
     try {
       setLoading(true)
@@ -81,6 +102,7 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
         maturity: dataIncome.paymentForm === 'Boleto' ? (clickedMaturity?.label || maturity) : '',
         income: clickedIncome?.label || dataIncome.income,
         status: dataIncome?.status === 'PENDENTE' ? 'PENDENTE' : 'PAGO',
+        isLaunchMoney: setLaunchMoney(dataIncome)
       }
       await apiAdmin.put(`orderServices/${data?.id}`, toApi(dataIncome))
       setTimeout(() => {
@@ -114,7 +136,6 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
       return
     }
     await save(data)
-    // showMessage(ConfirmationToSave, { history, setMakeRequest })
   }
 
   const onFormatterPrice = (value: string, field: any) => {
@@ -126,7 +147,6 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
   const getIncomeById = async () => {
     try {
       const { data: result } = await apiAdmin.get<OSData>(`orderServices/${data?.id}`)
-      console.log(result)
       const incomeData = result?.description ? result?.description : result?.client?.name
       setIsDisableIncomeText(!result?.description)
       setValue('income', incomeData)
@@ -141,6 +161,7 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
   }
 
   React.useEffect(() => {
+    console.log(data)
     getIncomeById()
   }, [])
 
@@ -153,12 +174,18 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
     { label: 'Cartão de Débito', value: 'Cartão de Débito' },
   ]
 
+  const onHandleChangeMoney = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const valueClicked = (event.target as HTMLInputElement).value
+    setIsLaunchMoney(valueClicked)
+  };
+
   return (
     <NewIncomeContainer>
       <form onSubmit={handleSubmit(onSubmitIncome)} autoComplete="off">
         <Row display="flex" flexDirection="column" gap={1}>
           {!!messageError && <Alert severity="error">{messageError}</Alert>}
           {!!isDisableIncomeText && <Alert severity="info">{`O nome do cliente e valor não pode ser editado, pois existe o documento de nº ${data?.osNumber} vinculado ao mesmo.`}</Alert>}
+          {/* {(data?.situation === 'PAGO' && data?.formOfPayment === 'Dinheiro') && <Alert severity="warning">{'Atenção ao marcar a opção '}</Alert>} */}
           <TitleModalNewIncome>Edição de Receita</TitleModalNewIncome>
           <Row
             display="grid"
@@ -226,6 +253,7 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
                   hasError={!!fieldState.error?.message}
                   msgError={fieldState.error?.message}
                   mask="99/99/9999"
+                  disabled
                   {...field}
                 />
               )}
@@ -283,6 +311,18 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
                 />
               )}
             />
+            {(paymentForm === 'Dinheiro' && status !== 'PENDENTE') &&
+              <FormControl disabled={data?.situation === 'PAGO'}>
+                <FormLabel>O dinheiro recebido foi depositado na conta?</FormLabel>
+                <RadioGroup
+                  row
+                  value={isLaunchMoney}
+                  onChange={onHandleChangeMoney}
+                >
+                  <FormControlLabel value="yes" control={<Radio />} label="Sim" />
+                  <FormControlLabel value="no" control={<Radio />} label="Não" />
+                </RadioGroup>
+              </FormControl>}
           </Row>
         </Row>
         <UpdateDeleteConfirmationContainer>
@@ -293,6 +333,7 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
             icon="add2"
             type="submit"
             loading={loading}
+            disabled={paymentForm === 'Dinheiro' && !isLaunchMoney}
           />
           <Button
             textButton="Cancelar"
