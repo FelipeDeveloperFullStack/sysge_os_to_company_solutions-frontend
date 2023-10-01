@@ -1,3 +1,4 @@
+import { Alert } from '@mui/material'
 import React, { useState } from 'react'
 import { Button } from 'src/components'
 import { toast } from 'src/components/Widgets/Toastify'
@@ -12,12 +13,16 @@ import {
 type UpdateConfirmationProps = {
   id: string
   expense_type: string
+  valueFormated: string
+  expense: string
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const UpdateConfirmationExpenseEmpresaPessoal: React.FC<UpdateConfirmationProps> = ({
   id,
   expense_type,
+  valueFormated,
+  expense,
   setMakeRequest,
 }) => {
   const { closeModal } = useModal()
@@ -60,6 +65,9 @@ export const UpdateConfirmationExpenseEmpresaPessoal: React.FC<UpdateConfirmatio
       <Text fontSize='19px'>
         Deseja atualizar para Despesa <b style={{ marginLeft: '5px' }}>{changeSituation()}</b>?
       </Text>
+      <p />
+      <Alert severity="info">Despesa: {expense}</Alert>
+      <Alert severity="info">Valor: {valueFormated}</Alert>
       <p />
       <UpdateDeleteConfirmationContainer>
         <Button
