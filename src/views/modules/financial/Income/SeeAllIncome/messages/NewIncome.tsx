@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Alert } from '@mui/material'
+import { Alert, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -34,7 +35,7 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
   setMakeRequest,
   history
 }) => {
-  const { closeModal, showMessage } = useModal()
+  const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const [_, setValueClear] = useState(0)
   const [isNote, setIsNote] = useState(false)
@@ -47,14 +48,13 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
       shouldUnregister: false,
     })
 
+  const [isLaunchMoney, setIsLaunchMoney] = React.useState('')
+
   const [optionMaturity, setOptionMaturity] = useState<AutocompleteOptions[]>(
     [] as AutocompleteOptions[],
   )
 
   const [optionExpense, setOptionExpense] = useState<AutocompleteOptions[]>(
-    [] as AutocompleteOptions[],
-  )
-  const [optionClients, setOptionClients] = useState<AutocompleteOptions[]>(
     [] as AutocompleteOptions[],
   )
 
@@ -64,16 +64,10 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
   const [clickedIncome, setClickedIncome] = useState(
     {} as AutocompleteOptions,
   )
-  const [clickedClient, setClickedClient] = useState(
-    {} as AutocompleteOptions,
-  )
 
-  const dateIn = watch('dateIn')
   const maturity = watch('maturity')
-  const income = watch('income')
   const status = watch('status')
   const paymentForm = watch('paymentForm')
-  const valueFormatedPiece = watch('valueFormatedPiece')
 
   const getDateCurrent = () => {
     const dataAtual = moment()
@@ -81,24 +75,15 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
     return dataAtual.format(formato)
   }
 
-  const regiterPiece = async (incomeData: SeeAllIncomeProps) => {
-    try {
-      setLoading(true)
-      const { clean: value } = formatInputPrice(incomeData.valueFormatedPiece)
-      await apiAdmin.post(`pieces/register`, {
-        description: incomeData.income,
-        value,
-      })
-      toast.success('Registrado em Peças e nas despesas com sucesso.')
-      await saveIncome(incomeData)
-    } catch ({ response }) {
-      if (response?.status === 403) {
-        setMessageError(response?.data?.message)
+  const setLaunchMoney = (dataIncome: SeeAllIncomeProps) => {
+    if (dataIncome.paymentForm === 'Dinheiro') {
+      if (isLaunchMoney === 'yes') {
+        return true
       } else {
-        setMessageError('Opss! Ocorreu um erro ao tentar registrar em peças.')
+        return false
       }
-    } finally {
-      setLoading(false)
+    } else {
+      return undefined
     }
   }
 
@@ -110,13 +95,17 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
         maturity: data.paymentForm === 'Boleto' ? (clickedMaturity?.label || maturity) : '',
         income: clickedIncome?.label || data.income,
         status: data?.status === 'PENDENTE' ? 'PENDENTE' : 'PAGO',
+        isLaunchMoney: setLaunchMoney(data)
       }
       await apiAdmin.post(`orderServices`, toApi(data))
-      setMakeRequest(Math.random())
-      toast.success('Receita financeira adicionada com sucesso.')
+      setTimeout(() => {
+        setMakeRequest(Math.random())
+        setLoading(false)
+        toast.success('Receita financeira adicionada com sucesso.')
+        closeModal()
+      }, 2000)
     } catch (error) {
       exceptionHandle(error)
-    } finally {
       closeModal()
       setLoading(false)
     }
@@ -217,6 +206,11 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
     { label: 'Cartão de Crédito', value: 'Cartão de Crédito' },
     { label: 'Cartão de Débito', value: 'Cartão de Débito' },
   ]
+
+  const onHandleChangeMoney = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const valueClicked = (event.target as HTMLInputElement).value
+    setIsLaunchMoney(valueClicked)
+  };
 
   return (
     <NewIncomeContainer>
@@ -388,6 +382,18 @@ export const NewIncome: React.FC<UpdateConfirmationProps> = ({
                 />
               )}
             />
+            {(paymentForm === 'Dinheiro' && status !== 'PENDENTE') &&
+              <FormControl>
+                <FormLabel>O dinheiro recebido foi depositado na conta?</FormLabel>
+                <RadioGroup
+                  row
+                  value={isLaunchMoney}
+                  onChange={onHandleChangeMoney}
+                >
+                  <FormControlLabel value="yes" control={<Radio />} label="Sim" />
+                  <FormControlLabel value="no" control={<Radio />} label="Não" />
+                </RadioGroup>
+              </FormControl>}
           </Row>
         </Row>
         <UpdateDeleteConfirmationContainer>
