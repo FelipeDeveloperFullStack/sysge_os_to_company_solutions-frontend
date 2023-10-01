@@ -7,6 +7,7 @@ export type SeeAllExpenseProps = {
   dateIn: string
   maturity: string
   status: string
+  expense_type: string
 }
 
 export type FiltersProps = {

@@ -9,6 +9,13 @@ export const statusOptions = [
     value: 'A PAGAR',
   },
 ]
+export const expensesTypeOptions = [
+  { label: 'Empresa', value: 'Empresa' },
+  {
+    label: 'Pessoal',
+    value: 'Pessoal',
+  },
+]
 
 export const addDaysMaturity = (dateString: string): AutocompleteOptions[] => {
   const date = parse(dateString, 'dd/MM/yyyy', new Date())

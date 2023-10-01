@@ -101,7 +101,6 @@ export const UpdateDeleteConfirmationContainer = styled.div`
 `
 
 export const NewExpenseContainer = styled.div`
-  width: 730px;
   > div:first-child {
     font-size: 19px;
     > b {

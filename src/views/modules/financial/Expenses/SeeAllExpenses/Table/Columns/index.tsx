@@ -1,3 +1,4 @@
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 import SyncIcon from '@mui/icons-material/Sync'
@@ -11,6 +12,7 @@ import { usePermission } from 'src/hooks/usePermission'
 import { DESPESAS_EDITAR, DESPESAS_EXCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import { DeleteConfirmation } from '../../messages/DeleteConfirmation'
 import { UpdateConfirmation } from '../../messages/UpdateConfirmation'
+import { UpdateConfirmationExpenseEmpresaPessoal } from '../../messages/UpdateConfirmationExpenseEmpresaPessoal'
 import { Expense } from '../adapter'
 
 type ColumnsProps = {
@@ -47,11 +49,22 @@ export const useColumns = (props: ColumnsProps) => {
     }
   }
 
+  const onHandleUpdateSituationRowEmpresaOrPessoal = (params: GridCellParams) => {
+    if (params.field === 'group-buttons') {
+      const { id, expense_type } = params.row as Expense
+      showMessage(UpdateConfirmationExpenseEmpresaPessoal, {
+        id,
+        expense_type,
+        setMakeRequest: props.setMakeRequest,
+      })
+    }
+  }
+
   const columns: GridColDef[] = [
     {
       field: 'expense',
       headerName: 'Despesa',
-      width: 400,
+      width: 380,
       renderCell: (params: GridCellParams) => {
         const data = params.row as Expense
         return (
@@ -149,6 +162,7 @@ export const useColumns = (props: ColumnsProps) => {
       headerName: ' ',
       sortable: false,
       disableColumnMenu: true,
+      width: 120,
       renderCell: (params: GridCellParams) => (
         <>
           <IconButton
@@ -173,7 +187,21 @@ export const useColumns = (props: ColumnsProps) => {
               <DeleteForeverIcon />
             </IconButton>
           </>
-
+          <>
+            {<Tooltip title={params.row.expense_type === 'Pessoal' ? 'Atualizar para Despesa da Empresa' : 'Atualizar paga Despesa Pessoal'}>
+              <IconButton
+                aria-label="update"
+                color="secondary"
+                onClick={() => onHandleUpdateSituationRowEmpresaOrPessoal(params)}
+              >
+                {params.row.expense_type === 'Pessoal' ? (
+                  <CurrencyExchangeIcon />
+                ) : (
+                  <CurrencyExchangeIcon />
+                )}
+              </IconButton>
+            </Tooltip>}
+          </>
         </>
       ),
     },

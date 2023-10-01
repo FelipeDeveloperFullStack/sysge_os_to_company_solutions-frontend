@@ -1,41 +1,36 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react'
-import { Button } from 'src/components'
-import { useLoading } from 'src/hooks/useLoading'
-import { useModal } from 'src/hooks/useModal'
-import { useAdmin } from 'src/services/useAdmin'
-import InputText from 'src/components/Form/InputText/index_old'
-import { Controller, useForm } from 'react-hook-form'
-import InputMask from 'src/components/Form/InputMask'
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
-import {
-  UpdateDeleteConfirmationContainer,
-  NewExpenseContainer,
-  TitleModalNewExpense,
-} from './style'
-import { toast } from 'src/components/Widgets/Toastify'
-import { Row } from 'src/styles'
-import { SeeAllExpenseProps } from '../types'
-import { formatInputPrice } from 'src/helpers/formatPrice'
-import { toApi } from './adapter/toApi'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { schemaExpense } from './schemaValidation'
-import { Select } from 'src/components/Widgets/Select'
 import { Alert } from '@mui/material'
-import { green } from '@mui/material/colors'
+import axios from 'axios'
+import moment from 'moment'
+import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Button } from 'src/components'
 import {
   Autocomplete,
-  AutocompleteOptions,
+  AutocompleteOptions
 } from 'src/components/Form/Autocomplete'
-import { addDaysMaturity, statusOptions } from './statics'
-import onlyNumbers from 'src/helpers/clear/onlyNumbers'
 import { Checkbox } from 'src/components/Form/Checkbox'
-import { fromApi } from './adapter/fromApi'
-import moment from 'moment'
-import axios from 'axios'
-import ConfirmationToSave from './ConfirmationToSave'
+import InputMask from 'src/components/Form/InputMask'
+import InputText from 'src/components/Form/InputText/index_old'
+import { Select } from 'src/components/Widgets/Select'
+import { toast } from 'src/components/Widgets/Toastify'
+import onlyNumbers from 'src/helpers/clear/onlyNumbers'
+import { formatInputPrice } from 'src/helpers/formatPrice'
 import { removeDuplicatesAutocomplete } from 'src/helpers/removeDuplicates'
+import { useModal } from 'src/hooks/useModal'
+import { useAdmin } from 'src/services/useAdmin'
+import { Row } from 'src/styles'
+import { SeeAllExpenseProps } from '../types'
+import { fromApi } from './adapter/fromApi'
+import { toApi } from './adapter/toApi'
+import ConfirmationToSave from './ConfirmationToSave'
+import { schemaExpense } from './schemaValidation'
+import { addDaysMaturity, expensesTypeOptions, statusOptions } from './statics'
+import {
+  NewExpenseContainer,
+  TitleModalNewExpense, UpdateDeleteConfirmationContainer
+} from './style'
 
 type UpdateConfirmationProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
@@ -114,6 +109,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
         ...data,
         maturity: clickedMaturity?.label || maturity,
         expense: clickedExpense?.label || data.expense,
+        expense_type: data.expense_type
       }
       await apiAdmin.post(`expense`, toApi(data))
       setMakeRequest(Math.random())
@@ -221,6 +217,7 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
 
   React.useEffect(() => {
     setValue('status', 'PAGO')
+    setValue('expense_type', 'Empresa')
   }, [])
 
   return (
@@ -362,6 +359,23 @@ export const NewExpenses: React.FC<UpdateConfirmationProps> = ({
                     setValue('status', previousState)
                   }
                   options={statusOptions}
+                  hasError={!!fieldState.error}
+                  msgError={fieldState.error?.message}
+                />
+              )}
+            />
+            <Controller
+              name="expense_type"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <Select
+                  label={'Tipo de Despesa'}
+                  value={field.value}
+                  setValue={(previousState) =>
+                    setValue('expense_type', previousState)
+                  }
+                  options={expensesTypeOptions}
                   hasError={!!fieldState.error}
                   msgError={fieldState.error?.message}
                 />

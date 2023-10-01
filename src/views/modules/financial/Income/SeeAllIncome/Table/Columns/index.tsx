@@ -201,7 +201,7 @@ export const useColumns = (props: ColumnsProps) => {
       disableColumnMenu: true,
       width: 210,
       renderCell: (params: GridCellParams) => (
-        <>{console.log(params.row)}
+        <>
           {(params.row.situation === 'PAGO' && params.row.valuePartial) && <Tooltip title={params.row.situation === 'PENDENTE' ? 'Atualizar para RECEBIDO' : 'Atualizar paga PENDENTE'}>
             <IconButton
               aria-label="update"
