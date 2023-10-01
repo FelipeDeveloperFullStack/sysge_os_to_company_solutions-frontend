@@ -1,13 +1,12 @@
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { GridCellParams, GridColDef } from '@mui/x-data-grid';
-//import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
-// import SyncIcon from '@mui/icons-material/Sync'
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 import TaskIcon from '@mui/icons-material/Task';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Tooltip } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
+import { GridCellParams, GridColDef } from '@mui/x-data-grid';
 import { addDays, isBefore, parse } from 'date-fns';
 import { useModal } from 'src/hooks/useModal';
 import { usePermission } from 'src/hooks/usePermission';
@@ -15,6 +14,7 @@ import { RECEITAS_EDITAR, RECEITAS_EXCLUIR } from 'src/views/modules/administrat
 import UploadDocument from 'src/views/modules/manager/seeAllServiceOrder/messages/UploadDocument';
 import { AddPartialIncome } from '../../messages/AddPartialIncome';
 import { DeleteConfirmation } from '../../messages/DeleteConfirmation';
+import { EditIncome } from '../../messages/EditIncome';
 import { UpdateConfirmation } from '../../messages/UpdateConfirmation';
 import { Income } from '../adapter';
 import { NofiticationMessage, NotificationText } from './style';
@@ -26,6 +26,16 @@ type ColumnsProps = {
 export const useColumns = (props: ColumnsProps) => {
   const { showMessage } = useModal()
   const { hasPermission } = usePermission()
+
+  const onHandleEdit = async (params: GridCellParams) => {
+    if (params.field === 'group-buttons') {
+      const data = params.row as Income
+      showMessage(EditIncome, {
+        data,
+        setMakeRequest: props.setMakeRequest,
+      })
+    }
+  }
 
   const onHandleDeleteRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
@@ -42,12 +52,13 @@ export const useColumns = (props: ColumnsProps) => {
   }
   const onHandlePartialIncomes = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
-      const { clientName, id, osNumber, valueFormated } = params.row as Income
+      const { clientName, id, osNumber, valueFormated, description } = params.row as Income
       showMessage(AddPartialIncome, {
         id,
         osNumber,
         valueFormated,
         clientName,
+        description,
         setMakeRequest: props.setMakeRequest,
       })
     }
@@ -55,12 +66,13 @@ export const useColumns = (props: ColumnsProps) => {
 
   const onHandleUpdateSituationRow = (params: GridCellParams) => {
     if (params.field === 'group-buttons') {
-      const { clientName, id, valueFormated, situation } = params.row as Income
+      const { clientName, id, valueFormated, situation, description } = params.row as Income
       showMessage(UpdateConfirmation, {
         valueFormated,
         clientName,
         id,
         situation,
+        description,
         setMakeRequest: props.setMakeRequest,
       })
     }
@@ -185,21 +197,24 @@ export const useColumns = (props: ColumnsProps) => {
       headerName: ' ',
       sortable: false,
       disableColumnMenu: true,
-      width: 140,
+      width: 210,
       renderCell: (params: GridCellParams) => (
         <>
-          {/* <IconButton
-            aria-label="update"
-            color="info"
-            onClick={() => onHandleUpdateSituationRow(params)}
-            disabled={!hasPermission(RECEITAS_EDITAR)}
-          >
-            {params.row.situation === 'PENDENTE' ? (
-              <PublishedWithChangesIcon />
-            ) : (
-              <SyncIcon />
-            )}
-          </IconButton> */}
+          {/* <Tooltip title={params.row.situation === 'PENDENTE' ? 'Atualizar para RECEBIDO' : 'Atualizar paga PENDENTE'}>
+            <IconButton
+              aria-label="update"
+              color="info"
+              onClick={() => onHandleUpdateSituationRow(params)}
+              disabled={!hasPermission(RECEITAS_EDITAR)}
+            >
+              {params.row.situation === 'PENDENTE' ? (
+                <PublishedWithChangesIcon />
+              ) : (
+                <SyncIcon />
+              )}
+            </IconButton>
+          </Tooltip> */}
+
           <>
             <IconButton
               aria-label="delete"
@@ -210,6 +225,25 @@ export const useColumns = (props: ColumnsProps) => {
               <DeleteForeverIcon />
             </IconButton>
           </>
+
+          {!params.row?.valuePartial && <Tooltip title={'Editar'}>
+            <IconButton aria-label="editar" color="info" onClick={() => onHandleEdit(params)}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>}
+
+          {(params.row.situation === 'PENDENTE' && params.row.description !== 'NOTINHA') && <>
+            <Tooltip title={'Adicionar Recebimento Parcial'}>
+              <IconButton
+                aria-label="parcial"
+                color="info"
+                onClick={() => onHandlePartialIncomes(params)}
+                disabled={!hasPermission(RECEITAS_EDITAR)}
+              >
+                <CurrencyExchangeIcon />
+              </IconButton>
+            </Tooltip>
+          </>}
           {(params.row.typeDocument !== 'ORCAMENTO'
             && params.row.situation === 'PENDENTE'
             && params.row.formOfPayment === 'Boleto'
@@ -224,18 +258,6 @@ export const useColumns = (props: ColumnsProps) => {
                 {!params.row?.isBoletoUploaded ? <UploadFileIcon /> : <TaskIcon />}
               </IconButton>
             </Tooltip>}
-          {(params.row.situation === 'PENDENTE' && params.row.description !== 'NOTINHA') && <>
-            <Tooltip title={'Adicionar Recebimento Parcial'}>
-              <IconButton
-                aria-label="parcial"
-                color="info"
-                onClick={() => onHandlePartialIncomes(params)}
-                disabled={!hasPermission(RECEITAS_EDITAR)}
-              >
-                <CurrencyExchangeIcon />
-              </IconButton>
-            </Tooltip>
-          </>}
         </>
       ),
     },

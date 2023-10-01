@@ -3,7 +3,7 @@ import { SeeAllIncomeProps } from '../../types'
 export const toApi = (data: SeeAllIncomeProps) => {
   return {
     status: data?.status,
-    description: data?.income,
+    description: String(data?.income).toUpperCase(),
     total: data?.valueFormated,
     dateOS: data?.dateIn,
     formOfPayment: data?.paymentForm,

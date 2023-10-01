@@ -1,30 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react'
-import { Button } from 'src/components'
-import { Select } from 'src/components/Widgets/Select'
 import { format } from 'date-fns'
-import { useModal } from 'src/hooks/useModal'
-import { useAdmin } from 'src/services/useAdmin'
-import {
-  UpdateDeleteConfirmationContainer,
-  UpdateConfirmationContainer,
-} from './style'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
+import { Button } from 'src/components'
+import { Autocomplete, AutocompleteOptions } from 'src/components/Form/Autocomplete'
+import InputMask from 'src/components/Form/InputMask'
 import InputText from 'src/components/Form/InputText/index_old'
 import { OptionsProps } from 'src/components/Form/Select'
-import InputMask from 'src/components/Form/InputMask'
-import { exceptionHandle } from 'src/helpers/exceptions'
-import { addDaysMaturity } from 'src/views/modules/financial/Expenses/SeeAllExpenses/messages/statics'
-import { Autocomplete, AutocompleteOptions } from 'src/components/Form/Autocomplete'
+import { Select } from 'src/components/Widgets/Select'
 import { toast } from 'src/components/Widgets/Toastify'
+import { exceptionHandle } from 'src/helpers/exceptions'
+import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
+import { useModal } from 'src/hooks/useModal'
+import { useAdmin } from 'src/services/useAdmin'
+import { addDaysMaturity } from 'src/views/modules/financial/Expenses/SeeAllExpenses/messages/statics'
+import {
+  UpdateConfirmationContainer, UpdateDeleteConfirmationContainer
+} from './style'
 
 type AddPartialIncomeProps = {
   valueFormated: string
   clientName: string
   id: string
   situation: string
+  description: string
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
@@ -40,6 +40,7 @@ export const AddPartialIncome: React.FC<AddPartialIncomeProps> = ({
   clientName,
   id,
   valueFormated,
+  description,
   setMakeRequest,
 }) => {
   const { closeModal } = useModal()
@@ -79,7 +80,7 @@ export const AddPartialIncome: React.FC<AddPartialIncomeProps> = ({
   }
 
   const sformOfPaymentOptions: OptionsProps[] = [
-    { label: 'Boleto', value: 'Boleto' },
+    !description && { label: 'Boleto', value: 'Boleto' },
     { label: 'Pix', value: 'Pix' },
     { label: 'Dinheiro', value: 'Dinheiro' },
     { label: 'Cheque', value: 'Cheque' },

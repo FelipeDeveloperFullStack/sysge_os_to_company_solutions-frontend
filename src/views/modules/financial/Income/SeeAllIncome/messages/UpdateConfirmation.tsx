@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 import { Button } from 'src/components'
+import { toast } from 'src/components/Widgets/Toastify'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
 import {
-  UpdateDeleteConfirmationContainer,
-  UpdateConfirmationContainer,
+  UpdateConfirmationContainer, UpdateDeleteConfirmationContainer
 } from './style'
-import { toast } from 'src/components/Widgets/Toastify'
 
 type UpdateConfirmationProps = {
   valueFormated: string
   clientName: string
   id: string
   situation: string
+  description: string
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
@@ -22,6 +22,7 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   id,
   valueFormated,
   situation,
+  description,
   setMakeRequest,
 }) => {
   const { closeModal } = useModal()
@@ -30,6 +31,10 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   const { Loading } = useLoading()
 
   const changeSituation = () => {
+    return situation === 'PENDENTE' ? 'RECEBIDO' : 'PENDENTE'
+  }
+
+  const changeSituationToApi = () => {
     return situation === 'PENDENTE' ? 'PAGO' : 'PENDENTE'
   }
 
@@ -37,17 +42,21 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
     try {
       Loading.turnOn()
       setLoading(true)
-      apiAdmin.put(`orderServices/${id}`, { status: changeSituation() })
-      setMakeRequest(Math.random())
-      toast.success('Receita financeira atualizada com sucesso.')
+      apiAdmin.put(`orderServices/${id}`, { status: changeSituationToApi() })
+      setTimeout(() => {
+        setMakeRequest(Math.random())
+        setLoading(false)
+        toast.success('Receita financeira atualizada com sucesso.')
+        closeModal()
+        Loading.turnOff()
+      }, 2000)
     } catch (error) {
+      setLoading(false)
+      closeModal()
+      Loading.turnOff()
       toast.error(
         'Opss! Ocorreu um erro ao tentar atualiza o status do registro financeiro.',
       )
-    } finally {
-      Loading.turnOff()
-      closeModal()
-      setLoading(false)
     }
   }
 
@@ -58,14 +67,13 @@ export const UpdateConfirmation: React.FC<UpdateConfirmationProps> = ({
   return (
     <UpdateConfirmationContainer>
       <div>
-        Deseja realmente atualizar o status desse registro financeiro para
+        Deseja atualizar esse registro financeiro para
         <b>{changeSituation()}</b>?
       </div>
-      <div>Cliente: {clientName}</div>
-      <div>Valor: {valueFormated}</div>
-      <div>
-        <b>Ao clicar em SIM o procedimento não poderá ser desfeito.</b>
-      </div>
+      <p />
+      {clientName && <div><b>Cliente:</b> {String(clientName).toUpperCase()}</div>}
+      {description && <div><b>Receita:</b> {String(description).toUpperCase()}</div>}
+      <div><b>Valor:</b> {valueFormated}</div>
       <UpdateDeleteConfirmationContainer>
         <Button
           textButton="Sim"

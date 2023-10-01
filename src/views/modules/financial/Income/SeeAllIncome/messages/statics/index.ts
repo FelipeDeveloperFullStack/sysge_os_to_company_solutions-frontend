@@ -3,10 +3,10 @@ import { AutocompleteOptions } from 'src/components/Form/Autocomplete'
 const { addDays, format, isValid, parse } = require('date-fns')
 
 export const statusOptions = [
-  { label: 'PAGO', value: 'PAGO' },
+  { label: 'RECEBIDO', value: 'RECEBIDO' },
   {
-    label: 'A PAGAR',
-    value: 'A PAGAR',
+    label: 'PENDENTE',
+    value: 'PENDENTE',
   },
 ]
 

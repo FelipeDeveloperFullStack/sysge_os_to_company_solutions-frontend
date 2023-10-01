@@ -85,6 +85,7 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     isBoletoUploaded: item?.isBoletoUploaded,
     isPartial: item?.isPartial,
     description: item?.description || '',
+    valuePartial: item?.valuePartial,
   }))
 
   const orderedYear = (resultFromApi: Income[]): string[] => {
