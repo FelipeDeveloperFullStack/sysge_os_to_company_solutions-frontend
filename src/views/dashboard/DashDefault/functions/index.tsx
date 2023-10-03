@@ -37,6 +37,22 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
     }
   }
 
+  const getTotalPersonalExpenseMonth = async () => {
+    try {
+      const { data } = await apiAdmin.get('expense/total/expense/month')
+      setTotal((previousState) => ({
+        ...previousState,
+        totalExpenseEmpresaMonth: data?.totalExpenseEmpresa,
+        totalExpensePessoalMonth: data?.totalExpensePessoal,
+        currentMonth: data?.month
+      }))
+    } catch (error) {
+      toast.error(
+        'Houve um erro ao tentar retornar o total de despesas da empresa e pessoal do mes na plataforma.',
+      )
+    }
+  }
+
   const getTotalExpiredMaturityIn3Days = async () => {
     try {
       const { data } = await apiAdmin.get('orderServices/total/maturity-boleto')
@@ -121,6 +137,22 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
     } catch (error) {
       toast.error(
         'Houve um erro ao tentar retornar o total de receitas na plataforma.',
+      )
+    } finally {
+
+    }
+  }
+  const getTotalProfitMonth = async () => {
+    try {
+
+      const { data } = await apiAdmin.get('orderServices/total/profit-month')
+      setTotal((previousState) => ({
+        ...previousState,
+        totalProfitMonth: data?.totalProfitMonth,
+      }))
+    } catch (error) {
+      toast.error(
+        'Houve um erro ao tentar retornar o total de lucro do mes na plataforma.',
       )
     } finally {
 
@@ -224,6 +256,8 @@ export const useDashBoard = ({ setTotal }: DashboardProps) => {
     getTotalClientWithoutEmail,
     getTotalBoletoNotImported,
     getTotalPersonalExpense,
-    getDataChart
+    getDataChart,
+    getTotalPersonalExpenseMonth,
+    getTotalProfitMonth
   }
 }

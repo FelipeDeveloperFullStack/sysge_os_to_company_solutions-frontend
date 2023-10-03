@@ -5,6 +5,7 @@ import GroupIcon from '@mui/icons-material/Group'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import { Tooltip } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Chip from '@mui/material/Chip'
 import React, { useState } from 'react'
@@ -41,6 +42,7 @@ export type Total = {
   totalServices: number
   totalEquipaments: number
   totalIncomes: number
+  totalProfitMonth: number
   totalExpenses: number
   totalValueExpenseInExpired: number
   qtdeExpenseInExpired: number
@@ -51,6 +53,9 @@ export type Total = {
   clientsWithoutEmail: ClientT[]
   boletoNotImported: OSData[]
   dataChart: DataChart[]
+  totalExpenseEmpresaMonth: number
+  totalExpensePessoalMonth: number
+  currentMonth: string
 }
 
 const DashDefault: React.FC = () => {
@@ -66,6 +71,7 @@ const DashDefault: React.FC = () => {
     totalServices: 0,
     totalEquipaments: 0,
     totalIncomes: 0,
+    totalProfitMonth: 0,
     totalExpenses: 0,
     qtdeExpenseInExpired: 0,
     totalValueExpenseInExpired: 0,
@@ -75,7 +81,10 @@ const DashDefault: React.FC = () => {
     totalPersonalExpense: 0,
     clientsWithoutEmail: [],
     boletoNotImported: [],
-    dataChart: []
+    dataChart: [],
+    totalExpenseEmpresaMonth: 0,
+    totalExpensePessoalMonth: 0,
+    currentMonth: ''
   } as Total)
   const {
     getTotalClients,
@@ -90,7 +99,9 @@ const DashDefault: React.FC = () => {
     getTotalClientWithoutEmail,
     getTotalBoletoNotImported,
     getTotalPersonalExpense,
-    getDataChart
+    getDataChart,
+    getTotalPersonalExpenseMonth,
+    getTotalProfitMonth
   } = useDashBoard({ setTotal })
 
   const getTotal = async () => {
@@ -109,6 +120,8 @@ const DashDefault: React.FC = () => {
       await getTotalBoletoNotImported()
       await getTotalPersonalExpense()
       await getDataChart()
+      await getTotalPersonalExpenseMonth()
+      await getTotalProfitMonth()
     } catch (err) {
       exceptionHandle(err)
     } finally {
@@ -208,7 +221,7 @@ const DashDefault: React.FC = () => {
         {typeUser === 'ADMIN' && <Col xl={3} >
           <Card>
             <Card.Body>
-              <h6 className="mb-4">Receitas</h6>
+              <h6 className="mb-4">Total Receitas</h6>
               <div className="row d-flex align-items-center">
                 <div className="col-9">
                   <h3 className="f-w-300 d-flex align-items-center m-b-0">
@@ -237,48 +250,63 @@ const DashDefault: React.FC = () => {
         {typeUser === 'ADMIN' && <Col xl={3} >
           <Card>
             <Card.Body>
-              <h6 style={total.totalPersonalExpense > 0 ? { marginBottom: '12px' } : { marginBottom: '12px' }} className={total.totalPersonalExpense === 0 && 'mb-4'}>Despesas</h6>
-              {total.totalPersonalExpense > 0 ?
-                <div className="row d-flex align-items-center">
-                  <div className="col-9">
-                    <h5 className="f-w-300 d-flex align-items-center m-b-0" style={{ width: '245px' }}>
-                      <i className="feather icon-arrow-down text-c-red f-15 m-r-5" />{' '}
-                      {formatPrice(total.totalExpenses - total.totalPersonalExpense)} Empresa
-                    </h5>
-                  </div>
-                  <div className="col-9">
-                    <h5 className="f-w-300 d-flex align-items-center m-b-0" style={{ width: '245px' }}>
-                      <i className="feather icon-arrow-down text-c-red f-15 m-r-5" />{' '}
-                      {formatPrice(total.totalPersonalExpense)} Pessoal
-                    </h5>
-                  </div>
-                  <div className="col-3 text-right">
-                    {/* <p className="m-b-0">36%</p> */}
-                  </div>
-                </div> :
+              <h6 className={'mb-4'}>Total Despesas Empresa</h6>
+              <div className="row d-flex align-items-center">
+                <div className="col-9">
+                  <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                    <i className="feather icon-arrow-down text-c-red f-30 m-r-5" />{' '}
+                    {formatPrice(total.totalExpenses)}
+                  </h3>
+                </div>
+                <div className="col-3 text-right">
+                  {/* <p className="m-b-0">36%</p> */}
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>}
+        {typeUser === 'ADMIN' && <Col xl={3} >
+          <Card>
+            <Card.Body>
+              <h6 className={'mb-4'}>Total Despesas Pessoal</h6>
+              <div className="row d-flex align-items-center">
+                <div className="col-9">
+                  <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                    <i className="feather icon-arrow-down text-c-red f-30 m-r-5" />{' '}
+                    {formatPrice(total.totalPersonalExpense)}
+                  </h3>
+                </div>
+                <div className="col-3 text-right">
+                  {/* <p className="m-b-0">36%</p> */}
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>}
+        {typeUser === 'ADMIN' && <Col xl={3}>
+          <Card >
+            <Tooltip title='O cálculo do lucro total não se aplica as despesas pessoais, somente as despesas da empresa.'>
+              <Card.Body>
+                <h6 className="mb-4">Total Lucro</h6>
                 <div className="row d-flex align-items-center">
                   <div className="col-9">
                     <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                      <i className="feather icon-arrow-down text-c-red f-30 m-r-5" />{' '}
-                      {formatPrice(total.totalExpenses)}
+                      <i
+                        className={`feather ${total.totalIncomes - total.totalExpenses < 0
+                          ? 'icon-arrow-down text-c-red'
+                          : 'icon-arrow-up text-c-green'
+                          } f-30 m-r-5`}
+                      />{' '}
+                      {formatPrice(total.totalIncomes - total.totalExpenses)}
                     </h3>
                   </div>
+
                   <div className="col-3 text-right">
-                    {/* <p className="m-b-0">36%</p> */}
+                    {/* <p className="m-b-0">70%</p> */}
                   </div>
                 </div>
-              }
-              {/* <div className="progress m-t-30" style={{ height: '7px' }}>
-                <div
-                  className="progress-bar progress-c-theme2"
-                  role="progressbar"
-                  style={{ width: '35%' }}
-                  aria-valuenow="35"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                />
-              </div> */}
-            </Card.Body>
+              </Card.Body>
+            </Tooltip>
           </Card>
         </Col>}
         {typeUser === 'ADMIN' && <Col xl={3} >
@@ -302,36 +330,74 @@ const DashDefault: React.FC = () => {
         </Col>}
         {typeUser === 'ADMIN' && <Col xl={3}>
           <Card >
-            <Card.Body>
-              <h6 className="mb-4">Lucro</h6>
-              <div className="row d-flex align-items-center">
-                <div className="col-9">
-                  <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                    <i
-                      className={`feather ${total.totalIncomes - total.totalExpenses < 0
-                        ? 'icon-arrow-down text-c-red'
-                        : 'icon-arrow-up text-c-green'
-                        } f-30 m-r-5`}
-                    />{' '}
-                    {formatPrice(total.totalIncomes - total.totalExpenses)}
-                  </h3>
-                </div>
+            <Tooltip title={`Referente ao mês de ${total.currentMonth}`}>
+              <Card.Body>
+                <h6 className="mb-4">Despesa do Mês Empresa</h6>
+                <div className="row d-flex align-items-center">
+                  <div className="col-9">
+                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                      <i
+                        className={`feather icon-arrow-down text-c-red f-30 m-r-5`}
+                      />{' '}
+                      {formatPrice(total.totalExpenseEmpresaMonth)}
+                    </h3>
+                  </div>
 
-                <div className="col-3 text-right">
-                  {/* <p className="m-b-0">70%</p> */}
+                  <div className="col-3 text-right">
+                    {/* <p className="m-b-0">70%</p> */}
+                  </div>
                 </div>
-              </div>
-              {/* <div className="progress m-t-30" style={{ height: '7px' }}>
-                <div
-                  className="progress-bar progress-c-theme"
-                  role="progressbar"
-                  style={{ width: '70%' }}
-                  aria-valuenow="70"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                />
-              </div> */}
-            </Card.Body>
+              </Card.Body>
+            </Tooltip>
+          </Card>
+        </Col>}
+        {typeUser === 'ADMIN' && <Col xl={3}>
+          <Card >
+            <Tooltip title={`Referente ao mês de ${total.currentMonth}`}>
+              <Card.Body>
+                <h6 className="mb-4">Despesa do Mês Pessoal</h6>
+                <div className="row d-flex align-items-center">
+                  <div className="col-9">
+                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                      <i
+                        className={`feather icon-arrow-down text-c-red f-30 m-r-5`}
+                      />{' '}
+                      {formatPrice(total.totalExpensePessoalMonth)}
+                    </h3>
+                  </div>
+
+                  <div className="col-3 text-right">
+                    {/* <p className="m-b-0">70%</p> */}
+                  </div>
+                </div>
+              </Card.Body>
+            </Tooltip>
+          </Card>
+        </Col>}
+        {typeUser === 'ADMIN' && <Col xl={3}>
+          <Card >
+            <Tooltip title={`O cálculo do lucro do mês não se aplica as despesas pessoais, somente as despesas da empresa. Referente ao mês de ${total.currentMonth}`}>
+              <Card.Body>
+                <h6 className="mb-4">Lucro do Mês</h6>
+                <div className="row d-flex align-items-center">
+                  <div className="col-9">
+                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
+                      <i
+                        className={`feather ${total.totalProfitMonth < 0
+                          ? 'icon-arrow-down text-c-red'
+                          : 'icon-arrow-up text-c-green'
+                          } f-30 m-r-5`}
+                      />{' '}
+                      {formatPrice(total.totalProfitMonth)}
+                    </h3>
+                  </div>
+
+                  <div className="col-3 text-right">
+                    {/* <p className="m-b-0">70%</p> */}
+                  </div>
+                </div>
+              </Card.Body>
+            </Tooltip>
           </Card>
         </Col>}
         {typeUser === 'ADMIN' && <Col md={6} xl={8}>
