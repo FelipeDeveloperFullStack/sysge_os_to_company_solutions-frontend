@@ -18,5 +18,5 @@ export const LinearProgressStyled = styled(LinearProgress)`
 `
 
 export const ButtonGenerateOSContainer = styled.div`
-  //padding: 10px 0px 10px 0px;
+  padding: 10px 0px 10px 0px;
 `

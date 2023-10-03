@@ -19,6 +19,11 @@ type TableViewProps = {
   setMakeRequest: React.Dispatch<React.SetStateAction<number>>
 }
 
+type SelectedRowByExpenseType = {
+  expenseTypePessoalId: string[]
+  expenseTypeEmpresaId: string[]
+}
+
 const TableView: React.FC<TableViewProps> = ({
   incomesFiltered,
   setMakeRequest,
@@ -26,11 +31,14 @@ const TableView: React.FC<TableViewProps> = ({
   const columns = useColumns({ setMakeRequest })
   const { apiAdmin } = useAdmin()
   const { Loading } = useLoading()
-  const { showSimple, showMessage } = useModal()
+  const { showSimple } = useModal()
   const { hasPermission } = usePermission()
 
   const [selectedAllRowIds, setSelectedAllRowIds] = useState<string[]>(
     [] as string[],
+  )
+  const [selectedRowByExpenseType, setSelectedRowByExpenseType] = useState<SelectedRowByExpenseType>(
+    {} as SelectedRowByExpenseType
   )
   const [selectedAllRow, setSelectedAllRow] = useState<Expense[]>(
     [] as Expense[],
@@ -59,6 +67,19 @@ const TableView: React.FC<TableViewProps> = ({
       )
     }
   }
+
+  const updateExpenseType = async (id: string, expenseType: string) => {
+    try {
+      await apiAdmin.put(`expense/${id}`, {
+        expense_type: expenseType,
+      })
+    } catch (error) {
+      toast.error(
+        'Opss! Ocorreu um erro ao tentar atualiza o tipo de despesa.',
+      )
+    }
+  }
+
   const updateRegiterPiece = async (expense: Expense) => {
     try {
       const { data } = await apiAdmin.post(`pieces/register`, {
@@ -90,6 +111,22 @@ const TableView: React.FC<TableViewProps> = ({
         setMakeRequest(Math.random())
         showSimple.success(
           `${selectedAllRowIds.length} registros registrados em peças com sucesso.`,
+        )
+      }
+    }
+  }
+
+  const onHandleUpdateExpenseType = async (expenseTypeList: string[], expenseType: string) => {
+    let index = 0
+    Loading.turnOn()
+    for (index; index < expenseTypeList.length; index++) {
+      const id = expenseTypeList[index]
+      await updateExpenseType(id, expenseType)
+      if (index === expenseTypeList.length - 1) {
+        Loading.turnOff()
+        setMakeRequest(Math.random())
+        showSimple.success(
+          `${expenseTypeList.length} registros atualizado para Despesa ${expenseType} com sucesso.`,
         )
       }
     }
@@ -146,6 +183,16 @@ const TableView: React.FC<TableViewProps> = ({
     }
   }, [incomesFiltered])
 
+  React.useEffect(() => {
+    const resultFilterPessoal = selectedAllRow.filter((item) => item.expense_type === 'Pessoal').map((item) => item.id)
+    const resultFilterEmpresa = selectedAllRow.filter((item) => item.expense_type === 'Empresa').map((item) => item.id)
+    setSelectedRowByExpenseType((previousState: SelectedRowByExpenseType) => ({
+      ...previousState,
+      expenseTypePessoalId: resultFilterPessoal,
+      expenseTypeEmpresaId: resultFilterEmpresa
+    }))
+  }, [selectedAllRow])
+
   return (
     <>
       <>
@@ -189,6 +236,46 @@ const TableView: React.FC<TableViewProps> = ({
                   icon={status === 'A PAGAR' ? 'update2' : 'update'}
                   color={status === 'A PAGAR' ? 'success' : 'warning'}
                   onClick={onHandleUpdateStatus}
+                  disabled={!hasPermission(DESPESAS_EDITAR)}
+                />
+                {/* <Badge
+                  badgeContent={selectedAllRowIds?.length}
+                  color={status === 'A PAGAR' ? 'success' : 'warning'}
+                >
+                </Badge> */}
+              </ButtonGenerateOSContainer>
+            </>
+          )}
+          {!!selectedRowByExpenseType.expenseTypeEmpresaId?.length && (
+            <>
+              <ButtonGenerateOSContainer>
+                <Button
+                  textButton={`Atualizar para Despesa Pessoal (${selectedRowByExpenseType.expenseTypeEmpresaId?.length})`}
+                  variant={'outlined'}
+                  size="small"
+                  icon={'update'}
+                  color={'primary'}
+                  onClick={() => onHandleUpdateExpenseType(selectedRowByExpenseType.expenseTypeEmpresaId, 'Pessoal')}
+                  disabled={!hasPermission(DESPESAS_EDITAR)}
+                />
+                {/* <Badge
+                  badgeContent={selectedAllRowIds?.length}
+                  color={status === 'A PAGAR' ? 'success' : 'warning'}
+                >
+                </Badge> */}
+              </ButtonGenerateOSContainer>
+            </>
+          )}
+          {!!selectedRowByExpenseType.expenseTypePessoalId?.length && (
+            <>
+              <ButtonGenerateOSContainer>
+                <Button
+                  textButton={`Atualizar para Despesa Empresa (${selectedRowByExpenseType.expenseTypePessoalId?.length})`}
+                  variant={'outlined'}
+                  size="small"
+                  icon={'update'}
+                  color={'secondary'}
+                  onClick={() => onHandleUpdateExpenseType(selectedRowByExpenseType.expenseTypePessoalId, 'Empresa')}
                   disabled={!hasPermission(DESPESAS_EDITAR)}
                 />
                 {/* <Badge
