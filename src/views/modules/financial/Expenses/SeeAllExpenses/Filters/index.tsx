@@ -15,9 +15,9 @@ import { useAdmin } from 'src/services/useAdmin'
 import { Row } from 'src/styles'
 import { DESPESAS_INCLUIR } from 'src/views/modules/administration/permissions/static/keysPermissions'
 import useLocalStorage from 'use-local-storage'
+import { Expense, fromApi } from '../Table/adapter'
 import { NewExpenses } from '../messages/NewExpenses'
 import UploadDocument from '../messages/UploadDocument'
-import { Expense, fromApi } from '../Table/adapter'
 import { Container, Form } from './style'
 
 type SeeAllIncomeProps = {
@@ -49,7 +49,7 @@ const Filters: React.FC<FiltersProps> = ({
   const history = useHistory()
   const [selectedButton, setSelectedButton] = useLocalStorage(
     'selectedButtonExpense',
-    'A PAGAR',
+    'PAGO',
   )
   const expense = watch('expense')
 

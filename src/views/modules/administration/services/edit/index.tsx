@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
@@ -15,14 +16,14 @@ import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_SERVICES } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_MAKE_REQUEST, SERVICE_FILTER, SERVICE_SEE_ALL } from 'src/store/actions'
 import { ServiceT } from 'src/store/Types'
+import { LAYOUT_MAKE_REQUEST, SERVICE_FILTER, SERVICE_SEE_ALL } from 'src/store/actions'
 import { Row } from 'src/styles'
 import { fromApi } from '../adapters'
 import { schemaService } from '../schemaValidation'
+import TableView from './Table'
 import { toApi } from './adapters'
 import { ButtonContainer, Container, Form } from './style'
-import TableView from './Table'
 
 type EditServiceProps = {
   isNewServiceByOS?: boolean
@@ -35,6 +36,7 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
   const { closeModal } = useModal()
   const { apiAdmin } = useAdmin()
   const [idService, setIdService] = useState('')
+  const [isEdit, setIsEdit] = useState(false)
 
   const { control, handleSubmit, setValue, getValues, setError } =
     useForm<ServiceT>({
@@ -48,6 +50,7 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
   const [loading, setLoading] = useState(false)
   const [laudos, setLaudos] = useState<string[]>([])
   const [errorMessage, setErrorMessage] = useState('')
+  const [originalLaudo, setOriginalLaudo] = useState('')
 
   useEffect(() => {
     const { description, _id, value, laudoService, laudos } = !isNewServiceByOS ? location?.state : dataService
@@ -81,9 +84,10 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
   const addLaudo = () => {
     const { laudoService } = getValues()
     if (!!laudoService) {
-      setLaudos([...laudos, laudoService])
+      setLaudos([...laudos.filter((item, index) => item !== originalLaudo), laudoService])
       setValue('laudoService', '')
       setError("laudoService", { message: '' })
+      setIsEdit(false)
     } else {
       setError('laudoService', {
         message: 'Necessário informar o laudo do serviço.',
@@ -192,15 +196,23 @@ const EditService: React.FC<EditServiceProps> = ({ dataService, isNewServiceByOS
             )}
           />
           <Button
-            textButton="Adicionar Laudo"
-            variant="outlined"
+            textButton={isEdit ? 'Editar Laudo' : "Adicionar Laudo"}
+            variant={isEdit ? 'contained' : "outlined"}
             size="large"
-            icon="add2"
+            icon={isEdit ? 'update' : "add2"}
+            color={isEdit ? 'secondary' : 'primary'}
             onClick={addLaudo}
           />
         </Row>
         <Row columns="1fr" marginTop="10px">
-          <TableView laudos={laudos} setLaudos={setLaudos} />
+          <TableView
+            laudos={laudos}
+            setLaudos={setLaudos}
+            setLaudo={(laudo) => {
+              setValue('laudoService', laudo)
+              setOriginalLaudo(laudo)
+            }}
+            setIsEdit={setIsEdit} />
         </Row>
         <ButtonContainer>
           <Button

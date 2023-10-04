@@ -22,3 +22,8 @@ export const TableCellStyle = styled(TableCell)`
     padding-top: 16px;
   }
 `
+
+export const ActionsContent = styled.section`
+  position: relative;
+  right: 15px;
+`

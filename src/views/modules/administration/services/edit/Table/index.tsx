@@ -1,4 +1,5 @@
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import EditIcon from '@mui/icons-material/Edit'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -8,16 +9,24 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import React from 'react'
 import { columns } from './Columns'
-import { IconButtonStyled, TableCellStyle } from './Styles'
+import { ActionsContent, IconButtonStyled, TableCellStyle } from './Styles'
 
 type TableViewProps = {
   laudos: string[]
   setLaudos: (newState: string[]) => void
+  setLaudo: (newState: string, indexSelected?: number) => void
+  setIsEdit: (newState: boolean) => void
 }
 
-const TableView: React.FC<TableViewProps> = ({ laudos, setLaudos }) => {
+const TableView: React.FC<TableViewProps> = ({ laudos, setLaudos, setLaudo, setIsEdit }) => {
   const removeLaudo = (index: number) => {
     setLaudos(laudos.filter((_, _index) => _index !== index))
+    setIsEdit(false)
+  }
+
+  const editLaudo = (data: string, indexSelected: number) => {
+    setLaudo(data, indexSelected)
+    setIsEdit(true)
   }
 
   return (
@@ -35,12 +44,12 @@ const TableView: React.FC<TableViewProps> = ({ laudos, setLaudos }) => {
                   )}
                 </>
               ))}
-            {!!laudos.length && <TableCell>Ações</TableCell>}
+            {!!laudos.length && <TableCell style={{ marginLeft: '10px' }}>Ações</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
           {!!laudos.length &&
-            laudos?.map((row, index) => (
+            laudos?.sort()?.map((row, index) => (
               <TableRow key={index}>
                 {columns.map((column) => {
                   return (
@@ -56,12 +65,20 @@ const TableView: React.FC<TableViewProps> = ({ laudos, setLaudos }) => {
                   )
                 })}
                 <TableCell>
-                  <IconButtonStyled>
-                    <DeleteForeverIcon
-                      color="error"
-                      onClick={() => removeLaudo(index)}
-                    />
-                  </IconButtonStyled>
+                  <ActionsContent>
+                    <IconButtonStyled>
+                      <EditIcon
+                        color="primary"
+                        onClick={() => editLaudo(row, index)}
+                      />
+                    </IconButtonStyled>
+                    <IconButtonStyled>
+                      <DeleteForeverIcon
+                        color="error"
+                        onClick={() => removeLaudo(index)}
+                      />
+                    </IconButtonStyled>
+                  </ActionsContent>
                 </TableCell>
               </TableRow>
             ))}
