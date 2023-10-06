@@ -191,53 +191,55 @@ const ServiceOS: React.FC<TableViewProps> = ({
         const total = formatPrice(service.total)
         const qtde = String(service.qtde)
         return (
-          <Row columns="5fr 0.1fr 1fr 1fr 1fr" gap={10} marginTop="5px">
+          <Row display='flex' gap={2} marginTop="5px">
             <InputText
               type="text"
               label={''}
               value={service.description}
               autoComplete="off"
               disabled
-              width='724px'
+              width='100%'
             />
-            <Row position='relative' right='5px'>
-              <InputText
-                type="text"
-                label={''}
-                value={qtde}
-                disabled
-                width="60px"
-              />
-            </Row>
-            <Row position='relative' right='5px'>
-              <InputText
-                type="text"
-                label={''}
-                value={unit}
-                autoComplete="off"
-                disabled
-              />
-            </Row>
-            <Row position='relative' right='5px'>
-              <InputText
-                type="text"
-                label={''}
-                value={total}
-                autoComplete="off"
-                disabled
-              />
-            </Row>
-            <Row>
-              <Tooltip title="Remover o Serviço" placement="left">
-                <IconButton
-                  aria-label="delete"
-                  size="large"
-                  color="error"
-                  onClick={() => handleRemoveItem(service.id)}
-                >
-                  <DeleteIcon fontSize="inherit" color="error" />
-                </IconButton>
-              </Tooltip>
+            <Row display='flex' gap={10} marginLeft='15px'>
+              <Row position='relative' right='5px'>
+                <InputText
+                  type="text"
+                  label={''}
+                  value={qtde}
+                  disabled
+                  width="60px"
+                />
+              </Row>
+              <Row position='relative' right='5px'>
+                <InputText
+                  type="text"
+                  label={''}
+                  value={unit}
+                  autoComplete="off"
+                  disabled
+                />
+              </Row>
+              <Row position='relative' right='5px'>
+                <InputText
+                  type="text"
+                  label={''}
+                  value={total}
+                  autoComplete="off"
+                  disabled
+                />
+              </Row>
+              <Row>
+                <Tooltip title="Remover o Serviço" placement="left">
+                  <IconButton
+                    aria-label="delete"
+                    size="large"
+                    color="error"
+                    onClick={() => handleRemoveItem(service.id)}
+                  >
+                    <DeleteIcon fontSize="inherit" color="error" />
+                  </IconButton>
+                </Tooltip>
+              </Row>
             </Row>
           </Row>
         )

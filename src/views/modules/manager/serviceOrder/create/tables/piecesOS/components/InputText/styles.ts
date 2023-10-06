@@ -5,14 +5,12 @@ interface ContainerProps {
   variation?: string
   hasError?: boolean | string
   isHasValue?: boolean
-  width?: string
 }
 
 export const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: ${({ width }) => width};
 
   label {
     margin-bottom: 6px;

@@ -7,6 +7,7 @@ import {
   AutocompleteOptions,
 } from 'src/components/Form/Autocomplete'
 import Button from 'src/components/Form/Button'
+import { toast } from 'src/components/Widgets/Toastify'
 import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import hasNumber from 'src/helpers/hasNumber'
@@ -17,6 +18,7 @@ import { SERVICE_SEE_ALL } from 'src/store/actions'
 import { Row } from 'src/styles'
 import { fromApi } from 'src/views/modules/administration/services/adapters'
 import EditService from 'src/views/modules/administration/services/edit'
+import useLocalStorage from 'use-local-storage'
 import { fromApiService } from '../../../../adapters/fromApiService'
 import InputText from '../../../../components/InputCurrency'
 import { useTotalSum } from '../../../../hooks/useTotalSum'
@@ -53,7 +55,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     {} as AutocompleteOptions,
   )
   const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
-  const [clickedValueService, setClickedValueService] = useState({} as AutocompleteOptions)
+  const [clickedValueService, setClickedValueService] = useLocalStorage('os-clickedValueService', {} as AutocompleteOptions)
 
   const addValueArrayLaudoTech = (itemPiece: ItemServices) => {
     // setItemServices((previousState) => [
@@ -245,10 +247,38 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     )
   }
 
+  const checkIfAlreayExistsServiceinList = (id: string | number, qtde: number) => {
+    if (itemServices?.length) {
+      if (itemServices?.length === 8) {
+        toast.warning('A quantidade de serviço permitido é 8.')
+        return false
+      }
+      const resultItemServices = itemServices.find((item) => item.id === id)
+      if (resultItemServices) {
+        if (resultItemServices.qtde !== qtde) {
+          toast.warning(`Já existe um serviço adicionado com a quantidade diferente, remova o serviço da lista abaixo para adicionar ou informe a mesma quantidade.`)
+          return false
+        }
+        return true
+      } else {
+        return true
+      }
+    } else {
+      return true
+    }
+  }
+
   const addService = () => {
 
     const { clean: totalValueClean } = formatInputPrice(totalValue)
     const { clean: valueUnitClean } = formatInputPrice(valueUnit)
+
+    if (!valueLaudoTech?.label) {
+      toast.warning('Primeiro selecione o serviço para depois adicionar.')
+      return
+    }
+
+    if (!checkIfAlreayExistsServiceinList(valueLaudoTech?.value, Number(qtdeValue))) return
 
     setItemServices((previousState) => [
       ...previousState.filter((item) => item.id !== valueLaudoTech?.value),

@@ -38,9 +38,9 @@ const LaudoDetails: React.FC<LaudoDetailsProps> = ({
           return (
             <>
               {!!Object.keys(item)?.length && (
-                <Row display='flex' gap={5} marginTop="5px" justifyContent='flex-start'>
-                  <InputText value={item.description} disabled style={{ width: '1105px' }} />
-                  <Row position='relative' left='8px'>
+                <Row display='flex' gap={5} marginTop="5px" justifyContent='space-between'>
+                  <InputText value={item.description} disabled width='100%' />
+                  <Row position='relative'>
                     <Tooltip title="Remover o Laudo" placement="left">
                       <IconButton
                         aria-label="delete"

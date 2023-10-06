@@ -369,6 +369,12 @@ const CreateOrderService: React.FC = () => {
 
   const onSubmit = async (data: ServiceOrderT & OSData) => {
     const { clean: totalCleanValue } = formatInputPrice(total)
+    const clickedValueService = JSON.parse(window.localStorage.getItem('os-clickedValueService'))
+    if (clickedValueService?.value) {
+      toast.error('Existe um serviço não adicionado.')
+      scroll(0, 0)
+      return
+    }
     if (!clickedClientName?.label) {
       setValidateErrorMessageClientName('Selecione o cliente')
       scroll(0, 0)

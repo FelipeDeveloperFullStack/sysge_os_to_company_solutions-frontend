@@ -7,15 +7,15 @@ import { ReactComponent as WarningIcon } from '../../../assets/icons/alerts/warn
 import Spinner from '../../Loader/Spinner'
 
 const error = (message: string): React.ReactText => {
-  return toastify.error(message, { icon: <ErrorIcon /> })
+  return toastify.error(message, { icon: <ErrorIcon />, autoClose: 10000 },)
 }
 
 const success = (message: string): React.ReactText => {
-  return toastify.success(message, { icon: <SuccessIcon /> })
+  return toastify.success(message, { icon: <SuccessIcon />, autoClose: 10000 })
 }
 
 const warning = (message: string): React.ReactText => {
-  return toastify.warning(message, { icon: <WarningIcon /> })
+  return toastify.warning(message, { icon: <WarningIcon />, autoClose: 10000 })
 }
 
 const promise = (
@@ -26,7 +26,6 @@ const promise = (
     promise,
     {
       pending: messages.pending,
-
       error: {
         render() {
           return messages.error
