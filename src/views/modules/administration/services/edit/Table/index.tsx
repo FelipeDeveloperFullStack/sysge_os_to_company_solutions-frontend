@@ -66,16 +66,14 @@ const TableView: React.FC<TableViewProps> = ({ laudos, setLaudos, setLaudo, setI
                 })}
                 <TableCell>
                   <ActionsContent>
-                    <IconButtonStyled>
+                    <IconButtonStyled onClick={() => editLaudo(row, index)}>
                       <EditIcon
                         color="primary"
-                        onClick={() => editLaudo(row, index)}
                       />
                     </IconButtonStyled>
-                    <IconButtonStyled>
+                    <IconButtonStyled onClick={() => removeLaudo(index)}>
                       <DeleteForeverIcon
                         color="error"
-                        onClick={() => removeLaudo(index)}
                       />
                     </IconButtonStyled>
                   </ActionsContent>
