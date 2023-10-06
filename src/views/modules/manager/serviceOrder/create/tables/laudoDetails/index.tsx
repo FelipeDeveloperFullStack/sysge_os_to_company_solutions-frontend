@@ -38,18 +38,20 @@ const LaudoDetails: React.FC<LaudoDetailsProps> = ({
           return (
             <>
               {!!Object.keys(item)?.length && (
-                <Row columns="21fr 1fr" marginTop="5px">
-                  <InputText value={item.description} disabled />
-                  <Tooltip title="Excluir" placement="left">
-                    <IconButton
-                      aria-label="delete"
-                      size="large"
-                      color="secondary"
-                      onClick={() => removeItemLaudo(item)}
-                    >
-                      <DeleteIcon fontSize="inherit" color="secondary" />
-                    </IconButton>
-                  </Tooltip>
+                <Row display='flex' gap={5} marginTop="5px" justifyContent='flex-start'>
+                  <InputText value={item.description} disabled style={{ width: '1105px' }} />
+                  <Row position='relative' left='8px'>
+                    <Tooltip title="Remover o Laudo" placement="left">
+                      <IconButton
+                        aria-label="delete"
+                        size="large"
+                        color="secondary"
+                        onClick={() => removeItemLaudo(item)}
+                      >
+                        <DeleteIcon fontSize="inherit" color="secondary" />
+                      </IconButton>
+                    </Tooltip>
+                  </Row>
                 </Row>
               )}
             </>

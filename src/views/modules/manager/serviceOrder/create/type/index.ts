@@ -2,17 +2,17 @@ import { ClientT } from 'src/store/Types'
 import { Laudo } from '../tables/type'
 
 export type ItemPieces = {
-  id: string
+  id: string | number
   description: string
   qtde: number
-  unit: string
+  unit: string | number
   total: number
 }
 export type ItemServices = {
-  id: string
+  id: number | string
   description: string
   qtde: number
-  unit: string
+  unit: string | number
   total: number
 }
 

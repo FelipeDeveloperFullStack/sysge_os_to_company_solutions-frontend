@@ -1,54 +1,50 @@
-import React, { InputHTMLAttributes, useEffect } from 'react'
+import React, { InputHTMLAttributes, useEffect, useState } from 'react'
 import { IMaskInput } from 'react-imask'
 import ReactInputMask from 'react-input-mask'
 import { useSelector } from 'react-redux'
 import { AutocompleteOptions } from 'src/components/Form/Autocomplete'
 import MsgError from 'src/components/MsgError'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
-import hasNumber from 'src/helpers/hasNumber'
 import { IStore } from 'src/store/Types'
+import { useTotalSum } from '../../../../hooks/useTotalSum'
 import { Container } from './styles'
 
 interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
   setValue?: (value: string) => void
-  value?: string
   hasError?: boolean
   type?: string
   msgError?: string
   variation?: string
   mask?: string
+  value?: string
   disabled?: boolean
   useIMask?: boolean
   onBlur?: () => void
   onKeyUp?: () => void
   price?: AutocompleteOptions
   setPrice?: (newState: AutocompleteOptions) => void
-  isCurrencyNumberOnly?: boolean
-  isPercent?: boolean
-  width?: string
   [x: string]: any
 }
 
 const InputText: React.FC<InputTextProps> = ({
-  setValue,
+  // setValue,
   setPrice,
   label,
   hasError,
   msgError,
   variation,
   mask,
-  value,
+  // value,
   disabled,
   useIMask,
   children,
   price,
-  isCurrencyNumberOnly = false,
-  width,
-  isPercent = false,
   ...rest
 }) => {
-  // const [value, setValue] = useState('')
+  const [value, setValue] = useState('')
+
+  const { sum } = useTotalSum()
 
   const services = useSelector(
     (state: IStore) =>
@@ -58,26 +54,13 @@ const InputText: React.FC<InputTextProps> = ({
   )
 
   useEffect(() => {
-    if (isPercent) {
-      setValue(`${value}%`)
-    } else {
-      if (setValue) setValue(formatPrice(value))
-    }
-  }, [])
+    setValue(formatPrice(services?.value))
+    if (services?.value) sum(Number(services?.value))
+  }, [price])
 
   const onFormatterPrice = (value: string) => {
-    const { formated } = formatInputPrice(value)
+    const { formated, clean } = formatInputPrice(value)
     setValue(formated)
-    if (isCurrencyNumberOnly) {
-      if (hasNumber(value)) {
-        setValue(value)
-      } else {
-        setValue(value)
-      }
-    } else {
-      const { formated } = formatInputPrice(value)
-      setValue(formated)
-    }
   }
 
   return (
@@ -85,7 +68,6 @@ const InputText: React.FC<InputTextProps> = ({
       hasError={msgError || hasError}
       variation={variation}
       isHasValue={value ? true : false}
-      width={width}
     >
       {label && <label htmlFor={label}>{label}</label>}
       {useIMask ? (

@@ -22,8 +22,8 @@ import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { useModal } from 'src/hooks/useModal'
 import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_IS_MODIFIED_FIELDS, SERVICE_FILTER, SERVICE_ORDER_CREATE } from 'src/store/actions'
 import { ClientT, IStore, ServiceOrderT } from 'src/store/Types'
+import { LAYOUT_IS_MODIFIED_FIELDS, SERVICE_FILTER, SERVICE_ORDER_CREATE } from 'src/store/actions'
 import { Row } from 'src/styles'
 import CreateClient from 'src/views/modules/administration/clients/create'
 import EditClient from 'src/views/modules/administration/clients/edit'
@@ -43,8 +43,8 @@ import {
   GroupDiscount,
   Total
 } from './style'
-import LaudoTechnicalTable from './tables/laudoTechnical'
 import PiecesTable from './tables/pieces'
+import ServiceOS from './tables/serviceOS'
 import { Laudo } from './tables/type'
 import { ItemPieces, ItemServices, OSData } from './type'
 
@@ -274,6 +274,7 @@ const CreateOrderService: React.FC = () => {
       setTotal('R$ 0,00')
       setTotalLaudoTech(0)
     }
+    console.log({ itemServices })
   }, [itemServices])
 
   useEffect(() => {
@@ -962,12 +963,18 @@ const CreateOrderService: React.FC = () => {
           />
         </Row>
         <Row columns="1fr" gap={5} marginTop="10px">
-          <LaudoTechnicalTable
+          <ServiceOS
             setItemServices={setItemServices}
             itemServices={itemServices}
             laudos={laudos}
             setLaudos={setLaudos}
           />
+          {/* <LaudoTechnicalTable
+            setItemServices={setItemServices}
+            itemServices={itemServices}
+            laudos={laudos}
+            setLaudos={setLaudos}
+          /> */}
           <PiecesTable setItemPieces={setItemPieces} itemPieces={itemPieces} />
         </Row>
         <Row columns="1fr 1fr 1fr" marginTop="10px">
