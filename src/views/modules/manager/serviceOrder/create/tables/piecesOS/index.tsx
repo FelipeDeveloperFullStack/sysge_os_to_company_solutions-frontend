@@ -1,7 +1,7 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { IconButton, Tooltip } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { formatPrice } from 'src/helpers/formatPrice'
 import { useModal } from 'src/hooks/useModal'
 import { Row } from 'src/styles'
@@ -21,6 +21,7 @@ const PiecesOS: React.FC<TableViewPiecesProps> = ({
   itemPieces,
 }) => {
   const { showMessage } = useModal()
+  const [idRowWarning, setIdRowWarning] = useState('')
 
   const onHandlePiece = () => {
     showMessage(
@@ -33,6 +34,7 @@ const PiecesOS: React.FC<TableViewPiecesProps> = ({
   }
 
   const handleRemoveItem = (id: string | number) => {
+    setIdRowWarning('')
     setItemPieces((previousState) => [
       ...previousState.filter(
         (item) => item.id !== id,
@@ -84,19 +86,20 @@ const PiecesOS: React.FC<TableViewPiecesProps> = ({
       </Row>
 
       <ItemLaudoPieces
+        setIdRowWarning={setIdRowWarning}
         setItemPieces={setItemPieces}
         itemPieces={itemPieces} />
 
-      {!!itemPieces.length && itemPieces.sort().map((service) => {
-        const unit = formatPrice(service.unit)
-        const total = formatPrice(service.total)
-        const qtde = String(service.qtde)
+      {!!itemPieces.length && itemPieces.sort().map((item) => {
+        const unit = formatPrice(item.unit)
+        const total = formatPrice(item.total)
+        const qtde = String(item.qtde)
         return (
-          <Row display='flex' gap={2} marginTop="5px">
+          <Row display='flex' gap={2} marginTop="5px" border={idRowWarning === item.id && '1px solid #C00000'}>
             <InputText
               type="text"
               label={''}
-              value={service.description}
+              value={item.description}
               autoComplete="off"
               disabled
               width='100%'
@@ -135,7 +138,7 @@ const PiecesOS: React.FC<TableViewPiecesProps> = ({
                     aria-label="delete"
                     size="large"
                     color="error"
-                    onClick={() => handleRemoveItem(service.id)}
+                    onClick={() => handleRemoveItem(item.id)}
                   >
                     <DeleteIcon fontSize="inherit" color="error" />
                   </IconButton>

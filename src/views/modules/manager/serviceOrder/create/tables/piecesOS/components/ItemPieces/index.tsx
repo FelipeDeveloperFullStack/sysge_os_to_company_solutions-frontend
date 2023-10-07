@@ -23,11 +23,13 @@ import { ItemPieces } from '../../../../type'
 
 type TableViewPiecesProps = {
   setItemPieces: React.Dispatch<React.SetStateAction<ItemPieces[]>>
+  setIdRowWarning: React.Dispatch<React.SetStateAction<string>>
   itemPieces: ItemPieces[]
 }
 
 export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
   setItemPieces,
+  setIdRowWarning,
   itemPieces,
 }) => {
   const [valueUnit, setValueUnit] = useState('')
@@ -150,6 +152,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
     } else {
       setMsgErrorAutoComplete('')
       clearValues()
+      setIdRowWarning('')
       //handleRemoveItemPieces()
     }
   }, [valuePiece])
@@ -206,6 +209,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
   }
 
   const onHandleEditPiece = async () => {
+    setIdRowWarning('')
     const id = clickedValuePiece?.value
     const dataPiece = await getPieceById(id)
     showMessage(
@@ -219,6 +223,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
   }
 
   const checkIfAlreayExistsPieceinList = (id: string | number, qtde: number) => {
+    setIdRowWarning('')
     if (itemPieces?.length) {
       if (itemPieces?.length === 6) {
         toast.warning('A quantidade de peça permitido é 6.')
@@ -228,6 +233,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
       if (resultItemServices) {
         if (resultItemServices.qtde !== qtde) {
           toast.warning(`Já existe uma peça adicionada com a quantidade diferente, remova a peça da lista abaixo para adicionar ou informe a mesma quantidade.`)
+          setIdRowWarning(String(id))
           return false
         }
         return true
@@ -265,6 +271,7 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
     clearValues()
     setValuePiece({ label: '', value: '' })
     setClickedValuePiece({ label: '', value: '' })
+    setIdRowWarning('')
   }
 
   useEffect(() => {
@@ -272,8 +279,6 @@ export const ItemLaudoPieces: React.FC<TableViewPiecesProps> = ({
       const idServiceCurrent = valuePiece.value
       const idStateUpdated = pieces._id
       if (idServiceCurrent === idStateUpdated) {
-        console.log({ idServiceCurrent, idStateUpdated })
-        console.log({ valuePiece, pieces })
         if (valuePiece.label.trim() !== pieces.description.trim()) {
           setValuePiece({ label: pieces.description, value: idStateUpdated })
         } else {

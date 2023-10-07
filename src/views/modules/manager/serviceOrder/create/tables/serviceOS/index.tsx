@@ -36,6 +36,7 @@ const ServiceOS: React.FC<TableViewProps> = ({
   const { showMessage } = useModal()
   const [clickedValue, setClickedValue] = useState({} as AutocompleteOptions)
   const [laudosList, setLaudosList] = React.useState<Laudo[]>([] as Laudo[])
+  const [idRowWarning, setIdRowWarning] = useState('')
 
   const services = useSelector(
     (state: IStore) =>
@@ -129,6 +130,7 @@ const ServiceOS: React.FC<TableViewProps> = ({
   }
 
   const handleRemoveItem = (id: string | number) => {
+    setIdRowWarning('')
     setItemServices((previousState) => [
       ...previousState.filter(
         (item) => item.id !== id,
@@ -181,6 +183,7 @@ const ServiceOS: React.FC<TableViewProps> = ({
       </Row>
 
       <ItemLaudoTechnical
+        setIdRowWarning={setIdRowWarning}
         setClickedValue={setClickedValue}
         setItemServices={setItemServices}
         itemServices={itemServices}
@@ -191,7 +194,7 @@ const ServiceOS: React.FC<TableViewProps> = ({
         const total = formatPrice(service.total)
         const qtde = String(service.qtde)
         return (
-          <Row display='flex' gap={2} marginTop="5px">
+          <Row display='flex' gap={2} marginTop="5px" border={idRowWarning === service.id && '1px solid #C00000'}>
             <InputText
               type="text"
               label={''}

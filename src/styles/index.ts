@@ -18,6 +18,7 @@ type RowProp = {
   right?: string
   height?: string
   flexDirection?: 'row' | 'column'
+  border?: string
 }
 
 export const Row = styled.div<RowProp>`
@@ -34,6 +35,7 @@ export const Row = styled.div<RowProp>`
   right: ${({ right }) => right};
   bottom: ${({ bottom }) => bottom};
   height: ${({ height }) => height};
+  border: ${({ border }) => border};
   gap: ${({ gap }) => (gap ? gap + 'px' : '32px')};
   border-bottom: ${({ borderBottom }) => borderBottom};
   justify-content: ${({ justifyContent }) =>

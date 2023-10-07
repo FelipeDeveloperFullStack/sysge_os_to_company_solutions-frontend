@@ -26,6 +26,7 @@ import { ItemServices } from '../../../../type'
 
 type ItemLaudoTechnicalProps = {
   itemServices: ItemServices[]
+  setIdRowWarning: React.Dispatch<React.SetStateAction<string>>
   setItemServices: React.Dispatch<React.SetStateAction<ItemServices[]>>
   setClickedValue: React.Dispatch<React.SetStateAction<AutocompleteOptions>>
 }
@@ -36,6 +37,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   setClickedValue,
   itemServices,
   setItemServices,
+  setIdRowWarning
 }) => {
   const [valueUnit, setValueUnit] = useState('')
   const dispatch = useDispatch()
@@ -158,6 +160,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     } else {
       setMsgErrorAutoComplete('')
       clearValues()
+      setIdRowWarning('')
       //  handleRemoveItem()
     }
   }, [valueLaudoTech])
@@ -235,6 +238,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   }
 
   const onHandleEditService = async () => {
+    setIdRowWarning('')
     const id = clickedValueService?.value
     const dataService = await getServiceById(id)
     showMessage(
@@ -249,6 +253,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   }
 
   const checkIfAlreayExistsServiceinList = (id: string | number, qtde: number) => {
+    setIdRowWarning('')
     if (itemServices?.length) {
       if (itemServices?.length === 8) {
         toast.warning('A quantidade de serviço permitido é 8.')
@@ -257,6 +262,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
       const resultItemServices = itemServices.find((item) => item.id === id)
       if (resultItemServices) {
         if (resultItemServices.qtde !== qtde) {
+          setIdRowWarning(String(id))
           toast.warning(`Já existe um serviço adicionado com a quantidade diferente, remova o serviço da lista abaixo para adicionar ou informe a mesma quantidade.`)
           return false
         }
@@ -297,6 +303,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     setValueLaudoTech({ label: '', value: '' })
     setClickedValue({ label: '', value: '' })
     setClickedValueService({ label: '', value: '' })
+    setIdRowWarning('')
   }
 
   return (

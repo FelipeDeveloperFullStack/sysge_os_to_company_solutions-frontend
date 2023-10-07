@@ -5,8 +5,8 @@ import { toast } from 'src/components/Widgets/Toastify'
 import { useLoading } from 'src/hooks/useLoading'
 import { useModal } from 'src/hooks/useModal'
 import { useAdmin } from 'src/services/useAdmin'
-import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
+import { LAYOUT_MAKE_REQUEST } from 'src/store/actions'
 import { ButtonGroup, Container, Text } from './style'
 
 const RemoveConfirmation: React.FC<ClientT> = ({ id, name, idFolderClientName }) => {
@@ -47,7 +47,7 @@ const RemoveConfirmation: React.FC<ClientT> = ({ id, name, idFolderClientName })
           Cliente: <span>{name}</span>
         </div>
       </Text>
-      <Text>
+      <Text style={{ color: 'red' }}>
         Ao clicar em <span>SIM</span> todas as Ordem de Serviços/Orçamentos vinculadas a esse cliente serão excluídas. Essa operação não poderá ser desfeita.
       </Text>
       <ButtonGroup>
