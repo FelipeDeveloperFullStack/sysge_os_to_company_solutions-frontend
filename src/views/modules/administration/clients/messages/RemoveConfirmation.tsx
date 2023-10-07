@@ -20,7 +20,7 @@ const RemoveConfirmation: React.FC<ClientT> = ({ id, name, idFolderClientName })
     try {
       setLoading(true)
       await apiAdmin.delete(`clients/${id}/${idFolderClientName}`)
-      await apiAdmin.delete(`orderServices/${id}`)
+      //await apiAdmin.delete(`orderServices/${id}`)
       toast.success(`Cliente ${name} excluído com sucesso!`)
       closeModal()
       dispatch({
@@ -47,9 +47,9 @@ const RemoveConfirmation: React.FC<ClientT> = ({ id, name, idFolderClientName })
           Cliente: <span>{name}</span>
         </div>
       </Text>
-      <Text style={{ color: 'red' }}>
+      {/* <Text style={{ color: 'red' }}>
         Ao clicar em <span>SIM</span> todas as Ordem de Serviços/Orçamentos vinculadas a esse cliente serão excluídas. Essa operação não poderá ser desfeita.
-      </Text>
+      </Text> */}
       <ButtonGroup>
         <Button
           textButton="Deletar"
