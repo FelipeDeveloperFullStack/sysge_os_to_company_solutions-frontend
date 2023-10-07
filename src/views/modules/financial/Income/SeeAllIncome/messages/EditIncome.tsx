@@ -152,9 +152,10 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
       setValue('income', incomeData)
       setValue('valueFormated', result?.total)
       setValue('dateIn', result?.dateOS)
-      setValue('status', result?.status)
+      setValue('status', result?.status === 'PAGO' ? 'RECEBIDO' : 'PENDENTE')
       setValue("paymentForm", result?.formOfPayment)
       setValue('maturity', result?.maturityOfTheBoleto)
+      setValue('dateClientPayment', result?.dateClientPayment)
     } catch (error) {
       exceptionHandle(error)
     }
@@ -323,6 +324,24 @@ export const EditIncome: React.FC<UpdateConfirmationProps> = ({
                   <FormControlLabel value="no" control={<Radio />} label="Não" />
                 </RadioGroup>
               </FormControl>}
+
+            {status === 'RECEBIDO' && <Controller
+              name="dateClientPayment"
+              control={control}
+              defaultValue={getDateCurrent()}
+              render={({ field, fieldState }) => (
+                <InputMask
+                  label="Data do Recebimento"
+                  variant="outlined"
+                  fieldState={fieldState}
+                  hasError={!!fieldState.error?.message}
+                  msgError={fieldState.error?.message}
+                  mask="99/99/9999"
+                  {...field}
+                />
+              )}
+
+            />}
           </Row>
         </Row>
         <UpdateDeleteConfirmationContainer>

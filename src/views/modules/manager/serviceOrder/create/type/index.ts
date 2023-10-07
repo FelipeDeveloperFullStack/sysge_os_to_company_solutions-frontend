@@ -49,6 +49,7 @@ export type OSData = {
   isSendNowDayMaturityBoleto?: boolean
   isPartial?: boolean
   isLaunchMoney?: boolean
+  dateClientPayment?: string
   user?: string
   _id?: string
 }

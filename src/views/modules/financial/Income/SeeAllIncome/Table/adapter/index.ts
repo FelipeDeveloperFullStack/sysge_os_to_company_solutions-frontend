@@ -23,6 +23,7 @@ export type Income = {
   isLaunchMoney?: boolean
   description?: string
   valuePartial?: string
+  dateClientPayment?: string
   id: string
 }
 
@@ -75,8 +76,8 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     valueFormated: item.total,
     situation: item.status,
     dateOS: item.dateOS,
-    month: getMonthAndYear(item.dateOS).month,
-    year: getMonthAndYear(item.dateOS).year,
+    month: getMonthAndYear(item?.dateClientPayment || item.dateOS).month,
+    year: getMonthAndYear(item?.dateClientPayment || item.dateOS).year,
     formOfPayment: item.formOfPayment,
     typeDocument: item?.typeDocument,
     idFileCreatedGoogleDrive: item?.idFileCreatedGoogleDrive,
@@ -89,6 +90,7 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     description: item?.description || '',
     valuePartial: item?.valuePartial,
     isLaunchMoney: item?.isLaunchMoney,
+    dateClientPayment: item?.dateClientPayment,
   }))
 
   const orderedYear = (resultFromApi: Income[]): string[] => {

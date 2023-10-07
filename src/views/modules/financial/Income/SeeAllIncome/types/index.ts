@@ -7,6 +7,7 @@ export type SeeAllIncomeProps = {
   paymentForm: string
   valueFormatedPiece: string
   dateIn: string
+  dateClientPayment: string
   maturity: string
   status: string
   isLaunchMoney?: boolean

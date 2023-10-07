@@ -18,8 +18,8 @@ import { useAdmin } from 'src/services/useAdmin'
 import { IStore } from 'src/store/Types'
 import { Row } from 'src/styles'
 import useLocalStorage from 'use-local-storage'
+import { Income, fromApi } from '../Table/adapter'
 import { NewIncome } from '../messages/NewIncome'
-import { fromApi, Income } from '../Table/adapter'
 import { Container, Form } from './style'
 
 type SeeAllIncomeProps = {
@@ -92,6 +92,7 @@ const Filters: React.FC<FiltersProps> = ({
         resultFromApi,
         selectedButton,
       )
+      console.log({ resultFromApi, orderedMonth, orderedYear, result, monthSelected, yearSelected })
       setIncomesFiltered(result)
     } catch (error) {
       toast.error('Um erro ocurreu ao tentar buscar os dados de receitas')
@@ -168,7 +169,7 @@ const Filters: React.FC<FiltersProps> = ({
         { locale: ptBR },
       )
       return arrayDatas.filter((data) => {
-        const dataDado = parse(data.dateOS, 'dd/MM/yyyy', new Date())
+        const dataDado = parse(data?.dateClientPayment || data.dateOS, 'dd/MM/yyyy', new Date())
         if (!income) {
           return (
             dataDado.getMonth() === dataPesquisa.getMonth() &&

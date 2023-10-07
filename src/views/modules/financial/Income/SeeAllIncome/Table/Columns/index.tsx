@@ -89,7 +89,7 @@ export const useColumns = (props: ColumnsProps) => {
 
   const columns: GridColDef[] = [
     {
-      field: 'clientName', headerName: 'Nome', width: 410,
+      field: 'clientName', headerName: 'Nome', width: 380,
       renderCell: (params: GridCellParams) => {
         const data = params.row as Income
         return (
@@ -119,7 +119,7 @@ export const useColumns = (props: ColumnsProps) => {
         )
       },
     },
-    { field: 'osNumber', headerName: 'Nº OS' },
+    { field: 'osNumber', headerName: 'Nº OS', width: 55 },
     {
       field: 'valueFormated',
       headerName: 'Valor',
@@ -194,6 +194,7 @@ export const useColumns = (props: ColumnsProps) => {
       },
     },
     { field: 'dateOS', headerName: 'Entrada' },
+    { field: 'dateClientPayment', headerName: 'Recebimento' },
     {
       field: 'group-buttons',
       headerName: ' ',
