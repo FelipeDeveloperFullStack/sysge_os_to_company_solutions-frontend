@@ -140,7 +140,7 @@ const ServiceOS: React.FC<TableViewProps> = ({
     <Container>
       <Row columns="5fr 0.1fr 1fr 1fr 1fr" gap={10} marginTop="5px">
         <ContainerButtonServiceAdd>
-          <div>Serviços</div>
+          <div>Serviços ({itemServices?.length || 0})</div>
           <Tooltip title="Clique aqui para adicionar um novo Serviço">
             <IconButton aria-label="Adicionar" onClick={onHandleAddNewService}>
               <AddCircleOutlineIcon />

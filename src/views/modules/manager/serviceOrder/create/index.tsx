@@ -43,7 +43,7 @@ import {
   GroupDiscount,
   Total
 } from './style'
-import PiecesTable from './tables/pieces'
+import PiecesOS from './tables/piecesOS'
 import ServiceOS from './tables/serviceOS'
 import { Laudo } from './tables/type'
 import { ItemPieces, ItemServices, OSData } from './type'
@@ -274,7 +274,6 @@ const CreateOrderService: React.FC = () => {
       setTotal('R$ 0,00')
       setTotalLaudoTech(0)
     }
-    console.log({ itemServices })
   }, [itemServices])
 
   useEffect(() => {
@@ -327,6 +326,10 @@ const CreateOrderService: React.FC = () => {
     resetTotal()
     setTotal('R$ 0,00')
     scroll(0, 0)
+    return () => {
+      window.localStorage.removeItem('os-clickedValueService')
+      window.localStorage.removeItem('os-clickedValuePiece')
+    }
   }, [])
 
   // scroll(0, 0)
@@ -372,6 +375,12 @@ const CreateOrderService: React.FC = () => {
     const clickedValueService = JSON.parse(window.localStorage.getItem('os-clickedValueService'))
     if (clickedValueService?.value) {
       toast.error('Existe um serviço não adicionado.')
+      scroll(0, 0)
+      return
+    }
+    const clickedValuePiece = JSON.parse(window.localStorage.getItem('os-clickedValuePiece'))
+    if (clickedValuePiece?.value) {
+      toast.error('Existe uma peça não adicionada.')
       scroll(0, 0)
       return
     }
@@ -981,7 +990,8 @@ const CreateOrderService: React.FC = () => {
             laudos={laudos}
             setLaudos={setLaudos}
           /> */}
-          <PiecesTable setItemPieces={setItemPieces} itemPieces={itemPieces} />
+          <PiecesOS setItemPieces={setItemPieces} itemPieces={itemPieces} />
+          {/* <PiecesTable setItemPieces={setItemPieces} itemPieces={itemPieces} /> */}
         </Row>
         <Row columns="1fr 1fr 1fr" marginTop="10px">
           <div>

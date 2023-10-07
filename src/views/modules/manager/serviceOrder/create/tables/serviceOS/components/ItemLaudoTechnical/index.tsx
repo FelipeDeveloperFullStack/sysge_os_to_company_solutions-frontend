@@ -167,6 +167,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
       const idServiceCurrent = valueLaudoTech.value
       const idStateUpdated = services._id
       if (idServiceCurrent === idStateUpdated) {
+        console.log({ valueLaudoTech, services })
         if (valueLaudoTech.label.trim() !== services.description.trim()) {
           setValueLaudoTech({ label: services.description, value: idStateUpdated })
         } else {
@@ -177,7 +178,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   }, [services])
 
   useEffect(() => {
-    let cancel: any
+    //let cancel: any
 
     const loadLaudoTech = async () => {
       try {
