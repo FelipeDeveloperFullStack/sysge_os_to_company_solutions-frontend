@@ -1,16 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Paper } from '@mui/material';
-import Alert from '@mui/material/Alert';
-import React, { useState } from 'react';
-import Button from 'src/components/Form/Button';
-import { toast } from 'src/components/Widgets/Toastify';
-import { exceptionHandle } from 'src/helpers/exceptions';
-import { useModal } from 'src/hooks/useModal';
-import { socket } from 'src/services/Socket';
-import { CONNECTION_UPDATE, QRCODE_UPDATED } from 'src/services/Socket/EventTypes';
-import { useAdmin } from 'src/services/useAdmin';
-import ConnectionQrCode from './messages/ConnectionQrCode';
-import { ConnectionWhatsapp, Container } from './style';
+import { Card, FormGroup, Paper, TextField } from '@mui/material'
+import Alert from '@mui/material/Alert'
+import React, { useState } from 'react'
+import Button from 'src/components/Form/Button'
+import { toast } from 'src/components/Widgets/Toastify'
+import { exceptionHandle } from 'src/helpers/exceptions'
+import { useModal } from 'src/hooks/useModal'
+import { socket } from 'src/services/Socket'
+import {
+  CONNECTION_UPDATE,
+  QRCODE_UPDATED,
+} from 'src/services/Socket/EventTypes'
+import { useAdmin } from 'src/services/useAdmin'
+import ConnectionQrCode from './messages/ConnectionQrCode'
+import { ConnectionWhatsapp, Container } from './style'
+import { InputText } from 'src/components'
 
 type UpdateHandle = {
   isEnableEmailBilling?: boolean
@@ -25,14 +29,22 @@ export type SocketResponse = {
 }
 
 const ConfigurationsSystem: React.FC = () => {
-
-  const [isEnableSendConfigurationWhatsapp, setIsEnableSendConfigurationWhatsapp] = useState(false)
-  const [isEnableSendConfigurationEmail, setIsEnableSendConfigurationEmail] = useState(false)
+  const [
+    isEnableSendConfigurationWhatsapp,
+    setIsEnableSendConfigurationWhatsapp,
+  ] = useState(false)
+  const [isEnableSendConfigurationEmail, setIsEnableSendConfigurationEmail] =
+    useState(false)
   const [makeRequest, setMakeRequest] = useState<number>()
   const [labelButton, setLabelButton] = useState('Conectar')
-  const [webSocketData, setWebSocketData] = useState<SocketResponse>({} as SocketResponse)
-  const [webSocketState, setWebSocketState] = useState('')
+  const [labelButtonWebhook, setLabelButtonWebhook] = useState('')
+  const [webSocketData, setWebSocketData] = useState<SocketResponse>(
+    {} as SocketResponse,
+  )
   const [statusConnection, setStatusConnection] = useState(false)
+  const [statusConnectionWebhook, setStatusConnectionWebhook] = useState(false)
+  const [webSocketState, setWebSocketState] = useState('')
+  const [publicIP, setPublicIP] = useState('')
   const { apiAdmin } = useAdmin()
   const { showMessage, closeModal } = useModal()
 
@@ -75,6 +87,16 @@ const ConfigurationsSystem: React.FC = () => {
       exceptionHandle(error)
     }
   }
+  const onHandleSetWebhook = async () => {
+    try {
+      const {data} = await apiAdmin.put('configurations/webhook/defineWebhook', { publicIP })
+      if (data?.status === 200) {
+        toast.success(data?.message)
+      }
+    } catch (error) {
+      exceptionHandle(error)
+    }
+  }
 
   const getStatusConnection = async () => {
     try {
@@ -90,6 +112,22 @@ const ConfigurationsSystem: React.FC = () => {
       exceptionHandle(error)
     }
   }
+  const getStatusConnectionWebhook = async () => {
+    try {
+      const { data } = await apiAdmin.get(`configurations/status/webhook`)
+      if (data?.status === 404) {
+        setStatusConnectionWebhook(false)
+        setLabelButton('Aguardando a configuração do webhook')
+        setLabelButtonWebhook('Enviar e configurar webhook')
+        toast.warning(data?.message)
+      } else {
+        setLabelButtonWebhook('Webhook configurado com sucesso.')
+        setStatusConnectionWebhook(true)
+      }
+    } catch (error) {
+      exceptionHandle(error)
+    }
+  }
 
   React.useEffect(() => {
     getConfigurations()
@@ -97,13 +135,21 @@ const ConfigurationsSystem: React.FC = () => {
 
   React.useEffect(() => {
     getStatusConnection()
+    getStatusConnectionWebhook()
   }, [])
 
   React.useEffect(() => {
     socket.on(CONNECTION_UPDATE, (response: SocketResponse) => {
       let webSocketState = response?.state
-      console.log({ state: response?.state, stateReason: response?.stateReason, CONNECTION_UPDATE })
-      setWebSocketData({ state: response?.state, stateReason: response?.stateReason })
+      console.log({
+        state: response?.state,
+        stateReason: response?.stateReason,
+        CONNECTION_UPDATE,
+      })
+      setWebSocketData({
+        state: response?.state,
+        stateReason: response?.stateReason,
+      })
       setWebSocketState(response?.state)
       if (webSocketState === 'close') {
         closeModal()
@@ -124,7 +170,10 @@ const ConfigurationsSystem: React.FC = () => {
   }, [])
 
   React.useEffect(() => {
-    if (webSocketData?.state === 'connecting' && webSocketData?.stateReason === 200) {
+    if (
+      webSocketData?.state === 'connecting' &&
+      webSocketData?.stateReason === 200
+    ) {
       setLabelButton('Conectando...')
     }
     if (webSocketData?.state === 'close') {
@@ -155,9 +204,17 @@ const ConfigurationsSystem: React.FC = () => {
         </FormGroup>
       </Paper> */}
       <Paper elevation={3}>
-        <Alert severity="info">Conexão com Whatsapp. (Apenas envio de mensagens)</Alert>
+        <Alert severity="info">
+          Conexão com Whatsapp. (Apenas envio de mensagens)
+        </Alert>
         <ConnectionWhatsapp>
-          <Button disabled={statusConnection} textButton={labelButton} variant='contained' icon='whatsApp' onClick={onHandleConnectionButton} />
+          <Button
+            disabled={statusConnection}
+            textButton={labelButton}
+            variant="contained"
+            icon="whatsApp"
+            onClick={onHandleConnectionButton}
+          />
         </ConnectionWhatsapp>
       </Paper>
       {/* <Paper elevation={3}>
@@ -174,6 +231,32 @@ const ConfigurationsSystem: React.FC = () => {
           </Card>
         </FormGroup>
       </Paper> */}
+      <Paper elevation={3}>
+        <Alert severity="info">
+          Informe o IP público para a configuração do Webhook. Necessário para a
+          geraçao do QRCode de autenticação.
+        </Alert>
+        {!statusConnectionWebhook && <p></p>}
+        {!statusConnectionWebhook && <TextField
+          label="IP público Webhook"
+          variant="outlined"
+          focused
+          fullWidth
+          size="small"
+          value={publicIP}
+          placeholder='Ex: 12.487.054.781'
+          onChange={(event) => setPublicIP(event.target.value)}
+        />}
+        <ConnectionWhatsapp>
+          <Button
+            disabled={statusConnectionWebhook}
+            textButton={labelButtonWebhook}
+            variant="contained"
+            icon="whatsApp"
+            onClick={onHandleSetWebhook}
+          />
+        </ConnectionWhatsapp>
+      </Paper>
     </Container>
   )
 }

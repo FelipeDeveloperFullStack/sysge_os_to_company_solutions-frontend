@@ -5,6 +5,7 @@ import { OSData } from 'src/views/modules/manager/serviceOrder/create/type'
 
 export type Income = {
   clientName: string
+  clientPhoneNumber?: string
   clientId: string
   cpfOrCnpj: string
   osNumber: string
@@ -71,6 +72,7 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
 
   const resultFromApi = oSData.map((item) => ({
     clientName: item?.client?.name,
+    clientPhoneNumber: item?.client?.phoneNumber,
     clientId: item?.client?.id,
     cpfOrCnpj: item?.client?.cpfOrCnpj,
     osNumber: item?.osNumber,
