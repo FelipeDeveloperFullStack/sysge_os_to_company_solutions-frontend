@@ -116,9 +116,10 @@ export const useColumns = (props: ColumnsProps) => {
           phoneNumber: serviceOrder.clientPhoneNumber,
           id: serviceOrder.clientId
         },
-        osNumber: serviceOrder.osNumber
+        osNumber: serviceOrder.osNumber,
+        isSendFirstTime: false
       })
-      toast.success(`Aguarde que em breve iremos enviar a mensagem de notificação para o cliente no nº ${serviceOrder.clientPhoneNumber}`)
+      toast.success(`Aguarde que em breve iremos enviar a mensagem de notificação para o nº ${serviceOrder.clientPhoneNumber}`)
      } catch (error) {
       exceptionHandle(error)
      }
