@@ -1,28 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   Autocomplete,
   AutocompleteOptions,
 } from 'src/components/Form/Autocomplete'
+import Button from 'src/components/Form/Button'
+import { toast } from 'src/components/Widgets/Toastify'
+import { exceptionHandle } from 'src/helpers/exceptions'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
+import hasNumber from 'src/helpers/hasNumber'
+import { useModal } from 'src/hooks/useModal'
+import { useAdmin } from 'src/services/useAdmin'
 import { IStore, ServiceT } from 'src/store/Types'
+import { SERVICE_SEE_ALL } from 'src/store/actions'
 import { Row } from 'src/styles'
+import { fromApi } from 'src/views/modules/administration/services/adapters'
+import EditService from 'src/views/modules/administration/services/edit'
+import useLocalStorage from 'use-local-storage'
+import { fromApiService } from '../../../../adapters/fromApiService'
 import InputText from '../../../../components/InputCurrency'
 import { useTotalSum } from '../../../../hooks/useTotalSum'
-import hasNumber from 'src/helpers/hasNumber'
-import axios from 'axios'
-import { useAdmin } from 'src/services/useAdmin'
 import { ItemServices } from '../../../../type'
-import { useModal } from 'src/hooks/useModal'
-import EditService from 'src/views/modules/administration/services/edit'
-import { exceptionHandle } from 'src/helpers/exceptions'
-import { fromApiService } from '../../../../adapters/fromApiService'
-import { SERVICE_SEE_ALL } from 'src/store/actions'
-import { fromApi } from 'src/views/modules/administration/services/adapters'
 
 type ItemLaudoTechnicalProps = {
   itemServices: ItemServices[]
+  setIdRowWarning: React.Dispatch<React.SetStateAction<string>>
+  setIsFirstLoadingPage: React.Dispatch<React.SetStateAction<boolean>>
   setItemServices: React.Dispatch<React.SetStateAction<ItemServices[]>>
   setClickedValue: React.Dispatch<React.SetStateAction<AutocompleteOptions>>
 }
@@ -33,6 +38,8 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   setClickedValue,
   itemServices,
   setItemServices,
+  setIdRowWarning,
+  setIsFirstLoadingPage
 }) => {
   const [valueUnit, setValueUnit] = useState('')
   const dispatch = useDispatch()
@@ -52,15 +59,15 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     {} as AutocompleteOptions,
   )
   const makeRequest = useSelector((state: IStore) => state.layout.makeRequest)
-  const [clickedValueService, setClickedValueService] = useState({} as AutocompleteOptions)
+  const [clickedValueService, setClickedValueService] = useLocalStorage('os-clickedValueService', {} as AutocompleteOptions)
 
   const addValueArrayLaudoTech = (itemPiece: ItemServices) => {
-    setItemServices((previousState) => [
-      ...previousState.filter(
-        (item: ItemServices) => item.id !== valueLaudoTech.value,
-      ),
-      itemPiece,
-    ])
+    // setItemServices((previousState) => [
+    //   ...previousState.filter(
+    //     (item: ItemServices) => item.id !== valueLaudoTech.value,
+    //   ),
+    //   itemPiece,
+    // ])
   }
 
   const calcPrice = (qtde: string) => {
@@ -137,25 +144,26 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
 
   useEffect(() => {
     if (services?.value) {
-      setItemServices((previousState) => {
-        const result = previousState.filter(
-          (item: ItemServices) => item.description === valueLaudoTech.label,
-        )
-        handleRemoveItem()
-        if (!result.length) {
-          setValueInFields()
-        } else {
-          setMsgErrorAutoComplete(
-            'Esse serviço já foi adicionado, escolha outro.',
-          )
-          clearValues()
-        }
-        return previousState
-      })
+      // setItemServices((previousState) => {
+      //   const result = previousState.filter(
+      //     (item: ItemServices) => item.description === valueLaudoTech.label,
+      //   )
+      //   handleRemoveItem()
+      //   if (!result.length) {
+      //     setValueInFields()
+      //   } else {
+      //     setMsgErrorAutoComplete(
+      //       'Esse serviço já foi adicionado, escolha outro.',
+      //     )
+      //     clearValues()
+      //   }
+      //   return previousState
+      // })
     } else {
       setMsgErrorAutoComplete('')
       clearValues()
-      handleRemoveItem()
+      setIdRowWarning('')
+      //  handleRemoveItem()
     }
   }, [valueLaudoTech])
 
@@ -164,6 +172,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
       const idServiceCurrent = valueLaudoTech.value
       const idStateUpdated = services._id
       if (idServiceCurrent === idStateUpdated) {
+        console.log({ valueLaudoTech, services })
         if (valueLaudoTech.label.trim() !== services.description.trim()) {
           setValueLaudoTech({ label: services.description, value: idStateUpdated })
         } else {
@@ -174,7 +183,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   }, [services])
 
   useEffect(() => {
-    let cancel: any
+    //let cancel: any
 
     const loadLaudoTech = async () => {
       try {
@@ -231,6 +240,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   }
 
   const onHandleEditService = async () => {
+    setIdRowWarning('')
     const id = clickedValueService?.value
     const dataService = await getServiceById(id)
     showMessage(
@@ -244,8 +254,64 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     )
   }
 
+  const checkIfAlreayExistsServiceinList = (id: string | number, qtde: number) => {
+    setIdRowWarning('')
+    if (itemServices?.length) {
+      if (itemServices?.length === 8) {
+        toast.warning('A quantidade de serviço permitido é 8.')
+        return false
+      }
+      const resultItemServices = itemServices.find((item) => item.id === id)
+      if (resultItemServices) {
+        if (resultItemServices.qtde !== qtde) {
+          setIdRowWarning(String(id))
+          toast.warning(`Já existe um serviço adicionado com a quantidade diferente, remova o serviço da lista abaixo para adicionar ou informe a mesma quantidade.`)
+          return false
+        }
+        return true
+      } else {
+        return true
+      }
+    } else {
+      return true
+    }
+  }
+
+  const addService = () => {
+
+    setIsFirstLoadingPage(false)
+
+    const { clean: totalValueClean } = formatInputPrice(totalValue)
+    const { clean: valueUnitClean } = formatInputPrice(valueUnit)
+
+    if (!valueLaudoTech?.label) {
+      toast.warning('Primeiro selecione o serviço para depois adicionar.')
+      return
+    }
+
+    if (!checkIfAlreayExistsServiceinList(valueLaudoTech?.value, Number(qtdeValue))) return
+
+    setItemServices((previousState) => [
+      ...previousState.filter((item) => item.id !== valueLaudoTech?.value),
+      {
+        id: valueLaudoTech?.value,
+        description: valueLaudoTech?.label,
+        qtde: Number(qtdeValue),
+        unit: valueUnitClean,
+        total: totalValueClean
+      }
+    ])
+
+    setMsgErrorAutoComplete('')
+    clearValues()
+    setValueLaudoTech({ label: '', value: '' })
+    setClickedValue({ label: '', value: '' })
+    setClickedValueService({ label: '', value: '' })
+    setIdRowWarning('')
+  }
+
   return (
-    <Row columns="5fr 0.1fr 1fr 1fr" gap={10} marginTop="5px">
+    <Row columns="5fr 0.1fr 1fr 1fr 1fr" gap={10} marginTop="5px">
       <Autocomplete
         value={valueLaudoTech}
         setValue={setValueLaudoTech}
@@ -290,6 +356,16 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
         autoComplete="off"
         disabled
       />
+      <Row display='flex' justifyContent='center' alignItems='center'>
+        <Button
+          textButton={'Adicionar'}
+          variant={"outlined"}
+          size="large"
+          icon={"add2"}
+          color={'primary'}
+          onClick={addService}
+        />
+      </Row>
     </Row>
   )
 }

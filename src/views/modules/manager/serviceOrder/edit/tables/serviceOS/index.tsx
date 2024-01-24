@@ -1,15 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import lodash from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { AutocompleteOptions } from 'src/components/Form/Autocomplete'
+import { formatPrice } from 'src/helpers/formatPrice'
 import { useModal } from 'src/hooks/useModal'
 import { IStore } from 'src/store/Types'
 import { Row } from 'src/styles'
 import CreateService from 'src/views/modules/administration/services/create'
+import InputText from '../../components/InputCurrency'
 import LaudoConfirmation from '../../messages/LaudoConfirmation'
 import { ItemServices } from '../../type'
 import LaudoDetails from '../laudoDetails'
@@ -22,17 +25,20 @@ type TableViewProps = {
   setItemServices: React.Dispatch<React.SetStateAction<ItemServices[]>>
   laudos: Laudo[]
   setLaudos: React.Dispatch<React.SetStateAction<Laudo[]>>
+  setIsFirstLoadingPage: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TableView: React.FC<TableViewProps> = ({
+const ServiceOS: React.FC<TableViewProps> = ({
   itemServices,
   setItemServices,
   laudos,
   setLaudos,
+  setIsFirstLoadingPage
 }) => {
-  const { showMessage, showSimple } = useModal()
+  const { showMessage } = useModal()
   const [clickedValue, setClickedValue] = useState({} as AutocompleteOptions)
   const [laudosList, setLaudosList] = React.useState<Laudo[]>([] as Laudo[])
+  const [idRowWarning, setIdRowWarning] = useState('')
 
   const services = useSelector(
     (state: IStore) =>
@@ -125,11 +131,21 @@ const TableView: React.FC<TableViewProps> = ({
     )
   }
 
+  const handleRemoveItem = (id: string | number) => {
+    setIsFirstLoadingPage(false)
+    setIdRowWarning('')
+    setItemServices((previousState) => [
+      ...previousState.filter(
+        (item) => item.id !== id,
+      ),
+    ])
+  }
+
   return (
     <Container>
-      <Row columns="5fr 0.1fr 1fr 1fr" gap={10} marginTop="5px">
+      <Row columns="5fr 0.1fr 1fr 1fr 1fr" gap={10} marginTop="5px">
         <ContainerButtonServiceAdd>
-          <div>Serviços</div>
+          <div>Serviços ({itemServices?.length || 0})</div>
           <Tooltip title="Clique aqui para adicionar um novo Serviço">
             <IconButton aria-label="Adicionar" onClick={onHandleAddNewService}>
               <AddCircleOutlineIcon />
@@ -160,38 +176,81 @@ const TableView: React.FC<TableViewProps> = ({
         >
           Preço
         </div>
+        <div
+          style={{
+            position: 'relative',
+            left: '10px',
+          }}
+        >
+        </div>
       </Row>
 
       <ItemLaudoTechnical
+        setIdRowWarning={setIdRowWarning}
         setClickedValue={setClickedValue}
         setItemServices={setItemServices}
         itemServices={itemServices}
+        setIsFirstLoadingPage={setIsFirstLoadingPage}
       />
-      <ItemLaudoTechnical
-        setClickedValue={setClickedValue}
-        setItemServices={setItemServices}
-        itemServices={itemServices}
-      />
-      <ItemLaudoTechnical
-        setClickedValue={setClickedValue}
-        setItemServices={setItemServices}
-        itemServices={itemServices}
-      />
-      <ItemLaudoTechnical
-        setClickedValue={setClickedValue}
-        setItemServices={setItemServices}
-        itemServices={itemServices}
-      />
-      <ItemLaudoTechnical
-        setClickedValue={setClickedValue}
-        setItemServices={setItemServices}
-        itemServices={itemServices}
-      />
-      <ItemLaudoTechnical
-        setClickedValue={setClickedValue}
-        setItemServices={setItemServices}
-        itemServices={itemServices}
-      />
+
+      {!!itemServices.length && itemServices.sort().map((service) => {
+        const unit = formatPrice(service.unit)
+        const total = formatPrice(service.total)
+        const qtde = String(service.qtde)
+        return (
+          <Row display='flex' gap={2} marginTop="5px" border={idRowWarning === service.id && '1px solid #C00000'}>
+            <InputText
+              type="text"
+              label={''}
+              value={service.description}
+              autoComplete="off"
+              disabled
+              width='100%'
+            />
+            <Row display='flex' gap={10} marginLeft='15px'>
+              <Row position='relative' right='5px'>
+                <InputText
+                  type="text"
+                  label={''}
+                  value={qtde}
+                  disabled
+                  width="60px"
+                />
+              </Row>
+              <Row position='relative' right='5px'>
+                <InputText
+                  type="text"
+                  label={''}
+                  value={unit}
+                  autoComplete="off"
+                  disabled
+                />
+              </Row>
+              <Row position='relative' right='5px'>
+                <InputText
+                  type="text"
+                  label={''}
+                  value={total}
+                  autoComplete="off"
+                  disabled
+                />
+              </Row>
+              <Row>
+                <Tooltip title="Remover o Serviço" placement="left">
+                  <IconButton
+                    aria-label="delete"
+                    size="large"
+                    color="error"
+                    onClick={() => handleRemoveItem(service.id)}
+                  >
+                    <DeleteIcon fontSize="inherit" color="error" />
+                  </IconButton>
+                </Tooltip>
+              </Row>
+            </Row>
+          </Row>
+        )
+      })}
 
       <LaudoDetails
         laudos={laudos}
@@ -202,4 +261,4 @@ const TableView: React.FC<TableViewProps> = ({
   )
 }
 
-export default TableView
+export default ServiceOS

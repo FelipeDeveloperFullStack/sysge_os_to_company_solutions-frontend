@@ -141,11 +141,6 @@ const ConfigurationsSystem: React.FC = () => {
   React.useEffect(() => {
     socket.on(CONNECTION_UPDATE, (response: SocketResponse) => {
       let webSocketState = response?.state
-      console.log({
-        state: response?.state,
-        stateReason: response?.stateReason,
-        CONNECTION_UPDATE,
-      })
       setWebSocketData({
         state: response?.state,
         stateReason: response?.stateReason,
@@ -162,7 +157,6 @@ const ConfigurationsSystem: React.FC = () => {
       }
     })
     socket.on(QRCODE_UPDATED, (response: SocketResponse) => {
-      console.log({ base64: response?.base64, QRCODE_UPDATED })
       const base64 = response?.base64
       setWebSocketData({ ...webSocketData, base64 })
       showMessage(ConnectionQrCode, { qrCode: base64, webSocketState }, true)
@@ -178,12 +172,13 @@ const ConfigurationsSystem: React.FC = () => {
     }
     if (webSocketData?.state === 'close') {
       setLabelButton('Conectar')
-      toast.error('Conexão com Whatsapp falhou, tente novamente!')
+      toast.error('Conexão com Whatsapp fechada.')
       setStatusConnection(false)
     }
     if (webSocketData?.state === 'open' && webSocketData?.stateReason === 200) {
       setLabelButton('Conectado com sucesso.')
       toast.success('Whatsapp conectado com sucesso!')
+      setStatusConnection(true)
     }
   }, [webSocketData, statusConnection])
 

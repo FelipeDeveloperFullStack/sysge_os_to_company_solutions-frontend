@@ -24,7 +24,6 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   onKeyUp?: () => void
   price?: AutocompleteOptions
   setPrice?: (newState: AutocompleteOptions) => void
-  width?: string
   [x: string]: any
 }
 
@@ -36,7 +35,6 @@ const InputText: React.FC<InputTextProps> = ({
   msgError,
   variation,
   mask,
-  width,
   // value,
   disabled,
   useIMask,
@@ -70,7 +68,6 @@ const InputText: React.FC<InputTextProps> = ({
       hasError={msgError || hasError}
       variation={variation}
       isHasValue={value ? true : false}
-      width={width}
     >
       {label && <label htmlFor={label}>{label}</label>}
       {useIMask ? (

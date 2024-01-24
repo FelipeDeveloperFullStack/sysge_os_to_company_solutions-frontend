@@ -28,6 +28,7 @@ export const exceptionHandle = (
   error: AxiosError,
   messageStatusError500?: string,
 ): void => {
+  console.log(error)
   const message =
     messageStatusError500 ||
     'Ops! Houve um erro, atualize a página e tente novamente, se o problema persistir entre em contato com o suporte técnico.'

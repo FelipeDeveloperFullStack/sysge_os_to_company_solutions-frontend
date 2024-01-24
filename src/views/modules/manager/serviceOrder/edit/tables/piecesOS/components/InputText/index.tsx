@@ -6,7 +6,6 @@ import { AutocompleteOptions } from 'src/components/Form/Autocomplete'
 import MsgError from 'src/components/MsgError'
 import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { IStore } from 'src/store/Types'
-import { useTotalSum } from '../../../../hooks/useTotalSum'
 import { Container } from './styles'
 
 interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -24,7 +23,6 @@ interface InputTextProps extends InputHTMLAttributes<HTMLInputElement> {
   onKeyUp?: () => void
   price?: AutocompleteOptions
   setPrice?: (newState: AutocompleteOptions) => void
-  width?: string
   [x: string]: any
 }
 
@@ -36,7 +34,6 @@ const InputText: React.FC<InputTextProps> = ({
   msgError,
   variation,
   mask,
-  width,
   // value,
   disabled,
   useIMask,
@@ -46,18 +43,13 @@ const InputText: React.FC<InputTextProps> = ({
 }) => {
   const [value, setValue] = useState('')
 
-  const { sum } = useTotalSum()
-
   const services = useSelector(
     (state: IStore) =>
-      state.service.services.filter(
-        (service) => service._id === price?.value,
-      )[0],
+      state.piece.pieces.filter((service) => service._id === price?.value)[0],
   )
 
   useEffect(() => {
     setValue(formatPrice(services?.value))
-    if (services?.value) sum(Number(services?.value))
   }, [price])
 
   const onFormatterPrice = (value: string) => {
@@ -70,7 +62,6 @@ const InputText: React.FC<InputTextProps> = ({
       hasError={msgError || hasError}
       variation={variation}
       isHasValue={value ? true : false}
-      width={width}
     >
       {label && <label htmlFor={label}>{label}</label>}
       {useIMask ? (
