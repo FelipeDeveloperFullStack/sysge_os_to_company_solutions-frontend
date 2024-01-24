@@ -1,5 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Card, FormGroup, Paper, TextField } from '@mui/material'
+import {
+  Card,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Paper,
+  TextField,
+} from '@mui/material'
 import Alert from '@mui/material/Alert'
 import React, { useState } from 'react'
 import Button from 'src/components/Form/Button'
@@ -13,12 +20,12 @@ import {
 } from 'src/services/Socket/EventTypes'
 import { useAdmin } from 'src/services/useAdmin'
 import ConnectionQrCode from './messages/ConnectionQrCode'
-import { ConnectionWhatsapp, Container } from './style'
+import { ConnectionWhatsapp, Container, ContainerCheckBox } from './style'
 import { InputText } from 'src/components'
 
 type UpdateHandle = {
   isEnableEmailBilling?: boolean
-  isEnableWhatsappBilling?: boolean
+  isEnableToDontShowBeforeYearCurrent?: boolean
 }
 
 export type SocketResponse = {
@@ -30,8 +37,8 @@ export type SocketResponse = {
 
 const ConfigurationsSystem: React.FC = () => {
   const [
-    isEnableSendConfigurationWhatsapp,
-    setIsEnableSendConfigurationWhatsapp,
+    isEnableToDontShowBeforeYearCurrent,
+    setIsEnableToDontShowBeforeYearCurrent,
   ] = useState(false)
   const [isEnableSendConfigurationEmail, setIsEnableSendConfigurationEmail] =
     useState(false)
@@ -58,9 +65,9 @@ const ConfigurationsSystem: React.FC = () => {
     }
   }
 
-  const onHandleChangeEnableConfigurationWhatsapp = async (event: any) => {
-    setIsEnableSendConfigurationWhatsapp(event.target.checked)
-    await update({ isEnableWhatsappBilling: event.target.checked })
+  const onHandleChangeEnableDontShowBeforeYearCurrent = async (event: any) => {
+    setIsEnableToDontShowBeforeYearCurrent(event.target.checked)
+    await update({ isEnableToDontShowBeforeYearCurrent: event.target.checked })
   }
 
   const onHandleChangeEnableConfigurationEmail = async (event: any) => {
@@ -73,7 +80,7 @@ const ConfigurationsSystem: React.FC = () => {
       const { data } = await apiAdmin.get('configurations')
       if (data.length) {
         setIsEnableSendConfigurationEmail(data[0]?.isEnableEmailBilling)
-        setIsEnableSendConfigurationWhatsapp(data[0]?.isEnableWhatsappBilling)
+        setIsEnableToDontShowBeforeYearCurrent(data[0]?.isEnableToDontShowBeforeYearCurrent)
       }
     } catch (error) {
       exceptionHandle(error)
@@ -89,7 +96,10 @@ const ConfigurationsSystem: React.FC = () => {
   }
   const onHandleSetWebhook = async () => {
     try {
-      const {data} = await apiAdmin.put('configurations/webhook/defineWebhook', { publicIP })
+      const { data } = await apiAdmin.put(
+        'configurations/webhook/defineWebhook',
+        { publicIP },
+      )
       if (data?.status === 200) {
         toast.success(data?.message)
       }
@@ -184,20 +194,27 @@ const ConfigurationsSystem: React.FC = () => {
 
   return (
     <Container>
-      {/* <Paper elevation={3}>
-        <Alert severity="info">Ao marcar essa opção o sistema irá enviar a notificação de cobraça imediatamente após a importação do boleto e nota fiscal na ordem de serviço do cliente.</Alert>
-        <FormGroup>
-          <Card>
-            <FormControlLabel
-              control={<Checkbox />}
-              checked={isEnableSendConfigurationWhatsapp}
-              onChange={(event) => onHandleChangeEnableConfigurationWhatsapp(event)}
-              label={'Enviar notificações de cobrança no Whatsapp do cliente.'}
-              value={isEnableSendConfigurationWhatsapp}
-            />
-          </Card>
-        </FormGroup>
-      </Paper> */}
+      <Paper elevation={3}>
+        <Alert severity="info">
+          Ao marcar essa opção o sistema não irá mostrar nenhum dado anterior ao
+          ano de {new Date().getFullYear()}.
+        </Alert>
+        <ContainerCheckBox>
+          <FormGroup>
+            <Card>
+              <FormControlLabel
+                control={<Checkbox />}
+                checked={isEnableToDontShowBeforeYearCurrent}
+                onChange={(event) =>
+                  onHandleChangeEnableDontShowBeforeYearCurrent(event)
+                }
+                label={'Não mostrar os dados dos anos anteriores.'}
+                value={isEnableToDontShowBeforeYearCurrent}
+              />
+            </Card>
+          </FormGroup>
+        </ContainerCheckBox>
+      </Paper>
       <Paper elevation={3}>
         <Alert severity="info">
           Conexão com Whatsapp. (Apenas envio de mensagens)
@@ -232,16 +249,18 @@ const ConfigurationsSystem: React.FC = () => {
           geraçao do QRCode de autenticação.
         </Alert>
         {!statusConnectionWebhook && <p></p>}
-        {!statusConnectionWebhook && <TextField
-          label="IP público Webhook"
-          variant="outlined"
-          focused
-          fullWidth
-          size="small"
-          value={publicIP}
-          placeholder='Ex: 12.487.054.781'
-          onChange={(event) => setPublicIP(event.target.value)}
-        />}
+        {!statusConnectionWebhook && (
+          <TextField
+            label="IP público Webhook"
+            variant="outlined"
+            focused
+            fullWidth
+            size="small"
+            value={publicIP}
+            placeholder="Ex: 12.487.054.781"
+            onChange={(event) => setPublicIP(event.target.value)}
+          />
+        )}
         <ConnectionWhatsapp>
           <Button
             disabled={statusConnectionWebhook}

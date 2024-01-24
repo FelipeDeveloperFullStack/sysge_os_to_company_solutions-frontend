@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 
+export const ContainerCheckBox = styled.section`
+  margin-left: 16px;
+`
+
 export const Card = styled.div`
   padding: 12px;
 `
