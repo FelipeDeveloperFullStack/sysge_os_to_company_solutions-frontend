@@ -22,6 +22,7 @@ import { useAdmin } from 'src/services/useAdmin'
 import ConnectionQrCode from './messages/ConnectionQrCode'
 import { ConnectionWhatsapp, Container, ContainerCheckBox } from './style'
 import { InputText } from 'src/components'
+import { useLoading } from 'src/hooks/useLoading'
 
 type UpdateHandle = {
   isEnableEmailBilling?: boolean
@@ -54,6 +55,7 @@ const ConfigurationsSystem: React.FC = () => {
   const [publicIP, setPublicIP] = useState('')
   const { apiAdmin } = useAdmin()
   const { showMessage, closeModal } = useModal()
+  const { Loading } = useLoading()
 
   const update = async (data: UpdateHandle) => {
     try {
@@ -64,10 +66,26 @@ const ConfigurationsSystem: React.FC = () => {
       exceptionHandle(error)
     }
   }
+  const updateAllRegisterIncomesToDontShowBeforeYearCurrent = async (data: UpdateHandle) => {
+    try {
+      Loading.turnOn()
+      await apiAdmin.put('configurations/update', { ...data })
+      await apiAdmin.get(`orderServices/update-income-isEnableToDontShowBeforeYearCurrent/${data?.isEnableToDontShowBeforeYearCurrent}`)
+      await apiAdmin.get(`expense/update-expense-isEnableToDontShowBeforeYearCurrent/${data?.isEnableToDontShowBeforeYearCurrent}`)
+      setMakeRequest(Math.random())
+      setTimeout(() => {
+        Loading.turnOff()
+        toast.success('Configurações atualizadas com sucesso.')
+      }, 10000)
+    } catch (error) {
+      exceptionHandle(error)
+      Loading.turnOff()
+    }
+  }
 
   const onHandleChangeEnableDontShowBeforeYearCurrent = async (event: any) => {
     setIsEnableToDontShowBeforeYearCurrent(event.target.checked)
-    await update({ isEnableToDontShowBeforeYearCurrent: event.target.checked })
+    await updateAllRegisterIncomesToDontShowBeforeYearCurrent({ isEnableToDontShowBeforeYearCurrent: event.target.checked })
   }
 
   const onHandleChangeEnableConfigurationEmail = async (event: any) => {

@@ -95,6 +95,7 @@ const Filters: React.FC<FiltersProps> = ({
       console.log({ resultFromApi, orderedMonth, orderedYear, result, monthSelected, yearSelected })
       setIncomesFiltered(result)
     } catch (error) {
+      console.log(error)
       toast.error('Um erro ocurreu ao tentar buscar os dados de receitas')
     } finally {
       if (isUsingLoading) {
