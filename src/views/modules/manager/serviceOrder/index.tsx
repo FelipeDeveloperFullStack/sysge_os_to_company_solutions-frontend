@@ -18,19 +18,22 @@ import { Laudo } from './create/tables/type'
 import { ItemPieces, ItemServices, OSData } from './create/type'
 import {
   ButtonContainerGenerateOS,
-  ButtonContainerLaunchInTheFinancial, CompanyContact,
+  ButtonContainerLaunchInTheFinancial,
+  CompanyContact,
   Container,
   ContainerDateOS,
   ContainerOS,
   ContainerOSNumberAndDate,
   ContainerOSText,
-  DateOS, Header, HeaderTextFont,
+  DateOS,
+  Header,
+  HeaderTextFont,
   Image,
   OSNumber,
   OSText,
   PaperStyled,
   TecnicalResponsible,
-  Text
+  Text,
 } from './style'
 
 type ServiceOrderProps = {
@@ -42,7 +45,7 @@ type ServiceOrderProps = {
 const ServiceOrder: React.FC<ServiceOrderProps> = ({
   osData,
   setOsDataAdded,
-  isMerge = false
+  isMerge = false,
 }) => {
   const exportPDF = useGeneratePDF()
   const history = useHistory()
@@ -119,7 +122,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
       data?.typeDocument, //ORCAMENTO OU ORDEM_DE_SERVICO
       data?._id,
       data?.client?.id,
-      isMerge
+      isMerge,
     )
     setIsOsGenerated(true)
     // await updateDateOSGenerated()
@@ -234,7 +237,11 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
           <ContainerOSNumberAndDate>
             <PaperStyled elevation={1}>
               <ContainerOSText>
-                <OSText>{data?.typeDocument === 'ORCAMENTO' ? 'ORÇAMENTO' : 'ORDEM DE SERVIÇO'}</OSText>
+                <OSText>
+                  {data?.typeDocument === 'ORCAMENTO'
+                    ? 'ORÇAMENTO'
+                    : 'ORDEM DE SERVIÇO'}
+                </OSText>
                 <OSNumber>
                   Nº <OSNumber color="red">{data?.osNumber}</OSNumber>
                 </OSNumber>
@@ -389,7 +396,12 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                     >
                       {!!item.unit && formatPrice(item.unit)}
                     </Text>
-                    <Text marginTop="20px" height="19px" justifyContent="center" display="flex">
+                    <Text
+                      marginTop="20px"
+                      height="19px"
+                      justifyContent="center"
+                      display="flex"
+                    >
                       {!!item.total && formatPrice(item.total)}
                     </Text>
                   </Row>
@@ -483,7 +495,12 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                     >
                       {!!item.unit && formatPrice(item.unit)}
                     </Text>
-                    <Text marginTop="20px" height="19px" display="flex" justifyContent="center">
+                    <Text
+                      marginTop="20px"
+                      height="19px"
+                      display="flex"
+                      justifyContent="center"
+                    >
                       {!!item.total && formatPrice(item.total)}
                     </Text>
                   </Row>
@@ -507,13 +524,24 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   fontSize="11px"
                   display="flex"
                   gap="5px"
+                  width="228px"
+                  justifyContent="right"
                   isParcialValue={!!data?.valuePartial}
                 >
-                  <b>Desconto: </b> <span>{data?.discount}</span>
+                  <b>Desconto: </b>{' '}
+                  <span style={{ width: '100px' }}>{data?.discount}</span>
                 </Text>
               )}
-              <Text isNotUsingBorderBottom fontSize="11px" isParcialValue={!!data?.valuePartial}>
-                <b>Mão De Obra: </b> {data?.manpower}
+              <Text
+                isNotUsingBorderBottom
+                fontSize="11px"
+                display="flex"
+                width="228px"
+                justifyContent="right"
+                isParcialValue={!!data?.valuePartial}
+              >
+                <b>Mão De Obra: </b>{' '}
+                <span style={{ width: '100px' }}>{data?.manpower}</span>
               </Text>
             </PaperStyled>
             <PaperStyled
@@ -534,7 +562,12 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   gap="5px"
                   isParcialValue={!!data?.valuePartial}
                 >
-                  <b>{!!data?.valuePartial ? 'Valor Sem Desconto' : 'Valor S/Desconto:'} </b> <span>{data?.subTotal}</span>
+                  <b>
+                    {!!data?.valuePartial
+                      ? 'Valor Sem Desconto'
+                      : 'Valor S/Desconto:'}{' '}
+                  </b>{' '}
+                  <span>{data?.subTotal}</span>
                 </Text>
               )}
               {!!data?.valuePartial && (
@@ -544,15 +577,27 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   fontSize="11px"
                   display="flex"
                   gap="5px"
-                  justifyContent='center'
+                  justifyContent="center"
                   isParcialValue={!!data?.valuePartial}
                   width={!!data?.valuePartial ? '' : '225px'}
                 >
-                  <b>{!!data?.valuePartial ? 'Valor Pago' : 'Valor Pago:'} </b> <span>{data?.valuePartial}</span>
+                  <b>{!!data?.valuePartial ? 'Valor Pago' : 'Valor Pago:'} </b>{' '}
+                  <span>{data?.valuePartial}</span>
                 </Text>
               )}
-              <Text marginRight="-20px" width='225px' isNotUsingBorderBottom display="flex" isParcialValue={!!data?.valuePartial}>
-                <b>{!!data?.valuePartial ? 'Total A Pagar' : 'Total A Pagar:'} </b> {data?.status === 'PENDENTE' && data?.remainingValue ? data?.remainingValue : data?.total}
+              <Text
+                marginRight="-20px"
+                width="225px"
+                isNotUsingBorderBottom
+                display="flex"
+                isParcialValue={!!data?.valuePartial}
+              >
+                <b>
+                  {!!data?.valuePartial ? 'Total A Pagar' : 'Total A Pagar:'}{' '}
+                </b>{' '}
+                {data?.status === 'PENDENTE' && data?.remainingValue
+                  ? data?.remainingValue
+                  : data?.total}
               </Text>
             </PaperStyled>
           </Row>
