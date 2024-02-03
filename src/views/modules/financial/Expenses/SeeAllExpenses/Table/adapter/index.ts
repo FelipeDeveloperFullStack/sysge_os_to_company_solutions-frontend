@@ -35,9 +35,10 @@ type ResponseFromApi = {
   resultFromApi: Expense[]
   orderedMonth: string[]
   orderedYear: string[]
+  monthAndYear: MonthAndYear[]
 }
 
-type MonthAndYear = {
+export type MonthAndYear = {
   month: string
   year: string
 }
@@ -47,6 +48,7 @@ export const fromApi = (
   pieces: PieceT[],
 ): ResponseFromApi => {
   const monthSet = new Set<string>()
+  const monthAndYearSet = new Set<string>()
   const orderMonth = [
     'JAN',
     'FEV',
@@ -72,6 +74,7 @@ export const fromApi = (
     const month = format(dateParse, 'MMM', { locale: ptBR }).toUpperCase()
     const year = format(dateParse, 'yyyy')
     monthSet.add(month)
+    monthAndYearSet.add(`${month}-${year}`)
     return { month, year }
   }
 
@@ -104,9 +107,15 @@ export const fromApi = (
     return orderMonth.indexOf(a) - orderMonth.indexOf(b)
   })
 
+  const monthAndYear = Array.from(monthAndYearSet).map((str) => {
+    const [month, year] = str.split('-');
+    return { month, year };
+  });
+
   return {
     resultFromApi,
     orderedMonth,
     orderedYear: orderedYear(resultFromApi),
+    monthAndYear,
   }
 }

@@ -18,7 +18,7 @@ import { useAdmin } from 'src/services/useAdmin'
 import { IStore } from 'src/store/Types'
 import { Row } from 'src/styles'
 import useLocalStorage from 'use-local-storage'
-import { Income, fromApi } from '../Table/adapter'
+import { Income, MonthAndYear, fromApi } from '../Table/adapter'
 import { NewIncome } from '../messages/NewIncome'
 import { Container, Form } from './style'
 
@@ -42,9 +42,10 @@ const Filters: React.FC<FiltersProps> = ({
   const { showMessage } = useModal()
   const { apiAdmin } = useAdmin()
   const [months, setMonths] = useState([])
-  const [monthSelected, setMonthSelected] = useLocalStorage('monthSelected', '')
+  const [monthSelected, setMonthSelected] = useState('')
   const [years, setYears] = useState([])
-  const [yearSelected, setYearSelected] = useLocalStorage('yearSelected', '')
+  const [yearSelected, setYearSelected] = useState('')
+  const [monthAndYear, setMonthAndYear] = useState<MonthAndYear[]>([] as MonthAndYear[])
   const [incomes, setIncomes] = useState<Income[]>([] as Income[])
   const { Loading } = useLoading()
   const history = useHistory()
@@ -61,8 +62,8 @@ const Filters: React.FC<FiltersProps> = ({
     // setIncomesFiltered(result)
   }
 
-  const checkIfbuttonHasSelected = (dataIncomeResponseFromApi: Income[]) => {
-    const { monthSelected, yearSelected } = getDateCurrent()
+  const checkIfbuttonHasSelected = (dataIncomeResponseFromApi: Income[], monthAndYear: MonthAndYear[]) => {
+    const { monthSelected, yearSelected } = getDateCurrent(monthAndYear)
     if (monthSelected && yearSelected) {
       const result = dateFilter(
         `${monthSelected}/${yearSelected}`,
@@ -81,18 +82,18 @@ const Filters: React.FC<FiltersProps> = ({
         Loading.turnOn()
       }
       const { data } = await apiAdmin.get('orderServices')
-      const { resultFromApi, orderedMonth, orderedYear } = fromApi(data)
+      const { resultFromApi, orderedMonth, orderedYear, monthAndYear } = fromApi(data)
       setMonths(orderedMonth)
       setYears(orderedYear)
       setIncomes(resultFromApi)
-      checkIfbuttonHasSelected(resultFromApi)
+      checkIfbuttonHasSelected(resultFromApi, monthAndYear)
       setSelectedButton(selectedButton)
+      setMonthAndYear(monthAndYear)
       const result = dateFilter(
         `${monthSelected}/${yearSelected}`,
         resultFromApi,
         selectedButton,
       )
-      console.log({ resultFromApi, orderedMonth, orderedYear, result, monthSelected, yearSelected })
       setIncomesFiltered(result)
     } catch (error) {
       console.log(error)
@@ -106,6 +107,9 @@ const Filters: React.FC<FiltersProps> = ({
   }
 
   const onHandleClickYear = (year: string) => {
+    if (monthAndYear?.length) {
+      setMonths(monthAndYear.filter((item) => item.year === year).map((item) => item.month))
+    }
     setYearSelected(year)
     const result = dateFilter(
       `${monthSelected}/${year}`,
@@ -129,7 +133,7 @@ const Filters: React.FC<FiltersProps> = ({
     setIncomesFiltered(result)
   }
 
-  function getDateCurrent() {
+  function getDateCurrent(monthAndYear?: MonthAndYear[]) {
     const currentMonth = format(new Date(), 'MMM', {
       locale: ptBR,
     }).toUpperCase()
@@ -137,6 +141,9 @@ const Filters: React.FC<FiltersProps> = ({
     //setMonthSelected(currentMonth)
     setYearSelected(currentYear)
     setSelectedButton(!selectedButton ? 'PENDENTE' : selectedButton)
+    if (monthAndYear?.length) {
+      setMonths(monthAndYear.filter((item) => item.year === currentYear).map((item) => item.month))
+    }
     return {
       monthSelected: currentMonth,
       yearSelected: currentYear,

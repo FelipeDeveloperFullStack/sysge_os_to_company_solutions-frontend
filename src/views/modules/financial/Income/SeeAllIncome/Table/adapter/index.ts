@@ -33,15 +33,17 @@ type ResponseFromApi = {
   resultFromApi: Income[]
   orderedMonth: string[]
   orderedYear: string[]
+  monthAndYear: MonthAndYear[]
 }
 
-type MonthAndYear = {
+export type MonthAndYear = {
   month: string
   year: string
 }
 
 export const fromApi = (oSData: OSData[]): ResponseFromApi => {
   const monthSet = new Set<string>()
+  const monthAndYearSet = new Set<string>()
   const orderMonth = [
     'JAN',
     'FEV',
@@ -67,6 +69,7 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     const month = format(dateParse, 'MMM', { locale: ptBR }).toUpperCase()
     const year = format(dateParse, 'yyyy')
     monthSet.add(month)
+    monthAndYearSet.add(`${month}-${year}`)
     return { month, year }
   }
 
@@ -106,11 +109,17 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     return orderMonth.indexOf(a) - orderMonth.indexOf(b)
   })
 
+  const monthAndYear = Array.from(monthAndYearSet).map((str) => {
+    const [month, year] = str.split('-');
+    return { month, year };
+  });
+
   return {
     resultFromApi: resultFromApi.filter(
       (item) => item.typeDocument !== 'ORCAMENTO',
     ),
     orderedMonth,
     orderedYear: orderedYear(resultFromApi),
+    monthAndYear
   }
 }
