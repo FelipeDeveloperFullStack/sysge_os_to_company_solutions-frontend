@@ -138,7 +138,7 @@ const Filters: React.FC<FiltersProps> = ({
       locale: ptBR,
     }).toUpperCase()
     const currentYear = String(getYear(new Date()))
-    //setMonthSelected(currentMonth)
+    setMonthSelected(currentMonth)
     setYearSelected(currentYear)
     setSelectedButton(!selectedButton ? 'PENDENTE' : selectedButton)
     if (monthAndYear?.length) {
