@@ -7,7 +7,7 @@ import Fab from '@mui/material/Fab'
 import { format } from 'date-fns'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { formatPrice } from 'src/helpers/formatPrice'
+import { formatInputPrice, formatPrice } from 'src/helpers/formatPrice'
 import { useGeneratePDF } from 'src/hooks/useGeneratePDF'
 import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
@@ -68,14 +68,50 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
   //   }
   // }
 
+  function formatarNumeroEmReais(numeroString: string): string {
+    // Extrair apenas os dígitos e o ponto decimal
+    const numeros = numeroString.match(/\d|\./g);
+  
+    if (!numeros) {
+      // Retornar string vazia se não houver dígitos
+      return '';
+    }
+  
+    // Juntar os dígitos em uma única string
+    const numeroLimpo = numeros.join('');
+  
+    // Dividir a parte inteira e a parte decimal
+    const partes = numeroLimpo.split('.');
+  
+    // Corrigir o formato da parte inteira
+    const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  
+    // Construir a string formatada
+    const numeroFormatado = `R$ ${parteInteira}${partes[1] ? ',' + partes[1] : ',00'}`;
+  
+    return numeroFormatado;
+  }
+
   React.useEffect(() => {
     if (!osData) {
-      setData(location?.state?.oSData)
+      const data: OSData = location?.state?.oSData
+      setData({
+        ...data,
+        discount: data?.discount?.includes('R$') ? formatarNumeroEmReais(data?.discount) : data?.discount,
+      })
     } else {
       setTimeout(async () => {
         await handleClickToGenerateOS()
         if (setOsDataAdded) {
-          setOsDataAdded((previousState) => [...previousState, osData])
+          setOsDataAdded((previousState) => [
+            ...previousState,
+            {
+              ...osData,
+              discount: osData?.discount?.includes('R$')
+                ? formatarNumeroEmReais(osData?.discount)
+                : osData.discount,
+            },
+          ])
         }
       }, 2000)
     }
@@ -541,7 +577,7 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 isParcialValue={!!data?.valuePartial}
               >
                 <b>Mão De Obra: </b>{' '}
-                <span style={{ width: '100px' }}>{data?.manpower}</span>
+                <span style={{ width: '100px', marginLeft: '5px' }}>{data?.manpower}</span>
               </Text>
             </PaperStyled>
             <PaperStyled

@@ -58,13 +58,11 @@ type TypeDiscount = 'porcent' | 'real'
 const CreateOrderService: React.FC = () => {
   const dispatch = useDispatch()
   const location = useLocation<OSData>()?.state?.oSData
-  const [typeDiscount, setTypeDiscount] = useState<TypeDiscount>('porcent')
   const [warranty, setWarranty] = useState(false)
   const { apiAdmin } = useAdmin()
   const [isFirstLoadingPage, setIsFirstLoadingPage] = useState(false)
   const [osData] = useState<OSData>(location)
-
-  console.log({ osData })
+  const [typeDiscount, setTypeDiscount] = useState<TypeDiscount>(osData?.discount?.includes('%') ? 'porcent' : 'real')
 
   const equipaments = useSelector(
     (state: IStore) => state.equipament?.equipaments,
@@ -113,10 +111,10 @@ const CreateOrderService: React.FC = () => {
       .replace(',', '.')
       .trim()
     if (osData?.discount.includes('R$')) {
-      setDiscount(`R$ ${totalDiscount}`)
+      setDiscount(osData?.discount)
       setTypeDiscount('real')
     } else {
-      setDiscount(`${totalDiscount}%`)
+      setDiscount(osData?.discount)
       setTypeDiscount('porcent')
     }
     if (osData?.manpower === 'Garantia') {
@@ -146,7 +144,7 @@ const CreateOrderService: React.FC = () => {
     { label: osData?.client?.name, value: osData?.client?.id } ||
       ({} as AutocompleteOptions),
   )
-  const [discount, setDiscount] = useState('0')
+  const [discount, setDiscount] = useState(osData?.discount)
   const [equipamentsNameOptions, setEquipamentsNameOptions] = useState<
     AutocompleteOptions[]
   >([] as AutocompleteOptions[])
@@ -427,17 +425,21 @@ const CreateOrderService: React.FC = () => {
     return formatPrice(totalValue)
   }
 
-  const saveOrcamento = async (dataOS: OSData) => {
+  const save = async (dataOS: OSData, _typeDocument?: string) => {
     try {
       await apiAdmin.put(`orderServices/${dataOS?._id}`, dataOS)
       dispatch({
         type: SERVICE_FILTER,
         payload: {},
       })
-      toast.success('Orçamento cadastrado com sucesso.')
+      if (_typeDocument === 'ORCAMENTO') {
+        toast.success('Orçamento atualizado com sucesso.')
+      } else {
+        toast.success('Ordem de serviço atualizada com sucesso.')
+      }
       history.push(MANAGER_SERVICE_ORDER)
     } catch (error) {
-      toast.error('Houve um erro ao tentar salvar o Orçamento.')
+      toast.error('Houve um erro ao tentar atualizar os dados.')
     }
   }
 
@@ -527,14 +529,15 @@ const CreateOrderService: React.FC = () => {
     try {
       setLoading(true)
       const resultToApi = toApi(OSData, osNumber)
-      if (data.typeDocument === 'ORCAMENTO') {
-        await saveOrcamento(resultToApi)
-      } else {
-        showMessage(LaunchFinancial, {
-          data: resultToApi,
-          history,
-        })
-      }
+      const _typeDocument = data.typeDocument
+      await save(resultToApi, _typeDocument)
+      // if (data.typeDocument === 'ORCAMENTO') {
+      // } else {
+      //   showMessage(LaunchFinancial, {
+      //     data: resultToApi,
+      //     history,
+      //   })
+      // }
     } catch (error) {
       exceptionHandle(error)
     } finally {
