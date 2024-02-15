@@ -35,12 +35,24 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   const { user } = useAuth()
   const { apiAdmin } = useAdmin()
   const [loading, setLoading] = useState(false)
+  const [isDontSendNotificationMessage, setIsDontSendNotificationMessage] = useState(false)
   const dispatch = useDispatch()
   const [documents, setDocuments] = useState<Documents[]>([] as Documents[])
 
   const getTypeDocument = (typeDocument: string) => {
     if (typeDocument === 'ORDEM_DE_SERVICO') return 'Ordem de Serviço'
     if (typeDocument === 'ORCAMENTO') return 'Orçamento'
+  }
+
+  const getConfigurations = async () => {
+    try {
+      const { data } = await apiAdmin.get('configurations')
+      if (data?.length) {
+        setIsDontSendNotificationMessage(data[0]?.isEnableSendNotificationMessage || false)
+      }
+    } catch (error) {
+      exceptionHandle(error)
+    }
   }
 
   const getDocuments = async () => {
@@ -95,6 +107,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   }
 
   React.useEffect(() => {
+    getConfigurations()
     getDocuments()
     setMakeRequest && setMakeRequest(Math.random())
     dispatch && dispatch({
@@ -146,7 +159,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
           </ContainerDocuments>
         </ContainerUploadDocuments>
       ))}
-      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}/${clientId}`}
+      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}/${clientId}/${isDontSendNotificationMessage}`}
         multiple
         call={getDocuments}
         closeModal={closeModal} />

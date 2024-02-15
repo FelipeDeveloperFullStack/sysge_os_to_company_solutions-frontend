@@ -27,6 +27,7 @@ import { useLoading } from 'src/hooks/useLoading'
 type UpdateHandle = {
   isEnableEmailBilling?: boolean
   isEnableToDontShowBeforeYearCurrent?: boolean
+  isEnableSendNotificationMessage?: boolean
 }
 
 export type SocketResponse = {
@@ -40,6 +41,10 @@ const ConfigurationsSystem: React.FC = () => {
   const [
     isEnableToDontShowBeforeYearCurrent,
     setIsEnableToDontShowBeforeYearCurrent,
+  ] = useState(false)
+  const [
+    isEnableSendNotificationMessage,
+    setIsEnableSendNotificationMessage,
   ] = useState(false)
   const [isEnableSendConfigurationEmail, setIsEnableSendConfigurationEmail] =
     useState(false)
@@ -88,6 +93,12 @@ const ConfigurationsSystem: React.FC = () => {
     await updateAllRegisterIncomesToDontShowBeforeYearCurrent({ isEnableToDontShowBeforeYearCurrent: event.target.checked })
   }
 
+  const onHandleChangeSendNotificationMessage = async (event: any) => {
+    setIsEnableSendNotificationMessage(event.target.checked)
+    await update({ isEnableSendNotificationMessage: event.target.checked })
+  }
+
+
   const onHandleChangeEnableConfigurationEmail = async (event: any) => {
     setIsEnableSendConfigurationEmail(event.target.checked)
     await update({ isEnableEmailBilling: event.target.checked })
@@ -99,6 +110,7 @@ const ConfigurationsSystem: React.FC = () => {
       if (data.length) {
         setIsEnableSendConfigurationEmail(data[0]?.isEnableEmailBilling)
         setIsEnableToDontShowBeforeYearCurrent(data[0]?.isEnableToDontShowBeforeYearCurrent)
+        setIsEnableSendNotificationMessage(data[0]?.isEnableSendNotificationMessage)
       }
     } catch (error) {
       exceptionHandle(error)
@@ -235,6 +247,26 @@ const ConfigurationsSystem: React.FC = () => {
       </Paper>
       <Paper elevation={3}>
         <Alert severity="info">
+          Ao marcar essa opção o sistema não irá enviar a mensagem de notificação no Whatsapp e no E-mail após realizar a importação dos arquivos.
+        </Alert>
+        <ContainerCheckBox>
+          <FormGroup>
+            <Card>
+              <FormControlLabel
+                control={<Checkbox />}
+                checked={isEnableSendNotificationMessage}
+                onChange={(event) =>
+                  onHandleChangeSendNotificationMessage(event)
+                }
+                label={'Não enviar mensagem de notificação após a importação dos arquivos.'}
+                value={isEnableSendNotificationMessage}
+              />
+            </Card>
+          </FormGroup>
+        </ContainerCheckBox>
+      </Paper>
+      <Paper elevation={3}>
+        <Alert severity="info">
           Conexão com Whatsapp. (Apenas envio de mensagens)
         </Alert>
         <ConnectionWhatsapp>
@@ -247,20 +279,6 @@ const ConfigurationsSystem: React.FC = () => {
           />
         </ConnectionWhatsapp>
       </Paper>
-      {/* <Paper elevation={3}>
-        <Alert severity="info">Ao marcar essa opção o sistema irá enviar a notificação de cobraça quando faltar 3 dias para o vencimento do boleto e no dia do vencimento.</Alert>
-        <FormGroup>
-          <Card>
-            <FormControlLabel
-              control={<Checkbox />}
-              checked={isEnableSendConfigurationEmail}
-              onChange={(event) => onHandleChangeEnableConfigurationEmail(event)}
-              label={'Enviar notificações de cobrança no E-mail do cliente.'}
-              value={isEnableSendConfigurationEmail}
-            />
-          </Card>
-        </FormGroup>
-      </Paper> */}
       <Paper elevation={3}>
         <Alert severity="info">
           Informe o IP público para a configuração do Webhook. Necessário para a
