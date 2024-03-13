@@ -13,6 +13,11 @@ import { MANAGER_SERVICE_ORDER } from 'src/layouts/typePath'
 import { useAdmin } from 'src/services/useAdmin'
 import { Row } from 'src/styles'
 import Logo from './assets/images/logo.png'
+import emailIcon from '../../../../assets/images/os/os_email.jpg'
+import logoIcon from '../../../../assets/images/os/os_logo.png'
+import peopleIcon from '../../../../assets/images/os/os_people.jpg'
+import phoneIcon from '../../../../assets/images/os/os_phone.jpg'
+import socialIcon from '../../../../assets/images/os/os_social.jpg'
 import Signature from './assets/images/signature.png'
 import { Laudo } from './create/tables/type'
 import { ItemPieces, ItemServices, OSData } from './create/type'
@@ -27,6 +32,7 @@ import {
   ContainerOSText,
   DateOS,
   Header,
+  HeaderText,
   HeaderTextFont,
   Image,
   OSNumber,
@@ -70,26 +76,28 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
 
   function formatarNumeroEmReais(numeroString: string): string {
     // Extrair apenas os dígitos e o ponto decimal
-    const numeros = numeroString.match(/\d|\./g);
-  
+    const numeros = numeroString.match(/\d|\./g)
+
     if (!numeros) {
       // Retornar string vazia se não houver dígitos
-      return '';
+      return ''
     }
-  
+
     // Juntar os dígitos em uma única string
-    const numeroLimpo = numeros.join('');
-  
+    const numeroLimpo = numeros.join('')
+
     // Dividir a parte inteira e a parte decimal
-    const partes = numeroLimpo.split('.');
-  
+    const partes = numeroLimpo.split('.')
+
     // Corrigir o formato da parte inteira
-    const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  
+    const parteInteira = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+
     // Construir a string formatada
-    const numeroFormatado = `R$ ${parteInteira}${partes[1] ? ',' + partes[1] : ',00'}`;
-  
-    return numeroFormatado;
+    const numeroFormatado = `R$ ${parteInteira}${
+      partes[1] ? ',' + partes[1] : ',00'
+    }`
+
+    return numeroFormatado
   }
 
   React.useEffect(() => {
@@ -97,7 +105,9 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
       const data: OSData = location?.state?.oSData
       setData({
         ...data,
-        discount: data?.discount?.includes('R$') ? formatarNumeroEmReais(data?.discount) : data?.discount,
+        discount: data?.discount?.includes('R$')
+          ? formatarNumeroEmReais(data?.discount)
+          : data?.discount,
       })
     } else {
       setTimeout(async () => {
@@ -216,30 +226,71 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
         <ContainerOS id={`pdf${data?._id}`}>
           <PaperStyled elevation={1}>
             <Header>
-              <HeaderTextFont>
-                <Image src={Logo} />
+              <HeaderTextFont position="relative">
+                <Image src={logoIcon} position="absolute" width="237px"/>
+                <HeaderText>
+                  <HeaderTextFont marginLeft="5px" fontSize={8}>
+                    CNPJ: 46.293.911/0001-55
+                  </HeaderTextFont>
+                  <HeaderTextFont fontSize={8}>
+                    RESIDENCIAL & COMERCIAL
+                  </HeaderTextFont>
+                </HeaderText>
               </HeaderTextFont>
-              {/* <HeaderText>
-                <HeaderTextFont>
-                  Instalação e manutenção de equipamentos em geral
-                </HeaderTextFont>
-                <HeaderTextFont>Manutenção de Ar Condicionado</HeaderTextFont>
-              </HeaderText> */}
               <CompanyContact>
-                <HeaderTextFont fontSize={20} fontWeight>
-                  Contatos
+                <HeaderTextFont
+                  fontSize={13}
+                  display="flex"
+                  alignItems="center"
+                  gap="5px"
+                >
+                  <b>(62) 3222-6069 (62) 98529-6795</b>{' '}
+                  <Image width="21px" src={phoneIcon} />
                 </HeaderTextFont>
-                <HeaderTextFont fontSize={12}>
-                  <b>Whatsapp:</b> (62)98529-6795
+                <HeaderTextFont
+                  fontSize={13}
+                  display="flex"
+                  alignItems="center"
+                  gap="5px"
+                >
+                  <b>slevandosolucao@gmail.com</b>{' '}
+                  <Image width="21px" src={emailIcon} />
                 </HeaderTextFont>
-                <HeaderTextFont fontSize={12}>
-                  <b>Fixo:</b> (62)3222-6069
+                <HeaderTextFont
+                  fontSize={13}
+                  display="flex"
+                  alignItems="center"
+                  gap="5px"
+                >
+                  <b>Av. Niemeyer Qd. 157 Lt 24</b>{' '}
+                  <Image width="21px" src={socialIcon} />
                 </HeaderTextFont>
-                <HeaderTextFont fontSize={12}>
-                  <b>E-mail:</b> slevandosolucao@gmail.com
+                <HeaderTextFont
+                  fontSize={13}
+                  display="flex"
+                  alignItems="center"
+                  gap="5px"
+                >
+                  <b>@solutionprestadoradeservico</b>{' '}
+                  <Image width="21px" src={peopleIcon} />
                 </HeaderTextFont>
-                <HeaderTextFont fontSize={12}>
-                  <b>Instagram:</b> solutionprestadoradeservico
+                <HeaderTextFont
+                  fontSize={16}
+                  width="100%"
+                  display="flex"
+                  justifyContent="flex-end"
+                >
+                  <b
+                    style={{
+                      width: '356px',
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      position: 'relative',
+                      top: '4px',
+                    }}
+                  >
+                    ASSISTÊNCIA TÉCNICA AUTORIZADA
+                  </b>
                 </HeaderTextFont>
               </CompanyContact>
             </Header>
@@ -577,7 +628,9 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                 isParcialValue={!!data?.valuePartial}
               >
                 <b>Mão De Obra: </b>{' '}
-                <span style={{ width: '100px', marginLeft: '5px' }}>{data?.manpower}</span>
+                <span style={{ width: '100px', marginLeft: '5px' }}>
+                  {data?.manpower}
+                </span>
               </Text>
             </PaperStyled>
             <PaperStyled

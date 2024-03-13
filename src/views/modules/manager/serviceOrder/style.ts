@@ -5,6 +5,18 @@ type HeaderTextFontProps = {
   fontSize?: number
   fontWeight?: boolean
   marginBottom?: string
+  marginLeft?: string
+  display?: string
+  alignItems?: string
+  width?: string
+  gap?: string
+  position?: string
+  justifyContent?: string
+}
+
+type ImageType = {
+  width?: string
+  position?: string
 }
 
 type TextClientProps = {
@@ -175,23 +187,38 @@ export const Header = styled.section`
   padding: 0px 15px 0px 15px;
 `
 export const HeaderText = styled.section`
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  -ms-flex-align: center;
+  -ms-flex-pack: center;
+  justify-content: flex-start;
+  width: 500px;
+  margin-left: 49px;
+  position: absolute;
+  bottom: -8px;
 `
 export const HeaderTextFont = styled.section<HeaderTextFontProps>`
   font-size: ${({ fontSize }) => (fontSize ? `${fontSize}px` : '20px')};
   font-weight: ${({ fontWeight }) => (fontWeight ? 'bold' : null)};
   margin-bottom: ${({ marginBottom }) => marginBottom};
+  margin-left: ${({ marginLeft }) => marginLeft};
+  display: ${({ display }) => display};
+  align-items: ${({ alignItems }) => alignItems};
+  gap: ${({ gap }) => gap};
+  width: ${({ width }) => width};
+  justify-content: ${({ justifyContent }) => justifyContent};
+  position: ${({ position }) => position};
+}
 `
 
-export const Image = styled.img`
-  //width: 180px;
-  //width: 171px;
-  width: 171px;
-  /* margin-bottom: 5px; */
-  position: relative;
+export const Image = styled.img<ImageType>`
+  width: ${({ width }) => (width ? width : '171px')};
+  position: ${({ position }) => (position ? position : 'relative')};;
   top: 0px;
 `
 
@@ -203,6 +230,9 @@ export const CompanyContact = styled.section`
   flex-direction: column;
   /* justify-content: flex-end; */
   justify-content: center;
+  align-items: flex-end;
+  gap: 1px;
+  width: 320px;
 `
 
 export const DividerStyled = styled(Divider)<{ marginTop?: string }>`
