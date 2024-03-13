@@ -17,6 +17,12 @@ type HeaderTextFontProps = {
 type ImageType = {
   width?: string
   position?: string
+  right?: string
+  top?: string
+}
+
+type CompanyContactType = {
+  alignItems?: string
 }
 
 type TextClientProps = {
@@ -197,10 +203,10 @@ export const HeaderText = styled.section`
   -ms-flex-align: center;
   -ms-flex-pack: center;
   justify-content: flex-start;
-  width: 500px;
-  margin-left: 49px;
-  position: absolute;
-  bottom: -8px;
+  /* width: 500px; */
+  /* margin-left: 49px; */
+  /* position: absolute; */
+  /* bottom: -8px; */
 `
 export const HeaderTextFont = styled.section<HeaderTextFontProps>`
   font-size: ${({ fontSize }) => (fontSize ? `${fontSize}px` : '20px')};
@@ -219,20 +225,21 @@ export const HeaderTextFont = styled.section<HeaderTextFontProps>`
 export const Image = styled.img<ImageType>`
   width: ${({ width }) => (width ? width : '171px')};
   position: ${({ position }) => (position ? position : 'relative')};;
-  top: 0px;
+  top: ${({ top }) => (top && top)};
+  right: ${({ right }) => (right && right)};
 `
 
 export const CompanyAddress = styled.section`
   width: 50%;
 `
-export const CompanyContact = styled.section`
+export const CompanyContact = styled.section<CompanyContactType>`
   display: flex;
   flex-direction: column;
   /* justify-content: flex-end; */
   justify-content: center;
-  align-items: flex-end;
+  align-items: ${({ alignItems }) => (alignItems ? alignItems : 'flex-end')};;
   gap: 1px;
-  width: 320px;
+  /* width: 320px; */
 `
 
 export const DividerStyled = styled(Divider)<{ marginTop?: string }>`

@@ -226,16 +226,40 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
         <ContainerOS id={`pdf${data?._id}`}>
           <PaperStyled elevation={1}>
             <Header>
-              <HeaderTextFont position="relative">
-                <Image src={logoIcon} position="absolute" width="237px"/>
-                <HeaderText>
-                  <HeaderTextFont marginLeft="5px" fontSize={8}>
-                    CNPJ: 46.293.911/0001-55
+              <CompanyContact alignItems="flex-start">
+                <HeaderTextFont
+                  fontSize={13}
+                  display="flex"
+                  alignItems="center"
+                  gap="5px"
+                >
+                  <b>Av. Niemeyer Qd. 157 Lt 24</b>{' '}
+                </HeaderTextFont>
+                <HeaderTextFont
+                  fontSize={13}
+                  display="flex"
+                  alignItems="center"
+                  gap="5px"
+                >
+                  <b>CNPJ: 46.293.911/0001-55</b>{' '}
+                </HeaderTextFont>
+                <HeaderTextFont
+                  fontSize={13}
+                  display="flex"
+                  alignItems="center"
+                  gap="5px"
+                  width= '300px'
+                >
+                  <b style={{ width: '300px' }}>Assistência Técnica Autorizada</b>{' '}
+                </HeaderTextFont>
+              </CompanyContact>
+              <HeaderTextFont position='relative'>
+                <Image src={logoIcon} width="206px" position='absolute' right='-51px' top='-15px'/>
+                {/* <HeaderText>
+                  <HeaderTextFont marginLeft="5px" fontSize={10}>
+                    ASSISTÊNCIA TÉCNICA AUTORIZADA
                   </HeaderTextFont>
-                  <HeaderTextFont fontSize={8}>
-                    RESIDENCIAL & COMERCIAL
-                  </HeaderTextFont>
-                </HeaderText>
+                </HeaderText> */}
               </HeaderTextFont>
               <CompanyContact>
                 <HeaderTextFont
@@ -262,63 +286,11 @@ const ServiceOrder: React.FC<ServiceOrderProps> = ({
                   alignItems="center"
                   gap="5px"
                 >
-                  <b>Av. Niemeyer Qd. 157 Lt 24</b>{' '}
-                  <Image width="21px" src={socialIcon} />
-                </HeaderTextFont>
-                <HeaderTextFont
-                  fontSize={13}
-                  display="flex"
-                  alignItems="center"
-                  gap="5px"
-                >
                   <b>@solutionprestadoradeservico</b>{' '}
                   <Image width="21px" src={peopleIcon} />
                 </HeaderTextFont>
-                <HeaderTextFont
-                  fontSize={16}
-                  width="100%"
-                  display="flex"
-                  justifyContent="flex-end"
-                >
-                  <b
-                    style={{
-                      width: '356px',
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      position: 'relative',
-                      top: '4px',
-                    }}
-                  >
-                    ASSISTÊNCIA TÉCNICA AUTORIZADA
-                  </b>
-                </HeaderTextFont>
               </CompanyContact>
             </Header>
-
-            {/* <DividerStyled /> */}
-
-            {/* <Header>
-              <CompanyAddress>
-                <HeaderTextFont fontSize={12} marginBottom="10px">
-                  CNPJ: 46.293.911/0001-55
-                </HeaderTextFont>
-                <HeaderTextFont fontSize={20} fontWeight>
-                  SOLUTION
-                </HeaderTextFont>
-                <HeaderTextFont fontSize={12}>
-                  Av. Niemeyer QD 157 LT 24
-                </HeaderTextFont>
-              </CompanyAddress>
-
-              <CompanyContact>
-                <HeaderTextFont fontSize={20} fontWeight>
-                  Fone: (62)98529-6795 (62)3222-6069
-                </HeaderTextFont>
-                <HeaderTextFont fontSize={12}>
-                  E-mail: slevandosolucao@gmail.com
-                </HeaderTextFont>
-              </CompanyContact>
-            </Header> */}
           </PaperStyled>
 
           <ContainerOSNumberAndDate>
