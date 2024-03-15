@@ -42,10 +42,8 @@ const ConfigurationsSystem: React.FC = () => {
     isEnableToDontShowBeforeYearCurrent,
     setIsEnableToDontShowBeforeYearCurrent,
   ] = useState(false)
-  const [
-    isEnableSendNotificationMessage,
-    setIsEnableSendNotificationMessage,
-  ] = useState(false)
+  const [isEnableSendNotificationMessage, setIsEnableSendNotificationMessage] =
+    useState(false)
   const [isEnableSendConfigurationEmail, setIsEnableSendConfigurationEmail] =
     useState(false)
   const [makeRequest, setMakeRequest] = useState<number>()
@@ -71,12 +69,18 @@ const ConfigurationsSystem: React.FC = () => {
       exceptionHandle(error)
     }
   }
-  const updateAllRegisterIncomesToDontShowBeforeYearCurrent = async (data: UpdateHandle) => {
+  const updateAllRegisterIncomesToDontShowBeforeYearCurrent = async (
+    data: UpdateHandle,
+  ) => {
     try {
       Loading.turnOn()
       await apiAdmin.put('configurations/update', { ...data })
-      await apiAdmin.get(`orderServices/update-income-isEnableToDontShowBeforeYearCurrent/${data?.isEnableToDontShowBeforeYearCurrent}`)
-      await apiAdmin.get(`expense/update-expense-isEnableToDontShowBeforeYearCurrent/${data?.isEnableToDontShowBeforeYearCurrent}`)
+      await apiAdmin.get(
+        `orderServices/update-income-isEnableToDontShowBeforeYearCurrent/${data?.isEnableToDontShowBeforeYearCurrent}`,
+      )
+      await apiAdmin.get(
+        `expense/update-expense-isEnableToDontShowBeforeYearCurrent/${data?.isEnableToDontShowBeforeYearCurrent}`,
+      )
       setMakeRequest(Math.random())
       setTimeout(() => {
         Loading.turnOff()
@@ -90,14 +94,15 @@ const ConfigurationsSystem: React.FC = () => {
 
   const onHandleChangeEnableDontShowBeforeYearCurrent = async (event: any) => {
     setIsEnableToDontShowBeforeYearCurrent(event.target.checked)
-    await updateAllRegisterIncomesToDontShowBeforeYearCurrent({ isEnableToDontShowBeforeYearCurrent: event.target.checked })
+    await updateAllRegisterIncomesToDontShowBeforeYearCurrent({
+      isEnableToDontShowBeforeYearCurrent: event.target.checked,
+    })
   }
 
   const onHandleChangeSendNotificationMessage = async (event: any) => {
     setIsEnableSendNotificationMessage(event.target.checked)
     await update({ isEnableSendNotificationMessage: event.target.checked })
   }
-
 
   const onHandleChangeEnableConfigurationEmail = async (event: any) => {
     setIsEnableSendConfigurationEmail(event.target.checked)
@@ -109,8 +114,12 @@ const ConfigurationsSystem: React.FC = () => {
       const { data } = await apiAdmin.get('configurations')
       if (data.length) {
         setIsEnableSendConfigurationEmail(data[0]?.isEnableEmailBilling)
-        setIsEnableToDontShowBeforeYearCurrent(data[0]?.isEnableToDontShowBeforeYearCurrent)
-        setIsEnableSendNotificationMessage(data[0]?.isEnableSendNotificationMessage)
+        setIsEnableToDontShowBeforeYearCurrent(
+          data[0]?.isEnableToDontShowBeforeYearCurrent,
+        )
+        setIsEnableSendNotificationMessage(
+          data[0]?.isEnableSendNotificationMessage,
+        )
       }
     } catch (error) {
       exceptionHandle(error)
@@ -158,7 +167,7 @@ const ConfigurationsSystem: React.FC = () => {
       if (data?.status === 404) {
         setStatusConnectionWebhook(false)
         setLabelButton('Aguardando a configuração do webhook')
-        setLabelButtonWebhook('Enviar e configurar webhook')
+        setLabelButtonWebhook('Salvar IP do webhook')
         toast.warning(data?.message)
       } else {
         setLabelButtonWebhook('Webhook configurado com sucesso.')
@@ -247,7 +256,9 @@ const ConfigurationsSystem: React.FC = () => {
       </Paper>
       <Paper elevation={3}>
         <Alert severity="info">
-          Ao marcar essa opção o sistema não irá enviar a mensagem de notificação no Whatsapp e no E-mail após realizar a importação dos arquivos.
+          Ao marcar essa opção o sistema não irá enviar a mensagem de
+          notificação no Whatsapp e no E-mail após realizar a importação dos
+          arquivos.
         </Alert>
         <ContainerCheckBox>
           <FormGroup>
@@ -258,7 +269,9 @@ const ConfigurationsSystem: React.FC = () => {
                 onChange={(event) =>
                   onHandleChangeSendNotificationMessage(event)
                 }
-                label={'Não enviar mensagem de notificação após a importação dos arquivos.'}
+                label={
+                  'Não enviar mensagem de notificação após a importação dos arquivos.'
+                }
                 value={isEnableSendNotificationMessage}
               />
             </Card>
@@ -282,25 +295,25 @@ const ConfigurationsSystem: React.FC = () => {
       <Paper elevation={3}>
         <Alert severity="info">
           Informe o IP público para a configuração do Webhook. Necessário para a
-          geraçao do QRCode de autenticação.
+          geraçao do QRCode de autenticação. {" "}
+          {!!labelButtonWebhook &&<b>{labelButtonWebhook}</b>}
         </Alert>
-        {!statusConnectionWebhook && <p></p>}
-        {!statusConnectionWebhook && (
-          <TextField
-            label="IP público Webhook"
-            variant="outlined"
-            focused
-            fullWidth
-            size="small"
-            value={publicIP}
-            placeholder="Ex: 12.487.054.781"
-            onChange={(event) => setPublicIP(event.target.value)}
-          />
-        )}
+        <p></p>
+        <TextField
+          label="IP público Webhook"
+          variant="outlined"
+          focused
+          fullWidth
+          size="small"
+          value={publicIP}
+          placeholder="Ex: 12.487.054.781"
+          onChange={(event) => setPublicIP(event.target.value)}
+        />
+
         <ConnectionWhatsapp>
           <Button
-            disabled={statusConnectionWebhook}
-            textButton={labelButtonWebhook}
+            // disabled={statusConnectionWebhook}
+            textButton={'Salvar IP do webhook'}
             variant="contained"
             icon="whatsApp"
             onClick={onHandleSetWebhook}
