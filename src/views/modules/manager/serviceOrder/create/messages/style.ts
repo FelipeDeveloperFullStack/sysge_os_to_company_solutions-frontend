@@ -27,7 +27,7 @@ export const FormControlLabelStyled = styled(FormControlLabel)`
 `
 
 export const Modal = styled.div<{ isHasMaturity: boolean }>`
-  width: 555px;
+  width: 800px;
   display: flex;
   flex-direction: column;
   gap: 10px;

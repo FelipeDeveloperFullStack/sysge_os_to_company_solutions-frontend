@@ -68,7 +68,7 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
     }
 
     if (formOfPayment === 'Boleto') {
-      const validateDateMaturity = validateDate(maturityOfTheBoleto.label)
+      const validateDateMaturity = validateDate(String(maturityOfTheBoleto.value))
       if (validateDateMaturity) {
         setValidateDateMaturityErrorMessage(validateDateMaturity)
         return
@@ -80,7 +80,7 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
       ...data,
       status,
       formOfPayment,
-      maturityOfTheBoleto: maturityOfTheBoleto?.label || clickedMaturity?.label
+      maturityOfTheBoleto: maturityOfTheBoleto?.value || clickedMaturity?.value
     }
 
     try {

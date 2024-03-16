@@ -287,7 +287,7 @@ const DashDefault: React.FC = () => {
           <Card >
             <Tooltip title='O cálculo do lucro total não se aplica as despesas pessoais, somente as despesas da empresa.'>
               <Card.Body>
-                <h6 className="mb-4">Total Lucro</h6>
+                <h6 className="mb-4">Saldo da Conta</h6>
                 <div className="row d-flex align-items-center">
                   <div className="col-9">
                     <h3 className="f-w-300 d-flex align-items-center m-b-0">
