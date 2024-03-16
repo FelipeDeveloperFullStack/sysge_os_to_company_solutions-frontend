@@ -23,10 +23,16 @@ import { fromApiService } from '../../../../adapters/fromApiService'
 import InputText from '../../../../components/InputCurrency'
 import { useTotalSum } from '../../../../hooks/useTotalSum'
 import { ItemServices } from '../../../../type'
+import { Laudo } from '../../../type'
+import LaudoConfirmation from '../../../../messages/LaudoConfirmation'
 
 type ItemLaudoTechnicalProps = {
   itemServices: ItemServices[]
+  laudosList: Laudo[]
+  clickedValue: AutocompleteOptions
   setIdRowWarning: React.Dispatch<React.SetStateAction<string>>
+  setLaudos: React.Dispatch<React.SetStateAction<Laudo[]>>
+  setLaudosList: React.Dispatch<React.SetStateAction<Laudo[]>>
   setIsFirstLoadingPage: React.Dispatch<React.SetStateAction<boolean>>
   setItemServices: React.Dispatch<React.SetStateAction<ItemServices[]>>
   setClickedValue: React.Dispatch<React.SetStateAction<AutocompleteOptions>>
@@ -37,9 +43,13 @@ type ItemLaudoTechnicalProps = {
 export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   setClickedValue,
   itemServices,
+  clickedValue,
+  laudosList,
   setItemServices,
   setIdRowWarning,
-  setIsFirstLoadingPage
+  setIsFirstLoadingPage,
+  setLaudos,
+  setLaudosList,
 }) => {
   const [valueUnit, setValueUnit] = useState('')
   const dispatch = useDispatch()
@@ -172,7 +182,6 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
       const idServiceCurrent = valueLaudoTech.value
       const idStateUpdated = services._id
       if (idServiceCurrent === idStateUpdated) {
-        console.log({ valueLaudoTech, services })
         if (valueLaudoTech.label.trim() !== services.description.trim()) {
           setValueLaudoTech({ label: services.description, value: idStateUpdated })
         } else {
@@ -277,6 +286,39 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     }
   }
 
+  const openModalServiceAdd = () => {
+    if (clickedValue) {
+      if (!!Object.keys(clickedValue).length) {
+        if (services?.laudos.length > 1) {
+          setLaudos((previousState) => {
+            showMessage(
+              LaudoConfirmation,
+              {
+                clickedValue,
+                setLaudosList,
+                laudosList,
+                addService
+              },
+              true,
+            )
+            // if (checkLengthLaudos(previousState)) {}
+            return previousState
+          })
+        } else if (services?.laudos.length === 1) {
+          setLaudos((laudos) => [
+            ...laudos,
+            {
+              checked: true,
+              description: String(services.laudos[0]),
+              service: clickedValue.label,
+            },
+          ])
+          addService()
+        }
+      }
+    }
+  }
+
   const addService = () => {
 
     setIsFirstLoadingPage(false)
@@ -363,7 +405,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
           size="large"
           icon={"add2"}
           color={'primary'}
-          onClick={addService}
+          onClick={openModalServiceAdd}
         />
       </Row>
     </Row>

@@ -12,6 +12,7 @@ import { ButtonGroup, Container, FormControlLabelStyled, Text } from './style'
 type LaudoConfirmationProps = {
   clickedValue: AutocompleteOptions
   setLaudosList: (newState: any) => void
+  addService: () => void
   laudosList: any
 }
 
@@ -19,6 +20,7 @@ const LaudoConfirmation: React.FC<LaudoConfirmationProps> = ({
   clickedValue,
   laudosList,
   setLaudosList,
+  addService,
 }) => {
   const { closeModal } = useModal()
 
@@ -117,6 +119,7 @@ const LaudoConfirmation: React.FC<LaudoConfirmationProps> = ({
   }
 
   const handleConfirmationButton = () => {
+    addService()
     closeModal()
   }
 
