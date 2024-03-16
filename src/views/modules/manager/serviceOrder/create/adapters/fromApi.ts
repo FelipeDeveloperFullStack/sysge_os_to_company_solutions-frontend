@@ -34,6 +34,7 @@ export type ResponseApiClient = {
   idFolderOsUnificadas: string
   idFolderOsPendentes: string
   idFolderOsPagas: string
+  isSendFilesWhatsappNotification?: boolean
 }
 
 export const fromApiClient = (data: FromApiProps): ResponseApiClient => {

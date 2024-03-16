@@ -55,6 +55,7 @@ export type ClientT = {
   idFolderOsUnificadas?: string
   idFolderOrcamento?: string
   idFolderClientName?: string
+  isSendFilesWhatsappNotification?: boolean
   name?: string
   cpfOrCnpj?: string
   email?: string

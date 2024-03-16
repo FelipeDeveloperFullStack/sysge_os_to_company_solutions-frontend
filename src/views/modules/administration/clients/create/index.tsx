@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Alert } from '@mui/material'
+import { Alert, Checkbox, FormControlLabel, FormGroup, FormHelperText } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
@@ -22,7 +22,11 @@ import { useModal } from 'src/hooks/useModal'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
 import { useAdmin } from 'src/services/useAdmin'
-import { CLIENT_FILTER, LAYOUT_IS_MODIFIED_FIELDS, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import {
+  CLIENT_FILTER,
+  LAYOUT_IS_MODIFIED_FIELDS,
+  LAYOUT_MAKE_REQUEST,
+} from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import ConfirmationToSave from '../messages/ConfirmationToSave'
@@ -40,11 +44,14 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
   const { getAddressByCEP } = useServiceCEP()
   const { Loading } = useLoading()
   const [errorMessage, setErrorMessage] = useState('')
+  const [isSendFilesWhatsappNotification, setIsSendFilesWhatsappNotification] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { control, handleSubmit, setValue, setError, watch } = useForm<ClientT>({
-    shouldUnregister: false,
-    resolver: yupResolver(schemaClient),
-  })
+  const { control, handleSubmit, setValue, setError, watch } = useForm<ClientT>(
+    {
+      shouldUnregister: false,
+      resolver: yupResolver(schemaClient),
+    },
+  )
 
   const history = useHistory()
   const description = watch('name')
@@ -63,7 +70,7 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
       type: LAYOUT_IS_MODIFIED_FIELDS,
       payload: {
         fields: {},
-        url: ''
+        url: '',
       },
     })
   }
@@ -83,6 +90,12 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
         return
       }
     }
+
+    data = {
+      ...data,
+      isSendFilesWhatsappNotification
+    }
+
     try {
       setLoading(true)
       Loading.turnOn()
@@ -180,14 +193,14 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
         fields: {
           description,
         },
-        url: window.location.pathname
+        url: window.location.pathname,
       },
     })
   }, [description])
 
   return (
     <Container>
-      {!!errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+      {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         {!!isNewServiceByOS && <div>Novo cliente</div>}
         <Row columns="1fr">
@@ -287,6 +300,22 @@ const CreateClient: React.FC<CreateClientProps> = ({ isNewServiceByOS }) => {
               <InputMask label="Fixo" mask="(99) 9999-9999" {...field} />
             )}
           />
+        </Row>
+        <Row columns="1fr" marginTop="15px" gap={1}>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isSendFilesWhatsappNotification}
+                  onChange={(event) => setIsSendFilesWhatsappNotification(event.target.checked)}
+                  name="checkedA"
+                  color='primary'
+                />
+              }
+              label="Enviar arquivos na notificação no whatsapp"
+            />
+          </FormGroup>
+          <FormHelperText style={{ position: 'relative', bottom: '21px' }}>Ao marcar essa opção o sistema irá enviar os arquivos junto com a mensagem de notificação no whatsapp, caso contrário irá enviar apenas a mensagem.</FormHelperText>
         </Row>
         <ButtonContainer>
           <Button

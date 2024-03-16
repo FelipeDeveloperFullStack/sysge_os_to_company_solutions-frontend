@@ -20,31 +20,42 @@ import validateCpf from 'src/helpers/validateCpf'
 import { ADMINISTRATION_CLIENTS } from 'src/layouts/typePath'
 import { useServiceCEP } from 'src/services/ServiceCEP'
 import { useAdmin } from 'src/services/useAdmin'
-import { CLIENT_FILTER, CLIENT_SEE_ALL, LAYOUT_MAKE_REQUEST } from 'src/store/actions'
+import {
+  CLIENT_FILTER,
+  CLIENT_SEE_ALL,
+  LAYOUT_MAKE_REQUEST,
+} from 'src/store/actions'
 import { ClientT } from 'src/store/Types'
 import { Row } from 'src/styles'
 import { schemaClient } from '../schemaValidation'
 import { ButtonContainer, Container, Form } from './style'
-import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LockIcon from '@mui/icons-material/Lock';
-import Tooltip from '@mui/material/Tooltip';
+import Alert from '@mui/material/Alert'
+import IconButton from '@mui/material/IconButton'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
+import LockIcon from '@mui/icons-material/Lock'
+import Tooltip from '@mui/material/Tooltip'
 import { validateTwoPhoneTypes } from 'src/helpers/validateFields/validateTwoPhoneTypes'
 import { ResponseApiClient } from 'src/views/modules/manager/serviceOrder/create/adapters/fromApi'
 import { useModal } from 'src/hooks/useModal'
 import { fromApi } from '../adapters'
+import { Checkbox, FormControlLabel, FormGroup, FormHelperText } from '@mui/material'
 
 type EditClientProps = {
   isNewServiceByOS?: boolean
   clientData?: ResponseApiClient
 }
 
-const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData }) => {
+const EditClient: React.FC<EditClientProps> = ({
+  isNewServiceByOS,
+  clientData,
+}) => {
+  console.log(clientData)
   const dispatch = useDispatch()
   const { apiAdmin } = useAdmin()
   const { getAddressByCEP } = useServiceCEP()
   const history = useHistory()
+  const [isSendFilesWhatsappNotification, setIsSendFilesWhatsappNotification] =
+    useState(false)
   const location = !isNewServiceByOS ? useLocation() : null
   const [clientId, setClientId] = useState('')
   const [enableButtons, setEnableButton] = useState(true)
@@ -101,6 +112,13 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
         return
       }
     }
+
+
+    data = {
+      ...data,
+      isSendFilesWhatsappNotification
+    }
+
     try {
       setLoading(true)
       await apiAdmin.put(`clients/${clientId}`, data)
@@ -152,7 +170,6 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
     const valueWithoutCharacters = clearSpecialCharacters(value)
 
     if (valueWithoutCharacters?.length === 11) {
-      console.log({ validate: validateCpf(valueWithoutCharacters) })
       if (!validateCpf(valueWithoutCharacters)) {
         setError('cpfOrCnpj', { message: 'CPF inválido!' })
       } else {
@@ -177,7 +194,6 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
   }
 
   useEffect(() => {
-
     const {
       address,
       city,
@@ -193,9 +209,11 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
       idFolderOrcamento,
       idFolderOsUnificadas,
       idFolderOsPendentes,
-      idFolderOsPagas
+      idFolderOsPagas,
+      isSendFilesWhatsappNotification: _isSendFilesWhatsappNotification,
     } = !isNewServiceByOS ? location?.state : clientData
 
+    setIsSendFilesWhatsappNotification(_isSendFilesWhatsappNotification)
     setValue('address', address)
     setValue('city', city)
     setValue('uf', uf)
@@ -216,7 +234,7 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
 
   return (
     <Container>
-      {!!errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+      {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         {!!isNewServiceByOS && <div>Editar</div>}
         <Row columns="1fr">
@@ -322,84 +340,120 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
             )}
           />
         </Row>
-        {!isNewServiceByOS && <Row marginTop="15px" display='flex' gap={1}>
-          <div><b>Atenção:</b> Realizar a alteração desses IDs abaixo somente quando a pasta não existir mais. Para habilitar os campos abaixo, clique aqui:
-            <Tooltip title={enableButtons ? 'Habilitar Campos' : 'Desabilitar Campos'}>
-              <IconButton onClick={() => setEnableButton(!enableButtons)}><LockIcon /></IconButton>
-            </Tooltip></div>
-        </Row>}
-        {!isNewServiceByOS && <Row columns="repeat(5, 1fr)" marginTop="15px">
-          <Controller
-            name="idFolderClientName"
-            control={control}
-            defaultValue=""
-            render={({ field, fieldState }) => (
-              <InputText
-                label="ID Pasta do Cliente"
-                field={field}
-                fieldState={fieldState}
-                toUpperCase={false}
-                disabled={enableButtons}
-              />
-            )}
-          />
-          <Controller
-            name="idFolderOrcamento"
-            control={control}
-            defaultValue=""
-            render={({ field, fieldState }) => (
-              <InputText
-                label="ID Pasta Orçamento"
-                field={field}
-                fieldState={fieldState}
-                toUpperCase={false}
-                disabled={enableButtons}
-              />
-            )}
-          />
-          <Controller
-            name="idFolderOsPagas"
-            control={control}
-            defaultValue=""
-            render={({ field, fieldState }) => (
-              <InputText
-                label="ID Pasta Os Pagas"
-                field={field}
-                fieldState={fieldState}
-                toUpperCase={false}
-                disabled={enableButtons}
-              />
-            )}
-          />
-          <Controller
-            name="idFolderOsPendentes"
-            control={control}
-            defaultValue=""
-            render={({ field, fieldState }) => (
-              <InputText
-                label="ID Pasta Os Pendentes"
-                field={field}
-                fieldState={fieldState}
-                toUpperCase={false}
-                disabled={enableButtons}
-              />
-            )}
-          />
-          <Controller
-            name="idFolderOsUnificadas"
-            control={control}
-            defaultValue=""
-            render={({ field, fieldState }) => (
-              <InputText
-                label="ID Pasta Os Unificadas"
-                field={field}
-                fieldState={fieldState}
-                toUpperCase={false}
-                disabled={enableButtons}
-              />
-            )}
-          />
-        </Row>}
+        {!isNewServiceByOS && (
+          <Row marginTop="15px" display="flex" gap={1}>
+            <div>
+              <b>Atenção:</b> Realizar a alteração desses IDs abaixo somente
+              quando a pasta não existir mais. Para habilitar os campos abaixo,
+              clique aqui:
+              <Tooltip
+                title={
+                  enableButtons ? 'Habilitar Campos' : 'Desabilitar Campos'
+                }
+              >
+                <IconButton onClick={() => setEnableButton(!enableButtons)}>
+                  <LockIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          </Row>
+        )}
+        {!isNewServiceByOS && (
+          <Row columns="repeat(5, 1fr)" marginTop="15px">
+            <Controller
+              name="idFolderClientName"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label="ID Pasta do Cliente"
+                  field={field}
+                  fieldState={fieldState}
+                  toUpperCase={false}
+                  disabled={enableButtons}
+                />
+              )}
+            />
+            <Controller
+              name="idFolderOrcamento"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label="ID Pasta Orçamento"
+                  field={field}
+                  fieldState={fieldState}
+                  toUpperCase={false}
+                  disabled={enableButtons}
+                />
+              )}
+            />
+            <Controller
+              name="idFolderOsPagas"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label="ID Pasta Os Pagas"
+                  field={field}
+                  fieldState={fieldState}
+                  toUpperCase={false}
+                  disabled={enableButtons}
+                />
+              )}
+            />
+            <Controller
+              name="idFolderOsPendentes"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label="ID Pasta Os Pendentes"
+                  field={field}
+                  fieldState={fieldState}
+                  toUpperCase={false}
+                  disabled={enableButtons}
+                />
+              )}
+            />
+            <Controller
+              name="idFolderOsUnificadas"
+              control={control}
+              defaultValue=""
+              render={({ field, fieldState }) => (
+                <InputText
+                  label="ID Pasta Os Unificadas"
+                  field={field}
+                  fieldState={fieldState}
+                  toUpperCase={false}
+                  disabled={enableButtons}
+                />
+              )}
+            />
+          </Row>
+        )}
+        <Row columns="1fr" marginTop="15px" gap={1}>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isSendFilesWhatsappNotification}
+                  onChange={(event) =>
+                    setIsSendFilesWhatsappNotification(event.target.checked)
+                  }
+                  name="checkedA"
+                  color="primary"
+                />
+              }
+              label="Enviar arquivos na notificação no whatsapp"
+            />
+          </FormGroup>
+          <FormHelperText style={{ position: 'relative', bottom: '21px' }}>
+            Ao marcar essa opção o sistema irá enviar os arquivos junto com a
+            mensagem de notificação no whatsapp, caso contrário irá enviar
+            apenas a mensagem.
+          </FormHelperText>
+        </Row>
         <ButtonContainer>
           <Button
             textButton="Salvar"
@@ -410,15 +464,15 @@ const EditClient: React.FC<EditClientProps> = ({ isNewServiceByOS, clientData })
             loading={loading}
           />
           <Button
-            textButton={isNewServiceByOS ? "Fechar" : "Voltar"}
+            textButton={isNewServiceByOS ? 'Fechar' : 'Voltar'}
             variant="outlined"
             size="large"
             icon="back"
             onClick={onHandleClose}
           />
         </ButtonContainer>
-      </Form >
-    </Container >
+      </Form>
+    </Container>
   )
 }
 
