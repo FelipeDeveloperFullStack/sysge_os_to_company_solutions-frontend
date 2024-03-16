@@ -23,12 +23,18 @@ import { fromApiService } from '../../../../adapters/fromApiService'
 import InputText from '../../../../components/InputCurrency'
 import { useTotalSum } from '../../../../hooks/useTotalSum'
 import { ItemServices } from '../../../../type'
+import { Laudo } from '../../../type'
+import LaudoConfirmation from '../../../../messages/LaudoConfirmation'
 
 type ItemLaudoTechnicalProps = {
   itemServices: ItemServices[]
+  laudosList: Laudo[]
+  clickedValue: AutocompleteOptions
   setIdRowWarning: React.Dispatch<React.SetStateAction<string>>
   setItemServices: React.Dispatch<React.SetStateAction<ItemServices[]>>
   setClickedValue: React.Dispatch<React.SetStateAction<AutocompleteOptions>>
+  setLaudos: React.Dispatch<React.SetStateAction<Laudo[]>>
+  setLaudosList: React.Dispatch<React.SetStateAction<Laudo[]>>
 }
 
 // type FieldValue = { description?: string, id?: string, quantity?: number, total?: string, unit?: string }
@@ -37,7 +43,11 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
   setClickedValue,
   itemServices,
   setItemServices,
-  setIdRowWarning
+  setIdRowWarning,
+  setLaudos,
+  setLaudosList,
+  laudosList,
+  clickedValue,
 }) => {
   const [valueUnit, setValueUnit] = useState('')
   const dispatch = useDispatch()
@@ -274,6 +284,39 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
     }
   }
 
+  const openModalServiceAdd = () => {
+    if (clickedValue) {
+      if (!!Object.keys(clickedValue).length) {
+        if (services?.laudos.length > 1) {
+          setLaudos((previousState) => {
+            showMessage(
+              LaudoConfirmation,
+              {
+                clickedValue,
+                setLaudosList,
+                laudosList,
+                addService
+              },
+              true,
+            )
+            // if (checkLengthLaudos(previousState)) {}
+            return previousState
+          })
+        } else if (services?.laudos.length === 1) {
+          setLaudos((laudos) => [
+            ...laudos,
+            {
+              checked: true,
+              description: String(services.laudos[0]),
+              service: clickedValue.label,
+            },
+          ])
+          addService()
+        }
+      }
+    }
+  }
+
   const addService = () => {
 
     const { clean: totalValueClean } = formatInputPrice(totalValue)
@@ -358,7 +401,7 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
           size="large"
           icon={"add2"}
           color={'primary'}
-          onClick={addService}
+          onClick={openModalServiceAdd}
         />
       </Row>
     </Row>

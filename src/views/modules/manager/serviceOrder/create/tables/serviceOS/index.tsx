@@ -45,6 +45,8 @@ const ServiceOS: React.FC<TableViewProps> = ({
       )[0],
   )
 
+  const allServices = useSelector((state: IStore) => state.service.services)
+
   // const checkLengthLaudos = (laudos: Laudo[]): boolean => {
   //   if (laudos.length > 5) {
   //     showSimple.warning('Não é possível adicionar mais de 6 laudos.')
@@ -54,46 +56,46 @@ const ServiceOS: React.FC<TableViewProps> = ({
   //   }
   // }
 
-  useEffect(() => {
-    if (clickedValue) {
-      if (!!Object.keys(clickedValue).length) {
-        if (services?.laudos.length > 1) {
-          setLaudos((previousState) => {
-            showMessage(
-              LaudoConfirmation,
-              {
-                clickedValue,
-                setLaudosList,
-                laudosList,
-              },
-              true,
-            )
-            // if (checkLengthLaudos(previousState)) {}
-            return previousState
-          })
-        } else if (services?.laudos.length === 1) {
-          setLaudos((laudos) => [
-            ...laudos,
-            {
-              checked: true,
-              description: String(services.laudos[0]),
-              service: clickedValue.label,
-            },
-          ])
-          // setLaudos((laudos) => [
-          //   ...laudos,
-          //   laudos.length <= 5
-          //     ? {
-          //         checked: true,
-          //         description: String(services.laudos[0]).toUpperCase(),
-          //         service: clickedValue.label,
-          //       }
-          //     : undefined,
-          // ])
-        }
-      }
-    }
-  }, [clickedValue])
+  // useEffect(() => {
+  //   if (clickedValue) {
+  //     if (!!Object.keys(clickedValue).length) {
+  //       if (services?.laudos.length > 1) {
+  //         setLaudos((previousState) => {
+  //           showMessage(
+  //             LaudoConfirmation,
+  //             {
+  //               clickedValue,
+  //               setLaudosList,
+  //               laudosList,
+  //             },
+  //             true,
+  //           )
+  //           // if (checkLengthLaudos(previousState)) {}
+  //           return previousState
+  //         })
+  //       } else if (services?.laudos.length === 1) {
+  //         setLaudos((laudos) => [
+  //           ...laudos,
+  //           {
+  //             checked: true,
+  //             description: String(services.laudos[0]),
+  //             service: clickedValue.label,
+  //           },
+  //         ])
+  //         // setLaudos((laudos) => [
+  //         //   ...laudos,
+  //         //   laudos.length <= 5
+  //         //     ? {
+  //         //         checked: true,
+  //         //         description: String(services.laudos[0]).toUpperCase(),
+  //         //         service: clickedValue.label,
+  //         //       }
+  //         //     : undefined,
+  //         // ])
+  //       }
+  //     }
+  //   }
+  // }, [clickedValue])
 
   const addLaudos = (data: Laudo[]) => {
     setLaudos((laudos) => {
@@ -129,8 +131,41 @@ const ServiceOS: React.FC<TableViewProps> = ({
     )
   }
 
+  const deleteLaudos = (laudo: string) => {
+    setLaudosList((prev) => [
+      ...prev.filter(
+        (item) => item.description !== laudo,
+      ),
+    ])
+    setLaudos((prev) => [
+      ...prev.filter(
+        (item) => item.description !== laudo,
+      ),
+    ])
+  }
+
   const handleRemoveItem = (id: string | number) => {
     setIdRowWarning('')
+    /**
+     * @description Remove todos os laudos vinculado ao serviço que o usuário clicou para excluir.
+     */
+    const laudos_allServices = allServices?.find((service) => service._id === id).laudos
+    if (laudos_allServices) {
+      laudos_allServices.forEach((laudo) => {
+        if (laudosList?.length || laudos?.length) {
+          laudosList?.forEach((laudoItem) => {
+            if (laudoItem.description === laudo) {
+              deleteLaudos(laudo)
+            }
+          })
+          laudos?.forEach((laudoItem) => {
+            if (laudoItem.description === laudo) {
+              deleteLaudos(laudo)
+            }
+          })
+        }
+      })
+    }
     setItemServices((previousState) => [
       ...previousState.filter(
         (item) => item.id !== id,
@@ -187,6 +222,10 @@ const ServiceOS: React.FC<TableViewProps> = ({
         setClickedValue={setClickedValue}
         setItemServices={setItemServices}
         itemServices={itemServices}
+        clickedValue={clickedValue}
+        setLaudos={setLaudos}
+        setLaudosList={setLaudosList}
+        laudosList={laudosList}
       />
 
       {!!itemServices.length && itemServices.sort().map((service) => {
