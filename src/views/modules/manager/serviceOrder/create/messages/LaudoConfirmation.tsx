@@ -12,6 +12,7 @@ import { ButtonGroup, Container, FormControlLabelStyled, Text } from './style'
 type LaudoConfirmationProps = {
   clickedValue: AutocompleteOptions
   setLaudosList: (newState: any) => void
+  setLaudos: React.Dispatch<React.SetStateAction<Laudo[]>>
   addService: () => void
   laudosList: any
 }
@@ -20,6 +21,7 @@ const LaudoConfirmation: React.FC<LaudoConfirmationProps> = ({
   clickedValue,
   laudosList,
   setLaudosList,
+  setLaudos,
   addService
 }) => {
   const { closeModal } = useModal()
@@ -54,6 +56,8 @@ const LaudoConfirmation: React.FC<LaudoConfirmationProps> = ({
     setLaudo08,
     setLaudo09,
   }
+
+  const allServices = useSelector((state: IStore) => state.service.services)
 
   const services = useSelector(
     (state: IStore) =>
@@ -123,6 +127,29 @@ const LaudoConfirmation: React.FC<LaudoConfirmationProps> = ({
     closeModal()
   }
 
+  const deleteLaudos = (laudo: string) => {
+    setLaudosList((prev: Laudo[]) => [
+      ...prev.filter(
+        (item) => item.description !== laudo,
+      ),
+    ])
+    setLaudos((prev: Laudo[]) => [
+      ...prev.filter(
+        (item) => item.description !== laudo,
+      ),
+    ])
+  }
+
+  const onHandleCancel = () => {
+    const laudos_allServices = allServices?.find((service) => service._id === clickedValue.value)?.laudos
+    if (laudos_allServices) {
+      laudos_allServices.forEach((laudo) => {
+        deleteLaudos(laudo)
+      })
+    }
+    closeModal()
+  }
+
   return (
     <Container>
       {/* <Text>Selecione abaixo quais laudos deseja adicionar </Text> */}
@@ -151,11 +178,11 @@ const LaudoConfirmation: React.FC<LaudoConfirmationProps> = ({
           onClick={handleConfirmationButton}
         />
         <Button
-          textButton="Fechar"
+          textButton="Cancelar"
           variant="outlined"
-          icon="back"
+          icon="close"
           color="info"
-          onClick={() => closeModal()}
+          onClick={onHandleCancel}
         />
       </ButtonGroup>
     </Container>

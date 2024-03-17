@@ -295,9 +295,10 @@ export const ItemLaudoTechnical: React.FC<ItemLaudoTechnicalProps> = ({
                 clickedValue,
                 setLaudosList,
                 laudosList,
-                addService
+                addService,
+                setLaudos
               },
-              true,
+              false,
             )
             // if (checkLengthLaudos(previousState)) {}
             return previousState
