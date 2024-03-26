@@ -15,7 +15,10 @@ import InputMask from 'src/components/Form/InputMask'
 import { validateDate } from 'src/helpers/validateDateTime'
 import { Alert } from '@mui/material'
 import clearSpecialCharacters from 'src/helpers/clearSpecialCharacters'
-import { Autocomplete, AutocompleteOptions } from 'src/components/Form/Autocomplete'
+import {
+  Autocomplete,
+  AutocompleteOptions,
+} from 'src/components/Form/Autocomplete'
 import { format } from 'date-fns'
 import onlyNumbers from 'src/helpers/clear/onlyNumbers'
 import { addDaysMaturity } from 'src/views/modules/financial/Expenses/SeeAllExpenses/messages/statics'
@@ -36,8 +39,12 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
   const { closeModal, showMessage } = useModal()
   const [loading, setLoading] = useState(false)
   // const [maturityOfTheBoleto, setMaturityOfTheBoleto] = useState('')
-  const [maturityOfTheBoleto, setMaturityOfTheBoleto] = useState<AutocompleteOptions>({} as AutocompleteOptions)
-  const [validateDateMaturityErrorMessage, setValidateDateMaturityErrorMessage] = useState('')
+  const [maturityOfTheBoleto, setMaturityOfTheBoleto] =
+    useState<AutocompleteOptions>({} as AutocompleteOptions)
+  const [
+    validateDateMaturityErrorMessage,
+    setValidateDateMaturityErrorMessage,
+  ] = useState('')
   const [status, setStatus] = useState('PENDENTE')
   const [clickedMaturity, setClickedMaturity] = useState(
     {} as AutocompleteOptions,
@@ -62,25 +69,38 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
 
   const saveOS = async () => {
     setValidateDateMaturityErrorMessage('')
-    if (formOfPayment === 'Boleto' && clearSpecialCharacters(maturityOfTheBoleto.label).trim() === '') {
-      setValidateDateMaturityErrorMessage('Data de vencimento do boleto obrigatório.')
+    if (
+      formOfPayment === 'Boleto' &&
+      clearSpecialCharacters(maturityOfTheBoleto.label).trim() === ''
+    ) {
+      setValidateDateMaturityErrorMessage(
+        'Data de vencimento do boleto obrigatório.',
+      )
       return
     }
 
     if (formOfPayment === 'Boleto') {
-      const validateDateMaturity = validateDate(String(maturityOfTheBoleto.value))
+      const date =
+        maturityOfTheBoleto.value === 0
+          ? maturityOfTheBoleto.label
+          : maturityOfTheBoleto.value
+      const validateDateMaturity = validateDate(String(date))
       if (validateDateMaturity) {
         setValidateDateMaturityErrorMessage(validateDateMaturity)
         return
       }
     }
 
+    const date =
+        maturityOfTheBoleto.value === 0
+          ? maturityOfTheBoleto.label
+          : (maturityOfTheBoleto.value || clickedMaturity?.value)
 
     const dataOS = {
       ...data,
       status,
       formOfPayment,
-      maturityOfTheBoleto: maturityOfTheBoleto?.value || clickedMaturity?.value
+      maturityOfTheBoleto: date,
     }
 
     try {
@@ -101,10 +121,10 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
   }
 
   function getDateCurrent() {
-    const dataAtual = new Date();
-    const formato = 'dd/MM/yyyy';
-    const diaAtual = format(dataAtual, formato);
-    return diaAtual;
+    const dataAtual = new Date()
+    const formato = 'dd/MM/yyyy'
+    const diaAtual = format(dataAtual, formato)
+    return diaAtual
   }
 
   useEffect(() => {
@@ -120,7 +140,9 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
 
   return (
     <Modal isHasMaturity={formOfPayment === 'Boleto'}>
-      {!!validateDateMaturityErrorMessage && <Alert severity='error'>{validateDateMaturityErrorMessage}</Alert>}
+      {!!validateDateMaturityErrorMessage && (
+        <Alert severity="error">{validateDateMaturityErrorMessage}</Alert>
+      )}
       <div>Lançamento Financeiro</div>
       <InputText type="text" label="Data" value={data.dateOS} disabled />
       <InputText
@@ -149,18 +171,20 @@ export const LaunchFinancial: React.FC<LauchFinancialProps> = ({
           options={sformOfPaymentOptions}
         />
         {/* {formOfPayment === 'Boleto' && <InputMask type="text" label="Vencimento" value={maturityOfTheBoleto} setValue={setMaturityOfTheBoleto} mask='99/99/9999' />} */}
-        {formOfPayment === 'Boleto' && <Autocomplete
-          label="Vencimento"
-          value={maturityOfTheBoleto}
-          setValue={(previousState: AutocompleteOptions) =>
-            setMaturityOfTheBoleto(previousState)
-          }
-          mask="99/99/9999"
-          options={optionMaturity}
-          setOptions={setOptionMaturity}
-          setClickedValue={setClickedMaturity}
-          isUseButton
-        />}
+        {formOfPayment === 'Boleto' && (
+          <Autocomplete
+            label="Vencimento"
+            value={maturityOfTheBoleto}
+            setValue={(previousState: AutocompleteOptions) =>
+              setMaturityOfTheBoleto(previousState)
+            }
+            mask="99/99/9999"
+            options={optionMaturity}
+            setOptions={setOptionMaturity}
+            setClickedValue={setClickedMaturity}
+            isUseButton
+          />
+        )}
         <InputText type="text" label="Valor" value={data.total} disabled />
       </section>
       <ButtonContainer>
