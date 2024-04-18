@@ -119,7 +119,7 @@ export const useColumns = (props: ColumnsProps) => {
         osNumber: serviceOrder.osNumber,
         isSendFirstTime: false
       })
-      toast.success(`Aguarde que em breve iremos enviar a mensagem de notificação para o nº ${serviceOrder.clientPhoneNumber}`)
+      toast.success(`Aguarde que em breve iremos enviar a mensagem de notificação.`)
      } catch (error) {
       exceptionHandle(error)
      }
@@ -376,6 +376,19 @@ export const useColumns = (props: ColumnsProps) => {
               <Tooltip title={'Reenviar Notificação'}>
                 <IconButton
                   color={params.row?.isBoletoUploaded ? 'info' : 'default'}
+                  onClick={() => onResendNotificationWhatsappToClient(params)}
+                  disabled={!hasPermission(RECEITAS_EDITAR)}
+                >
+                  <SendIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          {params.row.typeDocument !== 'ORCAMENTO' &&
+            params.row.situation === 'PENDENTE' &&
+            params.row.formOfPayment === 'Pix' && (
+              <Tooltip title={'Enviar notificação de cobrança de pix'}>
+                <IconButton
+                  color={'secondary'}
                   onClick={() => onResendNotificationWhatsappToClient(params)}
                   disabled={!hasPermission(RECEITAS_EDITAR)}
                 >
