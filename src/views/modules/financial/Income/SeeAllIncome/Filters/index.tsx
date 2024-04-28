@@ -89,12 +89,12 @@ const Filters: React.FC<FiltersProps> = ({
       checkIfbuttonHasSelected(resultFromApi, monthAndYear)
       setSelectedButton(selectedButton)
       setMonthAndYear(monthAndYear)
-      const result = dateFilter(
-        `${monthSelected}/${yearSelected}`,
-        resultFromApi,
-        selectedButton,
-      )
-      setIncomesFiltered(result)
+      // const result = dateFilter(
+      //   `${monthSelected}/${yearSelected}`,
+      //   resultFromApi,
+      //   selectedButton,
+      // )
+      // setIncomesFiltered(result)
     } catch (error) {
       console.log(error)
       toast.error('Um erro ocurreu ao tentar buscar os dados de receitas')
