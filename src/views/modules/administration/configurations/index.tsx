@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
+  Box,
   Card,
   Checkbox,
   FormControlLabel,
   FormGroup,
   Paper,
   TextField,
+  Typography,
 } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import React, { useState } from 'react'
@@ -20,14 +22,25 @@ import {
 } from 'src/services/Socket/EventTypes'
 import { useAdmin } from 'src/services/useAdmin'
 import ConnectionQrCode from './messages/ConnectionQrCode'
-import { ConnectionWhatsapp, Container, ContainerCheckBox } from './style'
-import { InputText } from 'src/components'
+import {
+  ButtonConnectWhatsapp,
+  ConnectionWhatsapp,
+  Container,
+  ContainerCheckBox,
+  ContainerOption,
+  InputTextIP,
+} from './style'
 import { useLoading } from 'src/hooks/useLoading'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import { ConfigurationsMessagesText } from './components/ConfigurationsMessagesText'
 
 type UpdateHandle = {
   isEnableEmailBilling?: boolean
   isEnableToDontShowBeforeYearCurrent?: boolean
   isEnableSendNotificationMessage?: boolean
+  isEnableSendNotificationMessageStatusRecebido?: boolean
+  textToSendNotificationMessageStatusRecebido?: string
 }
 
 export type SocketResponse = {
@@ -37,6 +50,39 @@ export type SocketResponse = {
   stateReason?: number
 }
 
+interface TabPanelProps {
+  children?: React.ReactNode
+  index: number
+  value: number
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  )
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  }
+}
+
 const ConfigurationsSystem: React.FC = () => {
   const [
     isEnableToDontShowBeforeYearCurrent,
@@ -44,6 +90,16 @@ const ConfigurationsSystem: React.FC = () => {
   ] = useState(false)
   const [isEnableSendNotificationMessage, setIsEnableSendNotificationMessage] =
     useState(false)
+  const [
+    isEnableSendNotificationMessageStatusRecebido,
+    setIsEnableSendNotificationMessageStatusRecebido,
+  ] = useState(false)
+  const [
+    textToSendNotificationMessageStatusRecebido,
+    setTextToSendNotificationMessageStatusRecebido,
+  ] = useState(
+    `Legal! Recebemos o pagamento do boleto vinculado à ordem de serviço de número 998. Tudo certo por aqui!\n\nSe precisar de algo mais ou tiver alguma dúvida, é só chamar.\n\nValeu pela parceria com a Solution!\n\nAbraços,\n\nSolution Levando Solução`,
+  )
   const [isEnableSendConfigurationEmail, setIsEnableSendConfigurationEmail] =
     useState(false)
   const [makeRequest, setMakeRequest] = useState<number>()
@@ -56,9 +112,14 @@ const ConfigurationsSystem: React.FC = () => {
   const [statusConnectionWebhook, setStatusConnectionWebhook] = useState(false)
   const [webSocketState, setWebSocketState] = useState('')
   const [publicIP, setPublicIP] = useState('')
+  const [tab, setTab] = React.useState(0)
   const { apiAdmin } = useAdmin()
   const { showMessage, closeModal } = useModal()
   const { Loading } = useLoading()
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue)
+  }
 
   const update = async (data: UpdateHandle) => {
     try {
@@ -102,6 +163,44 @@ const ConfigurationsSystem: React.FC = () => {
   const onHandleChangeSendNotificationMessage = async (event: any) => {
     setIsEnableSendNotificationMessage(event.target.checked)
     await update({ isEnableSendNotificationMessage: event.target.checked })
+  }
+
+  const onHandleChangeSendNotificationMessageStatusRecebido = async (
+    event: any,
+  ) => {
+    if (!textToSendNotificationMessageStatusRecebido?.trim()) {
+      toast.error(
+        'O texto a ser enviado não pode estar vazio. Verifique e tente novamente.',
+      )
+      return
+    }
+    setIsEnableSendNotificationMessageStatusRecebido(event.target.checked)
+    await update({
+      isEnableSendNotificationMessageStatusRecebido: event.target.checked,
+      textToSendNotificationMessageStatusRecebido,
+    })
+  }
+
+  const onHandleChangeSendNotificationMessageStatusRecebidoButton = async (
+    textToSendNotificationMessageStatusRecebido: string,
+    isEnableSendNotificationMessageStatusRecebido: boolean,
+  ) => {
+    if (!textToSendNotificationMessageStatusRecebido?.trim()) {
+      toast.error(
+        'O texto a ser enviado não pode estar vazio. Verifique e tente novamente.',
+      )
+      return
+    }
+    await update({
+      textToSendNotificationMessageStatusRecebido,
+      isEnableSendNotificationMessageStatusRecebido,
+    })
+  }
+
+  const onHandleChangeSendNotificationTextMessageStatusRecebido = async (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    setTextToSendNotificationMessageStatusRecebido(event.target.value)
   }
 
   const onHandleChangeEnableConfigurationEmail = async (event: any) => {
@@ -232,95 +331,123 @@ const ConfigurationsSystem: React.FC = () => {
   }, [webSocketData, statusConnection])
 
   return (
-    <Container>
-      <Paper elevation={3}>
-        <Alert severity="info">
-          Ao marcar essa opção o sistema não irá mostrar nenhum dado anterior ao
-          ano de {new Date().getFullYear()}.
-        </Alert>
-        <ContainerCheckBox>
-          <FormGroup>
-            <Card>
-              <FormControlLabel
-                control={<Checkbox />}
-                checked={isEnableToDontShowBeforeYearCurrent}
-                onChange={(event) =>
-                  onHandleChangeEnableDontShowBeforeYearCurrent(event)
-                }
-                label={'Não mostrar os dados dos anos anteriores.'}
-                value={isEnableToDontShowBeforeYearCurrent}
+    <>
+      <Tabs value={tab} onChange={handleChange}>
+        <Tab label="Parâmetros Gerais" {...a11yProps(0)} />
+        <Tab label="Parâmetros de mensagens de texto" {...a11yProps(1)} />
+      </Tabs>
+      <CustomTabPanel value={tab} index={0}>
+        <Container>
+          <Paper elevation={3}>
+            <Alert severity="info">
+              Ao marcar essa opção o sistema não irá mostrar nenhum dado
+              anterior ao ano de {new Date().getFullYear()}.
+            </Alert>
+            <ContainerCheckBox>
+              <FormGroup>
+                <ContainerOption>
+                  <Card>
+                    <FormControlLabel
+                      control={
+                        <ContainerOption>
+                          <Checkbox
+                            checked={isEnableToDontShowBeforeYearCurrent}
+                            onChange={(event) =>
+                              onHandleChangeEnableDontShowBeforeYearCurrent(
+                                event,
+                              )
+                            }
+                          />
+                        </ContainerOption>
+                      }
+                      label={'Não mostrar os dados dos anos anteriores.'}
+                      value={isEnableToDontShowBeforeYearCurrent}
+                    />
+                  </Card>
+                </ContainerOption>
+              </FormGroup>
+            </ContainerCheckBox>
+          </Paper>
+          <Paper elevation={3}>
+            <Alert severity="info">
+              Conexão com Whatsapp. (Apenas envio de mensagens)
+            </Alert>
+            <ContainerOption>
+              <ButtonConnectWhatsapp>
+                <Button
+                  disabled={statusConnection}
+                  textButton={labelButton}
+                  variant="contained"
+                  icon="whatsApp"
+                  onClick={onHandleConnectionButton}
+                />
+              </ButtonConnectWhatsapp>
+            </ContainerOption>
+          </Paper>
+          <Paper elevation={3}>
+            <Alert severity="info">
+              Informe o IP público para a configuração do Webhook. Necessário
+              para a geraçao do QRCode de autenticação.{' '}
+              {!!labelButtonWebhook && <b>{labelButtonWebhook}</b>}
+            </Alert>
+            <p></p>
+            <InputTextIP>
+              <TextField
+                label="IP público Webhook"
+                variant="outlined"
+                focused
+                fullWidth
+                size="small"
+                value={publicIP}
+                placeholder="Ex: 12.487.054.781"
+                onChange={(event) => setPublicIP(event.target.value)}
               />
-            </Card>
-          </FormGroup>
-        </ContainerCheckBox>
-      </Paper>
-      <Paper elevation={3}>
-        <Alert severity="info">
-          Ao marcar essa opção o sistema não irá enviar a mensagem de
-          notificação no Whatsapp e no E-mail após realizar a importação dos
-          arquivos.
-        </Alert>
-        <ContainerCheckBox>
-          <FormGroup>
-            <Card>
-              <FormControlLabel
-                control={<Checkbox />}
-                checked={isEnableSendNotificationMessage}
-                onChange={(event) =>
-                  onHandleChangeSendNotificationMessage(event)
-                }
-                label={
-                  'Não enviar mensagem de notificação após a importação dos arquivos.'
-                }
-                value={isEnableSendNotificationMessage}
-              />
-            </Card>
-          </FormGroup>
-        </ContainerCheckBox>
-      </Paper>
-      <Paper elevation={3}>
-        <Alert severity="info">
-          Conexão com Whatsapp. (Apenas envio de mensagens)
-        </Alert>
-        <ConnectionWhatsapp>
-          <Button
-            disabled={statusConnection}
-            textButton={labelButton}
-            variant="contained"
-            icon="whatsApp"
-            onClick={onHandleConnectionButton}
-          />
-        </ConnectionWhatsapp>
-      </Paper>
-      <Paper elevation={3}>
-        <Alert severity="info">
-          Informe o IP público para a configuração do Webhook. Necessário para a
-          geraçao do QRCode de autenticação. {" "}
-          {!!labelButtonWebhook &&<b>{labelButtonWebhook}</b>}
-        </Alert>
-        <p></p>
-        <TextField
-          label="IP público Webhook"
-          variant="outlined"
-          focused
-          fullWidth
-          size="small"
-          value={publicIP}
-          placeholder="Ex: 12.487.054.781"
-          onChange={(event) => setPublicIP(event.target.value)}
-        />
+            </InputTextIP>
 
-        <ConnectionWhatsapp>
-          <Button
-            // disabled={statusConnectionWebhook}
-            textButton={'Salvar IP do webhook'}
-            variant="contained"
-            icon="whatsApp"
-            onClick={onHandleSetWebhook}
-          />
-        </ConnectionWhatsapp>
-      </Paper>
-    </Container>
+            <ContainerOption>
+              <ConnectionWhatsapp>
+                <Button
+                  // disabled={statusConnectionWebhook}
+                  textButton={'Salvar IP do webhook'}
+                  variant="contained"
+                  icon="whatsApp"
+                  onClick={onHandleSetWebhook}
+                />
+              </ConnectionWhatsapp>
+            </ContainerOption>
+          </Paper>
+        </Container>
+      </CustomTabPanel>
+      <CustomTabPanel value={tab} index={1}>
+        <ConfigurationsMessagesText
+          isEnableSendNotificationMessage={isEnableSendNotificationMessage}
+          textToSendNotificationMessageStatusRecebido={
+            textToSendNotificationMessageStatusRecebido
+          }
+          setIsEnableSendNotificationMessageStatusRecebido={
+            setIsEnableSendNotificationMessageStatusRecebido
+          }
+          setTextToSendNotificationMessageStatusRecebido={
+            setTextToSendNotificationMessageStatusRecebido
+          }
+          isEnableSendNotificationMessageStatusRecebido={
+            isEnableSendNotificationMessageStatusRecebido
+          }
+          onHandleChangeSendNotificationMessage={
+            onHandleChangeSendNotificationMessage
+          }
+          onHandleChangeSendNotificationMessageStatusRecebido={
+            onHandleChangeSendNotificationMessageStatusRecebido
+          }
+          onHandleChangeSendNotificationTextMessageStatusRecebido={
+            onHandleChangeSendNotificationTextMessageStatusRecebido
+          }
+          onHandleChangeSendNotificationMessageStatusRecebidoButton={
+            onHandleChangeSendNotificationMessageStatusRecebidoButton
+          }
+        />
+      </CustomTabPanel>
+    </>
   )
 }
 
