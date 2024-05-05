@@ -103,6 +103,17 @@ export const fromApi = (
     return Array.from(yearSet).sort()
   }
 
+  const sortMonths = (months: MonthAndYear[]): MonthAndYear[] => {
+    return months.sort((a, b) => {
+      const monthIndexA = orderMonth.indexOf(a.month);
+      const monthIndexB = orderMonth.indexOf(b.month);
+      if (monthIndexA < monthIndexB) return -1;
+      if (monthIndexA > monthIndexB) return 1;
+      // Se os meses forem iguais, ordenar por ano
+      return parseInt(a.year) - parseInt(b.year);
+    });
+  };
+
   const orderedMonth = Array.from(monthSet).sort((a, b) => {
     return orderMonth.indexOf(a) - orderMonth.indexOf(b)
   })
@@ -116,6 +127,6 @@ export const fromApi = (
     resultFromApi,
     orderedMonth,
     orderedYear: orderedYear(resultFromApi),
-    monthAndYear,
+    monthAndYear: sortMonths(monthAndYear),
   }
 }

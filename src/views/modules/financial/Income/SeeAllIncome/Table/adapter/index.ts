@@ -111,6 +111,17 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     return orderMonth.indexOf(a) - orderMonth.indexOf(b)
   })
 
+  const sortMonths = (months: MonthAndYear[]): MonthAndYear[] => {
+    return months.sort((a, b) => {
+      const monthIndexA = orderMonth.indexOf(a.month);
+      const monthIndexB = orderMonth.indexOf(b.month);
+      if (monthIndexA < monthIndexB) return -1;
+      if (monthIndexA > monthIndexB) return 1;
+      // Se os meses forem iguais, ordenar por ano
+      return parseInt(a.year) - parseInt(b.year);
+    });
+  };
+
   const monthAndYear = Array.from(monthAndYearSet).map((str) => {
     const [month, year] = str.split('-');
     return { month, year };
@@ -122,6 +133,6 @@ export const fromApi = (oSData: OSData[]): ResponseFromApi => {
     ),
     orderedMonth,
     orderedYear: orderedYear(resultFromApi),
-    monthAndYear
+    monthAndYear: sortMonths(monthAndYear)
   }
 }
