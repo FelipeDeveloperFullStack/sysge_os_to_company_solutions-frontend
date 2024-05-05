@@ -55,7 +55,7 @@ const UploadDocument: React.FC<any> = ({
       {loading && <Alert severity="info">
         Processando os dados, aguarde...
       </Alert>}
-      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/nubank/upload/extract`}
+      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:${process.env.REACT_APP_PORT_BACKEND}/nubank/upload/extract`}
         closeModal={onClose}
         accept='.csv'
         multiple

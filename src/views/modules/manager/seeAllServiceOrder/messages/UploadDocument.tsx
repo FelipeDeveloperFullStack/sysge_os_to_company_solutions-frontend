@@ -163,7 +163,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
           </ContainerDocuments>
         </ContainerUploadDocuments>
       ))}
-      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:3005/orderServices/upload/boleto/${osNumber}/${clientId}/${isDontSendNotificationMessage}`}
+      <UploadWithTemplate endpoint={`http://${user?.user?.ip}:${process.env.REACT_APP_PORT_BACKEND}/orderServices/upload/boleto/${osNumber}/${clientId}/${isDontSendNotificationMessage}`}
         multiple
         call={getDocuments}
         closeModal={closeModal} />

@@ -8,7 +8,7 @@ export const useAdmin = () => {
 
   const apiAdmin = axios.create({
     baseURL: user?.user?.ip
-      ? `http://${user?.user?.ip}:3005/`
+      ? `http://${user?.user?.ip}:${process.env.REACT_APP_PORT_BACKEND}/`
       : process.env.REACT_APP_ADMIN_API_HOST,
   })
 
