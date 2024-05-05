@@ -14,9 +14,11 @@ import onlyNumbers from '../../../helpers/clear/onlyNumbers'
 import { permissionsUser } from 'src/views/modules/administration/permissions/static'
 import validateCpf from 'src/helpers/validateCpf'
 import { toast } from 'src/components/Widgets/Toastify'
+import { useAdmin } from 'src/services/useAdmin'
 
 const RestRegister = ({ className, ...rest }) => {
   let history = useHistory()
+  const { apiAdmin } = useAdmin()
   const scriptedRef = useScriptRef()
   //const { Loading } = useContext(LoadingContext)
 
@@ -38,18 +40,13 @@ const RestRegister = ({ className, ...rest }) => {
           toast.error('CPF inválido, tente novamente.')
           return
         }
-        axios
-          .post(
-            'users/create',
-            {
-              name: values.username,
-              // email: values.email,
-              cpf: String(onlyNumbers(values.cpf)),
-              password: values.password,
-              permissions: permissionsUser,
-            },
-          )
-          .then(function (response) {
+        apiAdmin.post('users/create', {
+          name: values.username,
+          // email: values.email,
+          cpf: String(onlyNumbers(values?.cpf)),
+          password: values?.password,
+          permissions: permissionsUser,
+        }).then(function (response) {
             history.push('/auth/signin')
           })
           .catch(function (error) {
