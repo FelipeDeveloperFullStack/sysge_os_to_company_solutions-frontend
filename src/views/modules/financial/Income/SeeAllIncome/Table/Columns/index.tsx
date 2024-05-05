@@ -107,22 +107,26 @@ export const useColumns = (props: ColumnsProps) => {
     }
   }
 
-  const onResendNotificationWhatsappToClient = async (params: GridCellParams) => {
+  const onResendNotificationWhatsappToClient = async (
+    params: GridCellParams,
+  ) => {
     if (params.field === 'group-buttons') {
       const serviceOrder = params.row as Income
-     try {
-      await apiAdmin.post(`orderServices/sendNotificationWhatsappToClient`, {
-        client: {
-          phoneNumber: serviceOrder.clientPhoneNumber,
-          id: serviceOrder.clientId
-        },
-        osNumber: serviceOrder.osNumber,
-        isSendFirstTime: false
-      })
-      toast.success(`Aguarde que em breve iremos enviar a mensagem de notificação.`)
-     } catch (error) {
-      exceptionHandle(error)
-     }
+      try {
+        await apiAdmin.post(`orderServices/sendNotificationWhatsappToClient`, {
+          client: {
+            phoneNumber: serviceOrder.clientPhoneNumber,
+            id: serviceOrder.clientId,
+          },
+          osNumber: serviceOrder.osNumber,
+          isSendFirstTime: false,
+        })
+        toast.success(
+          `Aguarde que em breve iremos enviar a mensagem de notificação.`,
+        )
+      } catch (error) {
+        exceptionHandle(error)
+      }
     }
   }
 
@@ -135,43 +139,54 @@ export const useColumns = (props: ColumnsProps) => {
         const data = params.row as Income
         return (
           <>
-            <NofiticationMessage>
-              {!data?.isPartial && <div>{data.clientName}</div>}
-              {data?.isPartial && (
-                <div>
-                  <b>[PARCIAL]</b> {data.clientName}
-                </div>
-              )}
-              <section>
-                {(data.isSendNowDayMaturityBoleto ||
-                  data.isSendThreeDayMaturityBoleto) &&
-                  data.situation === 'PENDENTE' && (
-                    <NotificationText>
-                      Notificação de cobrança enviado
-                    </NotificationText>
-                  )}
-
-                {!data?.isBoletoUploaded &&
-                  data.formOfPayment === 'Boleto' &&
-                  data.situation === 'PENDENTE' &&
-                  data?.description !== 'NOTINHA' && (
-                    <NotificationText warning={!data?.isBoletoUploaded}>
-                      Boleto não importado
-                    </NotificationText>
-                  )}
-
-                {data?.isBoletoUploaded && data?.description !== 'NOTINHA' && (
-                  <NotificationText success>Boleto Importado</NotificationText>
-                )}
-
-                {data?.description && (
+            {!data?.isSendNotificationBoletoRecebido && (
+              <NofiticationMessage>
+                {!data?.isPartial && <div>{data.clientName}</div>}
+                {data?.isPartial && (
                   <div>
-                    <b>{data?.valuePartial && '[PARCIAL] - '}</b>
-                    {String(data.description).toUpperCase()}
+                    <b>[PARCIAL]</b> {data.clientName}
                   </div>
                 )}
-              </section>
-            </NofiticationMessage>
+                <section>
+                  {(data.isSendNowDayMaturityBoleto ||
+                    data.isSendThreeDayMaturityBoleto) &&
+                    data.situation === 'PENDENTE' && (
+                      <NotificationText>
+                        Notificação de cobrança enviado
+                      </NotificationText>
+                    )}
+
+                  {!data?.isBoletoUploaded &&
+                    data.formOfPayment === 'Boleto' &&
+                    data.situation === 'PENDENTE' &&
+                    data?.description !== 'NOTINHA' && (
+                      <NotificationText warning={!data?.isBoletoUploaded}>
+                        Boleto não importado
+                      </NotificationText>
+                    )}
+
+                  {data?.isBoletoUploaded &&
+                    data?.description !== 'NOTINHA' && (
+                      <NotificationText success>
+                        Boleto Importado
+                      </NotificationText>
+                    )}
+
+                  {data?.description && (
+                    <div>
+                      <b>{data?.valuePartial && '[PARCIAL] - '}</b>
+                      {String(data.description).toUpperCase()}
+                    </div>
+                  )}
+                </section>
+              </NofiticationMessage>
+            )}
+            {data?.isSendNotificationBoletoRecebido && (
+              <NofiticationMessage>
+                <div>{data.clientName}</div>
+                <NotificationText success>Notificação de boleto recebido enviado.</NotificationText>
+              </NofiticationMessage>
+            )}
           </>
         )
       },

@@ -47,6 +47,7 @@ export type OSData = {
   maturityOfTheBoleto?: string
   isSendThreeDayMaturityBoleto?: boolean
   isSendNowDayMaturityBoleto?: boolean
+  isSendNotificationBoletoRecebido?: boolean
   isPartial?: boolean
   isLaunchMoney?: boolean
   dateClientPayment?: string
