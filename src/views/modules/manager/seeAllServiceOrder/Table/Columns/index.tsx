@@ -249,6 +249,30 @@ export const useColumns = () => {
                 </IconButton>
               </Tooltip>
             )}
+          {params.row.typeDocument !== 'ORCAMENTO' &&
+            params.row.status === 'PENDENTE' &&
+            params.row.formOfPayment === 'Pix' && (
+              <Tooltip
+                title={
+                  params.row?.isBoletoUploaded
+                    ? 'Documento importado'
+                    : 'Importar Documentos'
+                }
+              >
+                <IconButton
+                  aria-label="Importar Documento"
+                  color={params.row?.isBoletoUploaded ? 'info' : 'default'}
+                  onClick={() => onUploadDocument(params)}
+                  disabled={!hasPermission(ORDEM_SERVICO_EXCLUIR)}
+                >
+                  {!params.row?.isBoletoUploaded ? (
+                    <UploadFileIcon />
+                  ) : (
+                    <TaskIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
           {params.row.status === 'PENDENTE' && (
             <>
               <Tooltip

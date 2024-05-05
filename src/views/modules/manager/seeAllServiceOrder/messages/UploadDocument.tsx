@@ -29,6 +29,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   isBoletoUploaded,
   clientName,
   clientId,
+  formOfPayment,
   setMakeRequest
 }) => {
   const { closeModal, showMessage } = useModal()
@@ -121,7 +122,7 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
   return (
     <Container>
       <Text alignSelf="center" fontSize="20px" bold>
-        Importação de Boleto e Nota Fiscal
+        {formOfPayment === 'Pix' ? 'Importação de documentos' : 'Importação de Boleto e Nota Fiscal'}
       </Text>
       <Text flexDirection="column">
         <div>
@@ -129,6 +130,9 @@ const UploadDocument: React.FC<MappedDataServiceOrders> = ({
         </div>
         <div>
           Cliente: <span>{name || clientName}</span>
+        </div>
+        <div>
+          Forma de Pagamento: <span>{formOfPayment}</span>
         </div>
       </Text>
 

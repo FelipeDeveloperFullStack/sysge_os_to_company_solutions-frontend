@@ -18,6 +18,7 @@ export type MappedDataServiceOrders = {
   phoneNumber?: string
   isPartial?: boolean
   isBoletoUploaded?: boolean
+  formOfPayment?: string
   setMakeRequest?: React.Dispatch<React.SetStateAction<number>>
 }
 

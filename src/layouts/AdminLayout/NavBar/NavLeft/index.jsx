@@ -60,7 +60,7 @@ const NavLeft = () => {
       if (pathName.includes(item)) {
         let pageName = ''
         if (String(item).replace('/', '') === 'ordem-servico') {
-          title = 'Gestão O.S'
+          title = 'Gestão O.S/Orçamento'
         } else if (
           String(item).replace('/', '') === 'novo' ||
           String(item).replace('/', '') === 'nova'
@@ -77,7 +77,7 @@ const NavLeft = () => {
       }
     })
     if (pathName.includes('/ordem-servicos')) {
-      title = 'Gestão O.S'
+      title = 'Gestão O.S/Orçamento'
     }
     return title
   }
