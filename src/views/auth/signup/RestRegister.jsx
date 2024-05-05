@@ -40,7 +40,7 @@ const RestRegister = ({ className, ...rest }) => {
         }
         axios
           .post(
-            API_SERVER_DEVELOPMENT || API_SERVER_PRODUTION + 'users/create',
+            'users/create',
             {
               name: values.username,
               // email: values.email,
